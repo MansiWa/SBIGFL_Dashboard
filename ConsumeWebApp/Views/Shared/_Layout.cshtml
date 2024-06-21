@@ -1,0 +1,691 @@
+﻿@*@model IEnumerable<PrintSoftWeb.Models.Home>*@
+@using Microsoft.AspNetCore.Mvc.Localization;
+@using Microsoft.Extensions.Localization
+@inject IViewLocalizer Localizer;
+@using Newtonsoft.Json
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"]  SBI GLobal Factors Ltd.</title>
+	@* <script src="https://cdn.polyfill.io/v3/polyfill.min.js?features=Intl.~locale.en"></script> *@
+
+	<link href="~/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/googleapis_nunito.css" rel="stylesheet" />
+	<!-- Custom styles for this template -->
+	@*<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />*@
+	<!-- Custom styles for this page -->
+	<link href="~/vendor/datatables/datatables.bootstrap4.min.css" rel="stylesheet" />
+	<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+	@*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />*@
+	@*<link href="~/css/site.css" rel="stylesheet" />*@
+	@* <link rel="stylesheet" href="~/css/custom.css" asp-append-version="true" />*@
+    <link href="~/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/css/all.css" rel="stylesheet" />
+    <link href="~/css/googleapis_cario.css" rel="stylesheet" />
+	@*<link href="~/assets/css/style.bundle.css" rel="stylesheet" />*@
+	@*<link href="~/assets/plugins/global/plugins.bundle.css" rel="stylesheet" />*@
+@* 	<link rel="canonical" href="https://preview.keenthemes.com/seven-html-pro" /> *@
+	<link rel="shortcut icon" href="~/assets/media/logos/favicon.ico" />
+	<!--begin::Fonts(mandatory for all pages)-->
+    <link href="~/css/googleapis_inter.css" rel="stylesheet" />
+	<!--end::Fonts-->
+	<!--begin::Vendor Stylesheets(used for this page only)-->
+	@*<link href="~/assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" />*@
+	<link href="~/assets/plugins/custom/vis-timeline/vis-timeline.bundle.css" rel="stylesheet" />
+
+	<!--end::Vendor Stylesheets-->
+	<!--begin::Global Stylesheets Bundle(mandatory for all pages)-->
+	@*<link href="~/css/site.css" rel="stylesheet" />*@
+	<link href="~/css/site.css" rel="stylesheet" />
+	<link href="~/css/custom.css" rel="stylesheet" />
+	<link href="~/assets/css/style.bundle.css" rel="stylesheet" id="styleSheetLink" />
+	<link href="~/assets/plugins/global/plugins.bundle.css" rel="stylesheet" />
+
+	<script src="~/js/jquery-3.6.0.min2.js"></script>
+	<script src="~/js/custom.js"></script>
+	<script src="~/js/jquery.datatables.js"></script>
+	<script src="~/js/custom-paging-and-search.js"></script>
+
+	<script src="~/jsfiles/commonjs/commonjs.js"></script><!-- For Common Jquery-->
+	<script>
+		// Check if the container-fluid class is present
+		var containerFluidExists = document.querySelector('.container-fluid');
+
+		// If container-fluid exists, remove bundle.style.css and switch to style.css
+		if (containerFluidExists) {
+			var bundleStyleSheet = document.getElementById('styleSheetLink');
+			bundleStyleSheet.parentNode.removeChild(bundleStyleSheet);
+
+			var styleCssLink = document.createElement('link');
+			styleCssLink.rel = 'stylesheet';
+			styleCssLink.href = '~/css/site.css';
+			document.head.appendChild(styleCssLink);
+		}
+		$(window).on('unload', function () {
+			setTimeout(function () {
+				$(window).scrollTop(0);
+			}, 100);
+		});
+	</script>
+	<style>
+		#kt_footer {
+			position: fixed;
+			bottom: 0;
+			width: 100%;
+			background-color: transparent; /* Set your desired background color */
+			z-index: 0; /* Adjust the z-index as needed */
+		}
+	</style>
+</head>
+
+@{
+	List<PrintSoftWeb.Models.Home> menuList = new List<PrintSoftWeb.Models.Home>();
+	string menu = HttpContextAccessor.HttpContext.Session.GetString("HomeDataList");
+
+	if (!string.IsNullOrEmpty(menu))
+	{
+		menuList = JsonConvert.DeserializeObject<List<PrintSoftWeb.Models.Home>>(menu);
+	}
+}
+
+
+
+<!-- The rest of your view... -->
+
+<body id="kt_body" class="header-fixed header-tablet-and-mobile-fixed aside-fixed aside-secondary-enabled">
+	<!--begin::Theme mode setup on page load-->
+	<script>var defaultThemeMode = "light"; var themeMode; if (document.documentElement) { if (document.documentElement.hasAttribute("data-bs-theme-mode")) { themeMode = document.documentElement.getAttribute("data-bs-theme-mode"); } else { if (localStorage.getItem("data-bs-theme") !== null) { themeMode = localStorage.getItem("data-bs-theme"); } else { themeMode = defaultThemeMode; } } if (themeMode === "system") { themeMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"; } document.documentElement.setAttribute("data-bs-theme", themeMode); }</script>
+	<!--end::Theme mode setup on page load-->
+	<!--begin::Main-->
+	<!--begin::Root-->
+	<div class="d-flex flex-column flex-root">
+		<!--begin::Page-->
+		<div class="page d-flex flex-row flex-column-fluid">
+			<!--begin::Aside-->
+			<div id="kt_aside" class="aside aside-extended" data-kt-drawer="true" data-kt-drawer-name="aside" data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true" data-kt-drawer-width="auto" data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_aside_toggle">
+
+				<!--begin::Secondary-->
+				<div class="aside-secondary d-flex flex-row-fluid">
+					<!--begin::Workspace-->
+					<div class="aside-workspace my-5 p-5" id="kt_aside_wordspace">
+						<div class="d-flex h-100 flex-column">
+							<!--begin::Wrapper-->
+							<div class="flex-column-fluid hover-scroll-y" data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-height="auto" data-kt-scroll-wrappers="#kt_aside_wordspace" data-kt-scroll-dependencies="#kt_aside_secondary_footer" data-kt-scroll-offset="0px">
+								<!--begin::Tab content-->
+								<div class="tab-content">
+									<!--begin::Tab pane-->
+									<div class="aside-logo d-none d-lg-flex flex-column align-items-center flex-column-auto pb-5" id="kt_aside_logo">
+										<a asp-action="Index" asp-controller="Dashboard">
+											<img alt="Logo" src="~/images/sbilogo.png" style="border-radius: 16px " class="h-80px w-150px" />
+										</a>
+									</div>
+									<div class="tab-pane fade active show" id="kt_aside_nav_tab_menu" role="tabpanel">
+										<!--begin::Menu-->
+										<div class="menu menu-column menu-sub-indention menu-rounded menu-active-bg menu-title-white menu-icon-white menu-state-primary menu-arrow-white fw-semibold fs-6 px-2 my-5 my-lg-0" id="kt_aside_menu" data-kt-menu="true">
+											<div id="kt_aside_menu_wrapper">
+												<!--begin:Menu item-->
+												<div class="menu-item" style="display:none">
+													<!--begin:Menu content-->
+													<div class="menu-content pb-2">
+														<span class="menu-section text-muted text-uppercase fs-8 ls-1">Crafted</span>
+													</div>
+													<!--end:Menu content-->
+												</div>
+												<!--end:Menu item-->
+												<!--begin:Menu item-->
+												<div data-kt-menu-trigger="click" class="menu-item menu-accordion mb-1">
+													<!--begin:Menu link-->
+													<span class="menu-link">
+														<span class="menu-icon">
+															<i class="ki-duotone ki-element-11 fs-2">
+																<span class="path1"></span>
+																<span class="path2"></span>
+																<span class="path3"></span>
+																<span class="path4"></span>
+															</i>
+														</span>
+														<a href="@Url.Action("Index", "Dashboard")" class="menu-title">Dashboard</a>
+														<!--<span class="menu-title">Dashboard</span>-->
+														<span class="menu-arrow"></span>
+													</span>
+													<!--end:Menu link-->
+													<div class="menu-sub menu-sub-accordion">
+														<div class="menu-item">
+
+															<a href="@Url.Action("Index", "AccountDashboardNew")" class="menu-link">
+																<span class="menu-bullet">
+																	<span class="bullet bullet-dot"></span>
+																</span>
+																<span class="menu-title">Financial Performance</span>
+															</a>
+														</div>
+
+
+													</div>
+													<!--begin:Menu sub-->
+													<div class="menu-sub menu-sub-accordion">
+														<div class="menu-item">
+
+															<a href="@Url.Action("Index", "TreasuryDashboard")" class="menu-link">
+																<span class="menu-bullet">
+																	<span class="bullet bullet-dot"></span>
+																</span>
+																<span class="menu-title">Treasury</span>
+															</a>
+														</div>
+
+
+													</div>
+													<div class="menu-sub menu-sub-accordion">
+														<div class="menu-item">
+
+															<a href="@Url.Action("Index", "BusinessDev")" class="menu-link">
+																<span class="menu-bullet">
+																	<span class="bullet bullet-dot"></span>
+																</span>
+																<span class="menu-title">Business Devlopment</span>
+															</a>
+														</div>
+
+
+													</div>
+													<div class="menu-sub menu-sub-accordion">
+														<div class="menu-item">
+
+															<a href="@Url.Action("Index", "CustomerDashboard")" class="menu-link">
+																<span class="menu-bullet">
+																	<span class="bullet bullet-dot"></span>
+																</span>
+																<span class="menu-title">Client Service</span>
+															</a>
+														</div>
+
+
+													</div>
+													<div class="menu-sub menu-sub-accordion">
+														<div class="menu-item">
+
+															<a href="@Url.Action("Index", "DebtDashboard")" class="menu-link">
+																<span class="menu-bullet">
+																	<span class="bullet bullet-dot"></span>
+																</span>
+																<span class="menu-title">Debt Management</span>
+															</a>
+														</div>
+
+
+													</div>
+													<div class="menu-sub menu-sub-accordion">
+														<div class="menu-item">
+
+															<a href="@Url.Action("Index", "CreditDash")" class="menu-link">
+																<span class="menu-bullet">
+																	<span class="bullet bullet-dot"></span>
+																</span>
+																<span class="menu-title">Credit </span>
+															</a>
+														</div>
+
+
+													</div>
+													
+													<!--end:Menu sub-->
+												</div>
+
+												<div data-kt-menu-trigger="click" class="menu-item menu-accordion mb-1">
+													<!--begin:Menu link-->
+													<span class="menu-link">
+														<span class="menu-icon">
+															<i class="fas fa-file-upload fs-2">
+																<span class="path1"></span>
+																<span class="path2"></span>
+																<span class="path3"></span>
+																<span class="path4"></span>
+															</i>
+														</span>
+														<a href="@Url.Action("Index", "Dashboard")" class="menu-title">Uploads (Forms and Files)</a>
+														<!--<span class="menu-title">Dashboard</span>-->
+														<span class="menu-arrow"></span>
+													</span>
+													<!--end:Menu link-->
+													<div class="menu-sub menu-sub-accordion">
+
+														<div data-kt-menu-trigger="click" class="menu-item menu-accordion mb-1">
+															<!--begin:Menu link-->
+															<span class="menu-link">
+																<span class="menu-icon">
+																	<i class="ki-duotone ki-briefcase fs-2">
+																		<span class="path1"></span>
+																		<span class="path2"></span>
+																		<span class="path3"></span>
+																		<span class="path4"></span>
+																	</i>
+																</span>
+																<span class="menu-title">Client Service </span>
+																<span class="menu-arrow"></span>
+															</span>
+															<!--end:Menu link-->
+															<div class="menu-sub menu-sub-accordion">
+																<div class="menu-item">
+
+																	<a href="@Url.Action("Index", "FileUpload","")" class="menu-link">
+																		<span class="menu-bullet">
+																			<span class="bullet bullet-dot"></span>
+																		</span>
+																		<span class="menu-title">File Upload</span>
+																	</a>
+																</div>
+
+
+															</div>
+														</div>
+														<div data-kt-menu-trigger="click" class="menu-item menu-accordion mb-1">
+															<!--begin:Menu link-->
+															<span class="menu-link">
+																<span class="menu-icon">
+																	<i class="ki-duotone ki-nexo fs-2">
+																		<span class="path1"></span>
+																		<span class="path2"></span>
+																		<span class="path3"></span>
+																		<span class="path4"></span>
+																	</i>
+																</span>
+																<span class="menu-title">Treasury</span>
+																<span class="menu-arrow"></span>
+															</span>
+															<!--end:Menu link-->
+															<!--begin:Menu sub
+															<div class="menu-sub menu-sub-accordion">
+																<div class="menu-item">
+
+																	<a href="@Url.Action("Index", "TreasuryDashboard")" class="menu-link">
+																		<span class="menu-bullet">
+																			<span class="bullet bullet-dot"></span>
+																		</span>
+																		<span class="menu-title">Treasury Dashboard</span>
+																	</a>
+																</div>
+
+
+															</div>
+															end:Menu sub-->
+															<!--begin:Menu sub-->
+															<div class="menu-sub menu-sub-accordion">
+																<!--begin:Menu item-->
+																<div class="menu-item">
+																	<!--begin:Menu link-->
+
+																	<a href="@Url.Action("Index", "BorroAndRFR")" class="menu-link">
+																		<span class="menu-bullet">
+																			<span class="bullet bullet-dot"></span>
+																		</span>
+																		<span class="menu-title">Borrowing and RFR Document</span>
+																	</a>
+																	<!--end:Menu link-->
+																</div>
+
+																<!--end:Menu item-->
+
+															</div>
+															<!--end:Menu sub-->
+															<!--begin:Menu sub-->
+															<div class="menu-sub menu-sub-accordion">
+																<!--begin:Menu item-->
+																<div class="menu-item">
+																	<!--begin:Menu link-->
+
+																	<a href="@Url.Action("Index", "AssetsLiabilities")" class="menu-link">
+																		<span class="menu-bullet">
+																			<span class="bullet bullet-dot"></span>
+																		</span>
+																		<span class="menu-title">Assets And Liabilities Upload</span>
+																	</a>
+																	<!--end:Menu link-->
+																</div>
+
+																<!--end:Menu item-->
+
+															</div>
+															<!--end:Menu sub-->
+															<!--begin:Menu sub-->
+															<div class="menu-sub menu-sub-accordion">
+																<!--begin:Menu item-->
+																<div class="menu-item">
+																	<!--begin:Menu link-->
+
+																	<a href="@Url.Action("Index", "CreditRating")" class="menu-link">
+																		<span class="menu-bullet">
+																			<span class="bullet bullet-dot"></span>
+																		</span>
+																		<span class="menu-title">Credit Rating</span>
+																	</a>
+																	<!--end:Menu link-->
+																</div>
+
+																<!--end:Menu item-->
+
+															</div>
+															<!--end:Menu sub-->
+															<!--begin:Menu sub-->
+															<div class="menu-sub menu-sub-accordion">
+																<!--begin:Menu item-->
+																<div class="menu-item">
+																	<!--begin:Menu link-->
+
+																	<a href="@Url.Action("Index", "PrimeRRate")" class="menu-link">
+																		<span class="menu-bullet">
+																			<span class="bullet bullet-dot"></span>
+																		</span>
+																		<span class="menu-title">Prime Reference Rate</span>
+																	</a>
+																	<!--end:Menu link-->
+																</div>
+
+																<!--end:Menu item-->
+
+															</div>
+															<!--end:Menu sub-->
+															<!--begin:Menu sub-->
+															<div class="menu-sub menu-sub-accordion">
+																<!--begin:Menu item-->
+																<div class="menu-item">
+																	<!--begin:Menu link-->
+
+																	<a href="@Url.Action("Index", "TBillRate")" class="menu-link">
+																		<span class="menu-bullet">
+																			<span class="bullet bullet-dot"></span>
+																		</span>
+																		<span class="menu-title">T-Bill Cut Off</span>
+																	</a>
+																	<!--end:Menu link-->
+																</div>
+
+																<!--end:Menu item-->
+
+															</div>
+															<!--end:Menu sub-->
+															<!--begin:Menu sub-->
+															<div class="menu-sub menu-sub-accordion">
+																<!--begin:Menu item-->
+																<div class="menu-item">
+																	<!--begin:Menu link-->
+
+																	<a href="@Url.Action("Index", "CostOfBorrowing")" class="menu-link">
+																		<span class="menu-bullet">
+																			<span class="bullet bullet-dot"></span>
+																		</span>
+																		<span class="menu-title">Cost Of Borrowing</span>
+																	</a>
+																	<!--end:Menu link-->
+																</div>
+
+																<!--end:Menu item-->
+
+															</div>
+															<!--end:Menu sub-->
+														</div>
+														<div data-kt-menu-trigger="click" class="menu-item menu-accordion mb-1">
+															<!--begin:Menu link-->
+															<span class="menu-link">
+																<span class="menu-icon">
+																	<i class="ki-duotone ki-bank fs-2">
+																		<span class="path1"></span>
+																		<span class="path2"></span>
+																		<span class="path3"></span>
+																		<span class="path4"></span>
+																	</i>
+																</span>
+																<span class="menu-title">Financial Performance</span>
+																<span class="menu-arrow"></span>
+															</span>
+															<!--end:Menu link-->
+															<!--begin:Menu sub
+															<div class="menu-sub menu-sub-accordion">
+																<div class="menu-item">
+
+																	<a href="@Url.Action("Index", "AccountDashboard")" class="menu-link">
+																		<span class="menu-bullet">
+																			<span class="bullet bullet-dot"></span>
+																		</span>
+																		<span class="menu-title">Accounting Dashboard</span>
+																	</a>
+																</div>
+
+
+															</div>
+															end:Menu sub-->
+															<!--begin:Menu sub-->
+															<div class="menu-sub menu-sub-accordion">
+																<!--begin:Menu item-->
+																<div class="menu-item">
+																	<!--begin:Menu link-->
+
+																	<a href="@Url.Action("Index", "HighlightsNew")" class="menu-link">
+																		<span class="menu-bullet">
+																			<span class="bullet bullet-dot"></span>
+																		</span>
+																		<span class="menu-title">File Upload</span>
+																	</a>
+																	<!--end:Menu link-->
+																</div>
+
+																<!--end:Menu item-->
+
+															</div>
+															<!--end:Menu sub-->
+														</div>
+														<div data-kt-menu-trigger="click" class="menu-item menu-accordion mb-1">
+															<!--begin:Menu link-->
+															<span class="menu-link">
+																<span class="menu-icon">
+																	<i class="ki-duotone ki-binance fs-2">
+																		<span class="path1"></span>
+																		<span class="path2"></span>
+																		<span class="path3"></span>
+																		<span class="path4"></span>
+																	</i>
+																</span>
+																<span class="menu-title">Debt Management</span>
+																<span class="menu-arrow"></span>
+															</span>
+															<!--end:Menu link-->
+															<!--begin:Menu sub-->
+															<div class="menu-sub menu-sub-accordion">
+																<!--begin:Menu item-->
+																<div class="menu-item">
+																	<!--begin:Menu link-->
+
+																	<a href="@Url.Action("Index", "Dept")" class="menu-link">
+																		<span class="menu-bullet">
+																			<span class="bullet bullet-dot"></span>
+																		</span>
+																		<span class="menu-title">File Upload</span>
+																	</a>
+																	<!--end:Menu link-->
+																</div>
+
+																<!--end:Menu item-->
+
+															</div>
+															<!--end:Menu sub-->
+														</div>
+														<div data-kt-menu-trigger="click" class="menu-item menu-accordion mb-1">
+															<!--begin:Menu link-->
+															<span class="menu-link">
+																<span class="menu-icon">
+																	<i class="ki-duotone ki-briefcase fs-2">
+																		<span class="path1"></span>
+																		<span class="path2"></span>
+																		<span class="path3"></span>
+																		<span class="path4"></span>
+																	</i>
+																</span>
+																<span class="menu-title">Business Devlopment</span>
+																<span class="menu-arrow"></span>
+															</span>
+															<!--end:Menu link-->
+															<div class="menu-sub menu-sub-accordion">
+																<div class="menu-item">
+
+																	<a href="@Url.Action("Index", "BDUpload","")" class="menu-link">
+																		<span class="menu-bullet">
+																			<span class="bullet bullet-dot"></span>
+																		</span>
+																		<span class="menu-title">File Upload</span>
+																	</a>
+																</div>
+
+
+															</div>
+														</div>
+
+													</div>
+
+												</div>
+
+
+
+
+											</div>
+										</div>
+										<!--end::Menu-->
+										<!--begin::Footer-->
+										<div class="aside-footer d-flex flex-column align-items-center flex-column-auto pt-5" id="kt_aside_footer">
+
+											<div class="d-flex align-items-center mb-3">
+												<!--begin::Menu toggle-->
+												<a class="btn btn-icon btn-custom" asp-controller="Login" asp-action="Delete" title="Sign Out" data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-overflow="true" data-kt-menu-placement="top-start" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-dismiss="click">
+													<i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 "></i>
+												</a>
+												<!--begin::Menu toggle-->
+											</div>
+											<!--end::Theme mode-->
+											<!--begin::User-->
+											<!--end::User-->
+										</div>
+										<!--end::Footer-->
+									</div>
+									<!--end::Tab pane-->
+
+
+								</div>
+								<!--end::Tab content-->
+							</div>
+							<!--end::Wrapper-->
+
+						</div>
+					</div>
+					<!--end::Workspace-->
+				</div>
+				<!--end::Secondary-->
+				<!--begin::Aside Toggle-->
+				<button class="btn btn-sm btn-icon bg-body btn-color-gray-600 btn-active-primary position-absolute translate-middle start-100 end-0 bottom-0 shadow-sm d-none d-lg-flex" data-kt-toggle="true" data-kt-toggle-state="active" data-kt-toggle-target="body" data-kt-toggle-name="aside-minimize" style="margin-bottom: 1.35rem">
+					<i class="ki-duotone ki-arrow-left fs-2 rotate-180">
+						<span class="path1"></span>
+						<span class="path2"></span>
+					</i>
+				</button>
+				<!--end::Aside Toggle-->
+			</div>
+			<!--end::Aside-->
+			<!--begin::Wrapper-->
+			<div class="wrapper d-flex flex-column flex-row-fluid" id="kt_wrapper">
+				<!--begin::Header-->
+				<div class="">
+					<main role="main" class="pb-3">
+						@{
+							var errorMessage = TempData["errorMessage"]?.ToString();
+							var successMessage = TempData["successMessage"]?.ToString();
+						}
+						@if (!string.IsNullOrWhiteSpace(successMessage))
+						{
+							<div class="alert alert-success">
+								<b>Success :</b>@successMessage
+								<button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close"></button>
+							</div>
+						}
+						else @if (!string.IsNullOrWhiteSpace(errorMessage))
+						{
+							<div class="alert alert-danger">
+								<b>Error :</b>@errorMessage
+								<button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close"></button>
+							</div>
+						}
+						@RenderBody()
+					</main>
+				</div>
+				<!--end::Header-->
+				<!--begin::Content-->
+				<!--end::Content-->
+				<!--begin::Footer
+				<div class="footer py-4 d-flex flex-lg-column " id="kt_footer">
+					<div class="container-fluid d-flex flex-column flex-md-row flex-stack">
+						<div class="text-gray-900 order-2 order-md-1">
+							<span class="text-gray-500 fw-semibold me-1">Copyright by</span>
+							<a href="https://initialinfinity.com/" target="_blank" class="text-muted text-hover-primary fw-semibold me-2 fs-6">AITS Softwares</a>
+						</div>
+
+					</div>
+				</div>
+				 -->
+			</div>
+			<!--end::Wrapper-->
+		</div>
+		<!--end::Page-->
+	</div>
+	<!--end::Root-->
+	<!--end::Main-->
+	<!--begin::Scrolltop-->
+	<div id="kt_scrolltop" class="scrolltop" data-kt-scrolltop="true">
+		<i class="ki-duotone ki-arrow-up">
+			<span class="path1"></span>
+			<span class="path2"></span>
+		</i>
+	</div>
+	<!--end::Scrolltop-->
+	<!--begin::Javascript-->
+	<script>var hostUrl = "~/assets/";</script>
+	<!--begin::Global Javascript Bundle(mandatory for all pages)-->
+
+	<script src="~/assets/js/scripts.bundle.js"></script>
+	<!--end::Global Javascript Bundle-->
+	<!--begin::Vendors Javascript(used for this page only
+	<script src="~/assets/plugins/custom/datatables/datatables.bundle.js"></script>)-->
+	<!--end::Vendors Javascript-->
+	<!--begin::Custom Javascript(used for this page only)-->
+	<script src="~/assets/js/widgets.bundle.js"></script>
+	<script src="~/assets/js/custom/apps/chat/chat.js"></script>
+	<script src="~/assets/js/custom/utilities/modals/upgrade-plan.js"></script>
+	<script src="~/assets/js/custom/utilities/modals/create-account.js"></script>
+	<script src="~/assets/js/custom/utilities/modals/create-campaign.js"></script>
+	<script src="~/assets/js/custom/utilities/modals/users-search.js"></script>
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="~/js1/sb-admin-2.min.js"></script>
+
+	<!-- Page level plugins
+	<script src="~/vendor/datatables/jquery.dataTables.min.js"></script>
+	<script src="~/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+	-->
+	<!-- Bootstrap core JavaScript-->
+	<script src="~/vendor/jquery/jquery.min.js"></script>
+	<script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+
+	<!-- Core plugin JavaScript-->
+	<script src="~/vendor/jquery-easing/jquery.easing.min.js"></script>
+	<!--end::Javascript-->
+	<script>
+		$(window).on('unload', function () {
+			setTimeout(function () {
+				$(window).scrollTop(0);
+			}, 100);
+		});
+	</script>
+</body>
+</html>

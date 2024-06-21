@@ -1,0 +1,211 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization;
+@using Microsoft.Extensions.Localization
+@inject IViewLocalizer Localizer;
+
+
+    <script src="~/jsfiles/product/product.js"></script>
+    <script src="~/jsfiles/commonjs/commonjs.js"></script>
+
+
+<div class="modal fade" id="addproduct" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-dark fw-bold" id="exampleModalLabel">Add Product</h5>
+                <button type="button"
+                        class="btn-close modal-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div> 
+            <div class="modal-body text-dark">
+
+                <div class="row">
+                    <div class="col-lg-8" style="display:none">
+                        <input type="text" class="form-control" id="p_id" value="@ViewBag.p_id" placeholder="Product id" name="name">
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <label for="name" class="form-label float-lg-end">@Localizer["Product Name"]:<span class="text-danger">*</span></label>
+                            </div>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="p_name" value="@ViewBag.p_name" placeholder="Product Name" name="name">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="row mt-3 mt-lg-0 mt-md-0">
+                            <div class="col-lg-4">
+                                <label for="unit" class="form-label float-lg-end">@Localizer["Unit"]:<span class="text-danger">*</span></label>
+                            </div>
+                            <div class="col-lg-8">
+                                <select class="form-select" id="p_unitid" asp-items="@(new SelectList(ViewBag.p_unitid,"Id","Value", ViewBag.Selectedp))" placeholder="Select Unit" required>
+                                    <option value="">-- Select --</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-lg-6">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <label for="hsnCode" class="form-label float-lg-end">@Localizer["HSN Code"]:</label>
+                            </div>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="p_hsn_code" value="@ViewBag.p_hsn_code" placeholder="HSN Code" name="hsnCode">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="row mt-3 mt-lg-0 mt-md-0">
+                            <div class="col-lg-4">
+                                <label for="rate" class="form-label float-lg-end">@Localizer["Rate (Rs.)"]:<span class="text-danger">*</span></label>
+                            </div>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="p_rate" oninput="isValidNumber(this)" value="@ViewBag.p_rate" placeholder="Rate" name="rate">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-lg-6">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <label for="cgst" class="form-label float-lg-end">@Localizer["CGST"]:<span class="text-danger">*</span></label>
+                            </div>
+                            <div class="col-lg-8">
+                                <select class="form-select" id="p_cgst" aria-label="Default select example">
+                                    <option selected>--select--</option>
+                                    <option Value="0">0 %</option>
+                                    <option Value="5">5 %</option>
+                                    <option Value="6">6 %</option>
+                                    <option Value="9">9 %</option>
+                                    <option Value="12">12 %</option>
+                                    <option Value="18">18 %</option>
+                                    <option Value="28">28 %</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="row mt-3 mt-lg-0 mt-md-0">
+                            <div class="col-lg-4">
+                                <label for="sgst" class="form-label float-lg-end">@Localizer["SGST"]:<span class="text-danger">*</span></label>
+                            </div>
+                            <div class="col-lg-8">
+                                <select class="form-select" id="p_sgst" aria-label="Default select example">
+                                    <option selected>--select--</option>
+                                    <option Value="0">0 %</option>
+                                    <option Value="5">5 %</option>
+                                    <option Value="6">6 %</option>
+                                    <option Value="9">9 %</option>
+                                    <option Value="12">12 %</option>
+                                    <option Value="18">18 %</option>
+                                    <option Value="28">28 %</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-lg-6">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <label for="igst" class="form-label float-lg-end">@Localizer["IGST"]:<span class="text-danger">*</span></label>
+                            </div>
+                            <div class="col-lg-8">
+                                <select class="form-select" id="p_igst" aria-label="Default select example">
+                                    <option selected>--select--</option>
+                                    <option Value="0">0 %</option>
+                                    <option Value="5">5 %</option>
+                                    <option Value="6">6 %</option>
+                                    <option Value="9">9 %</option>
+                                    <option Value="12">12 %</option>
+                                    <option Value="18">18 %</option>
+                                    <option Value="28">28 %</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <label for="igst" class="form-label float-lg-end">@Localizer["UGST"]:<span class="text-danger">*</span></label>
+                            </div>
+                            <div class="col-lg-8">
+                                <select class="form-select" id="p_ugst" aria-label="Default select example">
+                                    <option selected>--select--</option>
+                                    <option Value="0">0 %</option>
+                                    <option Value="5">5 %</option>
+                                    <option Value="6">6 %</option>
+                                    <option Value="9">9 %</option>
+                                    <option Value="12">12 %</option>
+                                    <option Value="18">18 %</option>
+                                    <option Value="28">28 %</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-lg-6">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <label for="description" class="form-label float-lg-end">@Localizer["Description"]:<span class="text-danger">*</span></label>
+                            </div>
+                            <div class="col-lg-8">
+                                <textarea class="form-control" value="@ViewBag.p_desc" placeholder="Enter Discription" id="p_desc" rows="1">@Html.Raw(ViewBag.p_desc)</textarea>
+                            </div>
+                        </div>
+                    </div>
+                   @* <div class="col-lg-6 mt-3 mt-lg-0 mt-md-0">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <label for="productCategory" value="@ViewBag.p_type" class="form-label float-lg-end">@Localizer["Product Category"]:<span class="text-danger">*</span></label>
+                            </div>
+                            <div class="col-lg-8">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="Sale" @(ViewBag.p_type == null ? "" : "disabled")>
+                                    <label class="form-check-label" for="inlineRadio1">@Localizer["Sale Product"]</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="Purchase" @(ViewBag.p_type == null ? "" : "disabled")>
+                                    <label class="form-check-label" for="inlineRadio2">@Localizer["Purchase Product"]</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="Both" @(ViewBag.p_type == null ? "" : "disabled")>
+                                    <label class="form-check-label" for="inlineRadio3">@Localizer["For Both"]</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>*@
+
+                </div>
+                <div class="row mt-4">
+                    <div class="col-lg-6">
+                        <div class="row mt-3 mt-md-1 mt-lg-1 ml-2 ml-lg-0 ml-md-2">
+                            <div class="col-lg-4">
+                                <div class="d-flex justify-content-lg-end">
+                                    <input class="form-check-input float-lg-end" type="checkbox" value="" id="p_isactive" @(ViewBag.p_isactive == "Active" ? "checked" : "")>
+                                </div>
+                            </div>
+                            <div class="col-lg-8 ml-1 ml-lg-0 ml-md-1">
+                                <label class="form-check-label" for="flexCheckChecked">
+                                    @Localizer["Is Active"]
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button title="Save" type="submit" id="btnsubmit" value="Create" class="btn btn-primary" onclick="submitModalProduct()">@Localizer["Submit"]</>
+                <button type="button" title="Cancel" class="btn btn-secondary ml-2" data-dismiss="modal" onclick="GoBack()">@Localizer["Cancel"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+

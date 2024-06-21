@@ -1,0 +1,124 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization;
+@using Microsoft.Extensions.Localization
+@inject IViewLocalizer Localizer;
+@model PrintSoftWeb.Models.CompanyDetailsModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Master";
+}
+
+<head>
+        <script src="~/jsfiles/companydetails/companydetails.js"></script>
+</head>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <div class="row align-items-center">
+            <div class="col">
+                <h4 class="m-0 font-weight-bold text-primary">@Localizer["Company Details"]</h4>
+            </div>
+            <div class="col-auto d-flex flex-wrap">
+                <button class="btn btn-md text-light bg-primary mt-3 mt-lg-0 mt-md-0 ml-2"
+                        type="button" style="display:@Context.Session.GetString("EditAccess")"
+                        onclick="AddCompanyDetails()">
+                    <i class="fas fa-edit"></i> @Localizer["Edit"]
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+                <table class="table table-hover table-bordered">
+                    <tbody>
+                        <tr>
+                    <th><label for="name" class="form-label fw-bold">@Localizer["Company Name"]<span class="text-danger">*</span></label></th>
+                            <th><label for="name" class="form-label fw-bold" >@Model.com_company_name</label></th>
+                        </tr>
+                        <tr>
+                            <th><label for="name" class="form-label fw-bold">@Localizer["Sub Company Name"]</label></th>
+                            <td><label for="name" class="form-label ">@Model.com_company_name2 </label></td>
+                        </tr>
+                        <tr>
+                    <th><label for="name" class="form-label fw-bold">@Localizer["Owner Name"]<span class="text-danger">*</span></label></th>
+                            <td><label for="name" class="form-label">@Model.com_owner_name</label></td>
+                        </tr>
+                        <tr>
+                    <th>  <label for="name" class="form-label fw-bold">@Localizer["Address"]<span class="text-danger">*</span></label></th>
+                            <td>  <label for="name" class="form-label ">@Model.com_address</label></td>
+
+                        </tr>
+                        <tr>
+                    <th>  <label for="name" class="form-label fw-bold">@Localizer["Contact No"].<span class="text-danger">*</span></label></th>
+                    <td>  <label for="name" id="com_contact" class="form-label">@Model.com_contact</label></td>
+                       </tr>
+                        <tr>
+                            <th><label for="name" class="form-label fw-bold">@Localizer["GST No"].</label></th>
+                            <td><label for="name" class="form-label">@Model.com_gst_no</label></td>
+                        </tr>
+                <tr>
+                    <th><label for="name" class="form-label fw-bold">@Localizer["Email Id"]<span class="text-danger">*</span></label></th>
+                    <td><label for="name" class="form-label">@Model.com_email</label></td>
+                </tr>
+                 <tr>
+                            <th><label for="name" class="form-label fw-bold">@Localizer["Website"]</label></th>
+                            <td><label for="name" class="form-label">@Model.com_website</label></td>
+                 </tr>
+                <tr>
+                    <th><label for="name" class="form-label fw-bold">@Localizer["Company Logo"]<span class="text-danger">*</span></label></th>
+                    <td>
+                        <label for="name" class="form-label" id="editLabel"><i class="fas fa-edit text-primary">@* @{if(@Model.ImageBase64 !="")} *@</i> Edit</label>
+                    </td>
+                </tr>
+                <tr id="logoRow" style="display: none;">
+                    <th><label for="name" class="form-label fw-bold">@Localizer["Choose Company Logo"]<span class="text-danger">*</span></label></th>
+                    <td>
+                        <label for="name" class="form-label">
+                            <input type="file" id="com_company_logo" />
+                        </label>
+                        <button type="button" class="btn btn-primary float-end" onclick="updateLogo('logo')">@Localizer["Update"]</button>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="name" class="form-label fw-bold">@Localizer["Company SubLogo"] 2</label></th>
+                    <td><label for="name" class="form-label"> <i class="fas fa-edit text-primary" id="editLabel1"></i> Edit</label></td>
+                </tr>
+                <tr id="logoRow1" style="display: none;">
+                    <th><label for="name" class="form-label fw-bold">@Localizer["Choose Company Logo"] 2<span class="text-danger">*</span></label></th>
+                    <td>
+                        <label for="name" class="form-label"><input type="file" id="com_company_logo2" /></label>
+                        <button type="button" onclick="updateLogo('logo2')" class="btn btn-primary float-end">@Localizer["Update"]</button>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="name" class="form-label fw-bold">@Localizer["Bank Name"]</label></th>
+                    <td><label for="name" class="form-label">@Model.com_bank_name</label></td>
+                </tr>
+                <tr>
+                    <th><label for="name" class="form-label fw-bold">@Localizer["Branch Name"]</label></th>
+                    <td><label for="name" class="form-label">@Model.com_branch</label></td>
+                </tr>
+                <tr>
+                    <th><label for="name" class="form-label fw-bold">@Localizer["Account Number"]</label></th>
+                    <td><label for="name" class="form-label">@Model.com_acc_no</label></td>
+                </tr>
+                <tr>
+                    <th><label for="name" class="form-label fw-bold">@Localizer["Bank Branch IFSC"]</label></th>
+                    <td><label for="name" class="form-label">@Model.com_ifsc</label></td>
+                </tr>
+                <tr>
+                    <th><label for="name" class="form-label fw-bold">@Localizer["UPI Number"]</label></th>
+                    <td><label for="name" class="form-label"></label></td>
+                </tr>
+                    </tbody>
+                </table>              
+     </div>
+</div>
+
+ <script>
+        $("#editLabel").on("click", function() {
+            $("#logoRow").toggle();
+        });
+
+        $("#editLabel1").on("click", function () {
+        $("#logoRow1").toggle();
+       });
+ </script>
+

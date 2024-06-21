@@ -1,0 +1,9 @@
+System.ArgumentException: ORA-50008: 'Server' is an invalid connection string attribute
+   at OracleInternal.ConnectionPool.ConnectionString.SetProperty(String key, String value, String quotedValue, String originalKey, OracleOpaqueString opaquePassw, OracleOpaqueString token)
+   at OracleInternal.ConnectionPool.ConnectionString.Parse(OracleConnection con, String constr)
+   at OracleInternal.ConnectionPool.ConnectionString..ctor(OracleConnection con, String constring, OracleCredential credential, OracleAccessToken accessToken, Boolean bIncludeOsUser)
+   at OracleInternal.ConnectionPool.ConnectionString.GetCS(OracleConnection con, String userProvidedConStr, OracleCredential credential, OracleAccessToken accessToken, Boolean bCreateIfNotinCache, Boolean bIncludeOsUser)
+   at Oracle.ManagedDataAccess.Client.OracleConnectionInternal.set_ConnectionString(String value)
+   at Oracle.ManagedDataAccess.Client.OracleConnection.set_ConnectionString(String value)
+   at Oracle.ManagedDataAccess.Client.OracleConnection..ctor(String connectionString)
+   at DashboardService.UploadCSData.<GetValues>d__2.MoveNext() in C:\Users\admin\source\repos\SBIGFL_Dashboard\DashboardService\UploadCSData.cs:line 34 Error Time 15-05-2024 09:20:00

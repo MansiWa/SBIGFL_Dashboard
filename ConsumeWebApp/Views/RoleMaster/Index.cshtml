@@ -1,0 +1,196 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization;
+@using Microsoft.Extensions.Localization
+@inject IViewLocalizer Localizer;
+@model IEnumerable<PrintSoftWeb.Models.RoleMasterModel>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <script src="~/jsfiles/rolemaster/rolemaster.js"></script>
+</head>
+<div class="card shadow mb-4">
+ 
+    <div class="card-header py-3">
+        <div class="row align-items-center">
+            <div class="col">
+                <h4 class="m-0 font-weight-bold text-primary">@Localizer["Role Master"]</h4>
+            </div>
+            <div class="col-md-2 justify-content-lg-end justify-content-md-end justify-content-center mt-lg-0 mt-md-0 mt-3">
+
+                <input type="text" id="custom-search" class="form-control" placeholder="Search" />
+            </div>
+            <div class="col-auto d-flex flex-wrap toggle">
+                <div class="form-check form-switch mt-lg-1 mt-md-1 mt-3 ml-2 ">
+
+                    <input class="form-check-input" type="checkbox" id="toggleStatus" checked onclick="performAction()">
+                    <label class="form-check-label" for="toggleStatus" data-on="On" data-off="Off"></label>
+                </div>
+                
+                <button class="btn btn-md text-light bg-primary mt-3 mt-lg-0 mt-md-0 ml-2"
+                        type="button" title="Add Role"
+                        data-bs-toggle="modal"
+                        data-bs-target="#addSubscriptionmodel" onclick="return AddRole()">
+                    <i class="fa fa-plus"></i>
+                </button>
+                <button class="btn btn-md text-light bg-success mt-3 mt-lg-0 mt-md-0 ml-2"
+                        type="button"
+                        data-bs-toggle="modal" onclick="return Excel()" title="Excel"
+                        data-bs-target="#addSubscription">
+                    <i class="fas fa-file-excel"></i>
+                </button>
+                <button class="btn btn-md text-light bg-danger mt-3 mt-lg-0 mt-md-0 ml-2"
+                        type="button"
+                        data-bs-toggle="modal" onclick="return Pdf()" title="Pdf"
+                        data-bs-target="#addSubscription">
+                    <i class="fas fa-file-pdf"></i>
+                </button>
+            </div>
+             
+        </div>
+    </div>
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable1" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th width="6%"> @Localizer["Sr.No"]</th>
+                        <th style="display:none">
+                            @Localizer[@Html.DisplayNameFor(model => model.r_id)]
+                        </th>
+                        <th style="display:none">
+                            @Localizer[@Html.DisplayNameFor(model => model.a_id)]
+                        </th>
+                        <th>@Localizer[Html.DisplayNameFor(model => model.r_rolename)]</th>
+                        <th>@Localizer[Html.DisplayNameFor(model => model.r_description)]</th>
+                        <th>@Localizer[Html.DisplayNameFor(model => model.r_module)]</th>
+                        <th>@Localizer[Html.DisplayNameFor(model => model.m_menuname)]</th>
+                        <th width="7%" class="no-filter"> @Localizer[@Html.DisplayNameFor(model => model.r_isactive)] </th>
+                        <th width="7%" class="no-filter">@Localizer["Action"]</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int itemNumber = 1;
+                    }
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @itemNumber
+                            </td>
+
+                            <td style="display:none">
+                                @Html.DisplayFor(modelItem => item.r_id)
+                            </td>
+                            <td style="display:none">
+                                @Html.DisplayFor(modelItem => item.a_id)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.r_rolename)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.r_description)
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.r_module)
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.m_menuname)
+                            </td>
+                            <td>
+                                @* @Html.DisplayFor(modelItem => item.co_isactive)*@
+                                <div class="form-check form-switch ml-auto active-toggle">
+                                    @if (item.r_isactive == "Active")
+                                    {
+                                        <input class="form-check-input ml-auto" type="checkbox" id="toggleSwitch" checked onclick="ToggleSwitchCon('@item.r_id','@item.r_rolename','@item.r_description','@item.r_module','0')">
+                                        <label class="form-check-label" for="toggleSwitch" data-on="On" data-off="Off"></label>
+                                    }
+                                    else
+                                    {
+                                        <input class="form-check-input ml-auto" type="checkbox" id="toggleSwitch" onclick="ToggleSwitchCon('@item.r_id','@item.r_rolename','@item.r_description','@item.r_module','1')">
+                                        <label class="form-check-label" for="toggleSwitch" data-on="On" data-off="Off"></label>
+                                    }
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-inline-flex">
+
+                                    <a asp-action="Edit" asp-controller="RoleMaster" asp-route-r_id="@item.r_id" asp-route-r_rolename="@item.r_rolename" asp-route-r_description="@item.r_description" asp-route-r_module="@item.r_module" asp-route-r_isactive="@item.r_isactive" class='editicon text-primary' title="Edit"> <span class='fas fa-edit'></span></a>
+                                    @* <a class='editicon text-primary' title="Edit" onclick="editLinkClick('@item.r_id','@item.r_rolename','@item.r_description','@item.r_module','@item.r_isactive')"> <span class='fas fa-edit'></span></a> *@
+                                    <a href="@Url.Action("Delete", new { r_id = @item.r_id })" onclick="return confirm('Are you sure you want to delete?')" class='deleteicon text-danger' title="Delete"> <span class='fa fa-trash ml-2'></span></a>
+
+                                </div>
+                            </td>
+                        </tr>
+                        itemNumber++;
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-lg-5 col-md-5 col-12 ">
+                <div class="row ">
+                    <div class="col-lg-3 col-md-3 col-12 d-flex justify-content-lg-start justify-content-md-start justify-content-center ">
+                        <h6 class="mt-2"> @Localizer["Show"]</h6>&nbsp;&nbsp;
+                        <select name="table_id_length" id="table_length_select" aria-controls="table_id" class="form-select w-auto">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                        &nbsp;&nbsp;
+                        <h6 class="mt-2"> @Localizer["entries"]</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2"></div>
+            <div class="col-lg-5 col-md-5 col-12 mt-lg-0 mt-md-0 mt-3">
+                <nav aria-label="Page navigation example">
+                    <div id="table_id_length">
+
+                        <div id="custom-pagination" class=" d-flex text-center text-lg-end justify-content-end  text-end float-end">
+                            <ul class="pagination justify-content-lg-end justify-content-md-end justify-content-center">
+
+
+                                <li class="page-item disabled">
+                                    <button class="page-link" href="#" aria-label="Previous" data-page="0"> <span aria-hidden="true">&laquo;</span></button>
+                                </li>
+                                <li class="page-item active"><button class="page-link" href="#" data-page="1">1</button></li>
+
+                                <li class="page-item "><button class="page-link" href="#" data-page="2" aria-label="Next">  <span aria-hidden="true">&raquo;</span></button></li>
+
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    $(document).ready(function () {
+        
+        const urlParams = new URLSearchParams(window.location.search);
+
+        const status = urlParams.get('status');
+        if (status === '0') {
+
+            $('#toggleStatus').prop('checked', false);
+        }
+
+
+    });
+
+    myFunction();
+    $('#table_length_select').change();
+
+</script>
+
+

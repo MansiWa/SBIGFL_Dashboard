@@ -1,0 +1,134 @@
+﻿@model IEnumerable<PrintSoftWeb.Models.AssetsLiabilities>
+<head>
+    <link href="~/css/style.bundle.css" rel="stylesheet" />
+    <script src="~/js/chart.roundedbarcharts.js"></script>
+    <script src="~/js/chart.js"></script>
+    @* <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-3d"></script> *@
+    <link href="~/css/main.css" rel="stylesheet" />
+    <link href="~/css/util.css" rel="stylesheet" />
+    <script src="~/js/custom.js"></script>
+
+</head>
+<body>
+<div id="kt_header" class="header" data-kt-sticky="true" data-kt-sticky-name="header" data-kt-sticky-offset="{default: '200px', lg: '300px'}">
+    <!--begin::Container-->
+    <div class="container-fluid d-flex align-items-center justify-content-between" id="kt_header_container">
+        <!--begin::Page title-->
+        <div class="page-title d-flex flex-column align-items-start justify-content-center flex-wrap me-lg-auto pb-5 pb-lg-0" data-kt-swapper="true" data-kt-swapper-mode="prepend" data-kt-swapper-parent="{default: '#kt_content_container', lg: '#kt_header_container'}">
+            <!--begin::Heading-->
+                <h1 class="text-black fw-bold my-0 fs-2 text-start">Assets And Liabilities </h1>
+            <!--end::Heading-->
+        </div>
+
+    </div>
+</div>
+    <div class="col-md-12 mt-3">
+
+        <div class="card mycard bcolor ">
+            <div class="card-body d-flex p-4">
+
+                <!--begin::Nav-->
+                <ul class="nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent listdesign fw-bold">
+                    <!--begin::Nav item-->
+                    @* <li class="nav-item">
+                    <a class="nav-link nav-link3 text-active-primary p-5 active" id="NavOverview" onclick="move('Overview')">Overview</a>
+                    </li> *@
+                    <!--end::Nav item-->
+                    <!--begin::Nav item-->
+                    <li class="nav-item">
+                        <a class="nav-link nav-link3 text-active-primary active p-5 " id="NavAssets" onclick="move('Assets')">Assets & Liabilities</a>
+                    </li>
+                    <!--end::Nav item-->
+
+
+                </ul>
+                <!--end::Nav-->
+                <form asp-controller="AssetsDash" asp-action="Index" method="get">
+                <div class=" d-flex align-items-center " style="position:absolute;top:16px;right:16px;">
+
+                        <input type="date" class="form-control" id="date" name="date">
+
+
+                <button class="btn btn-md text-white bg-success mt-3 mt-lg-0 mt-md-0 ml-2" title="Search"><i class="fa fa-search" aria-hidden="true"></i></button>
+                </div>
+                </form> 
+
+            </div>
+        </div>
+        <div class="Add3 row3 pt-10 pr-5 allcontainer" id="Assets">
+            <!--begin::Col-->
+            <div class="col-lg-12  d-flex justify-content-end align-items-center" style="position: absolute;right: 20px;top: 88px;">
+
+                <div class="col-auto">
+                    <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                        Amount in Cr.
+                    </a>
+
+                </div>
+
+            </div>
+            <div class="table100 ver6 m-b-110">
+                <table data-vertable="ver6">
+                    <thead class="text-align-center">
+                        <tr class="row100 head">
+                            @{
+                                if (Model != null && Model.Any())
+                                {
+                                    var firstItem = Model.First();
+                                <tr class="row100 head">
+                                    <td class="column100 column1" data-column="column1">Sr No</td>
+                                    <td class="column100 column2 tal" data-column="column2">@firstItem.al_particulars</td>
+                                    <td class="column100 column3" data-column="column3">@firstItem.al_col1</td>
+                                    <td class="column100 column4" data-column="column4">@firstItem.al_col2</td>
+                                    <td class="column100 column5" data-column="column5">@firstItem.al_col3</td>
+                                    <td class="column100 column6" data-column="column6">@firstItem.al_col4</td>
+                                </tr>
+                                }
+                            }
+                    </thead>
+                    <tbody>
+                        @{
+                            int no6 = 1; // Start from 2 since 1 is already used for the first row
+
+                            if (Model != null)
+                            {
+                                var remainingItems = Model.Skip(1); // Skip the first item
+                                foreach (var item in remainingItems)
+                                {
+                                    <tr class="row100">
+                                        <td class="column100 column1" data-column="column1">@no6</td>
+                                        <td class="column100 column2 tal" data-column="column2">@item.al_particulars</td>
+                                        <td class="column100 column3" data-column="column3">@item.al_col1</td>
+                                        <td class="column100 column4" data-column="column4">@item.al_col2</td>
+                                        <td class="column100 column5" data-column="column5">@item.al_col3</td>
+                                        <td class="column100 column6" data-column="column6">@item.al_col4</td>
+                                    </tr>
+                                    no6++;
+                                }
+                            }
+                        }
+                        <!-- Repeat the above row structure for other data entries -->
+                    </tbody>
+                </table>
+            </div>    <!--end::Col-->
+        </div>
+    </div>
+</body>
+<script>
+    $(document).ready(function () {
+
+
+    });
+
+    function move(id) {
+        $('.row3').hide();
+        document.getElementById(id).style.display = 'block';
+        $('.nav-link3').removeClass('active');
+        $('#Add3').hide();
+        $('#Nav' + id).addClass('active');
+
+        if (id == 'Overview') {
+            window.location.reload();
+        }
+    }
+</script>

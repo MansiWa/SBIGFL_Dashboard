@@ -1,0 +1,302 @@
+﻿@model IEnumerable<PrintSoftWeb.Models.Highlights>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Highlights";
+}
+<head>
+    <script src="~/jsfiles/commonjs/commonjs.js"></script>
+
+    <link href="~/css/main.css" rel="stylesheet" />
+    <style type="text/css">
+        .table100 {
+            border: 0px !important;
+        }
+    </style>
+</head>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <div class="row">
+            <div class="col-lg-6">
+                <h4 class="m-0 font-weight-bold text-primary"> Highlights </h4>
+            </div>
+
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row d-flex justify-content-end align-items-center">
+            <div class="col-lg-3 ">
+                <div class="row mt-3 mt-lg-0 mt-md-3 d-flex justify-content-end align-items-center">
+                    <div class="col-lg-3 pr-0">
+                        <label for="name" class="form-label fw-bold"> Date : </label>
+                    </div>
+                    <div class="col-lg-9 pl-0 d-flex">
+                        <input type="date" class="form-control" id="h_date" name="name">
+                    </div>
+                </div>
+            </div>
+            <div class="col-auto d-flex flex-wrap toggle">
+                <button class="btn btn-md text-light bg-danger mt-3 mt-lg-0 mt-md-0 ml-2" type="button" title="Search" onclick="return searchbtn()">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </button>
+                <button class="btn btn-md text-light bg-primary mt-3 mt-lg-0 mt-md-0 ml-2" type="button" onclick="addmodel()">
+                    <i class="fa fa-angle-up"></i>
+                </button>
+                <button class="btn btn-md text-light bg-success mt-3 mt-lg-0 mt-md-0 ml-2" type="button" title="Excel" onclick="Excel()">
+                    <i class="fa fa-angle-down"></i>
+                </button>
+
+
+            </div>
+        </div>
+        <div class="table100 ver2 m-b-110 mt-3">
+
+            <table class="table table-bordered" id="dataTable1" width="100%" cellspacing="0" data-vertable="ver2">
+                <thead>
+                    <tr class="row100 head">
+                        <th> <label>Particulars</label> </th>
+                        <th class="d-none"></th>
+
+                        <th> <label id="h_col1"></label> </th>
+                        <th>F.Y.<label id="h_col2"></label> </th>
+                        <th> <label id="h_col3"></label> </th>
+                        <th> <label id="h_col4"></label> </th>
+                        <th> <label>M-O-M Growth (%)</label> </th>
+                        <th> <label>Y-O-Y Growth (%)</label> </th>
+                        <th> <label>Y-T-D Growth (%)</label> </th>
+                    </tr>
+                </thead>
+                <tbody id="htmlrpt" style="  font-size: 16px;  font-weight: bold;">
+                    <tr class="row100">
+                    </tr>
+                    @{
+                        if (Model != null)
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr class="row100">
+                                    <td>@Html.DisplayFor(modelItem => item.h_particulars)</td>
+                                    <td> @Html.DisplayFor(modelItem => item.h_col1)</td>
+                                    <td> @Html.DisplayFor(modelItem => item.h_col2)</td>
+                                    <td> @Html.DisplayFor(modelItem => item.h_col3)</td>
+                                    <td> @Html.DisplayFor(modelItem => item.h_col4)</td>
+                                    <td> @Html.DisplayFor(modelItem => item.h_mom)</td>
+                                    <td> @Html.DisplayFor(modelItem => item.h_yoy)</td>
+                                    <td> @Html.DisplayFor(modelItem => item.h_ytd)</td>
+
+                                </tr>
+
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-dark" id="exampleModalLabel">File Upload</h5>
+                    <button type="button" class="btn-close bg-primary text-white" data-bs-dismiss="modal" aria-label="Close" onclick="CancelData()"></button>
+                </div>
+
+                <form asp-controller="Highlights" asp-action="Upload" method="post" enctype="multipart/form-data">
+
+                    <input type="hidden" id="date" name="date" />
+                    <input type="hidden" id="month" name="month" />
+
+                    <div class="modal-body text-dark">
+                        <div class="form-group" style="display:none">
+                            <label class="control-label">Id</label>
+                            <input id="cc_id" class="form-control" />
+                            <span class="text-danger"></span>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6 col-sm-6 col-md-12 ">
+                                <label class="control-label fw-bold">Select File <span class="text-danger">*</span></label>
+                                <div class="form-group form-group-sm">
+                                    <input id="f_upload" class="form-control" type="file" name="postedFile" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button title="Save" type="submit" id="btnsubmit" value="Create" class="btn btn-primary" onclick="">Submit</button>
+                            <button type="button" title="Close" class="btn btn-danger" data-dismiss="modal" onclick="">Cancel</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var date = new Date();
+        //var firstDayOfCurrentMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+        //var lastDayOfPreviousMonth = new Date(firstDayOfCurrentMonth).setDate(0);
+        ////lastDayOfPreviousMonth.setDate(0);
+        //var formattedDate = lastDayOfPreviousMonth.toISOString().split('T')[0];
+
+
+
+        var currentDate = new Date(date.getFullYear(), date.getMonth(), 1);
+        var previousMonth = new Date(currentDate);
+        previousMonth.setMonth(previousMonth.getMonth() - 1);
+        var lastDayOfPreviousMonth = new Date(previousMonth.getFullYear(), previousMonth.getMonth() + 1, 0);
+
+        // Format the last day of the previous month as 'yyyy-mm-dd'
+        var formattedDate = lastDayOfPreviousMonth.getFullYear() + '-' + ('0' + (lastDayOfPreviousMonth.getMonth() + 1)).slice(-2) + '-' + ('0' + lastDayOfPreviousMonth.getDate()).slice(-2);
+
+
+
+
+        $('#h_date').val(formattedDate);
+        //searchbtn();
+        var h_date = $('#h_date').val();
+        const d = new Date(h_date);
+
+
+        //var currmonth = d.getMonth();
+
+        var year = d.getFullYear();
+        d.setFullYear(d.getFullYear() - 1);
+        var previousYear = d.getFullYear();
+        var prepreYear = previousYear - 1;
+        var currmonth = d.toLocaleString('default', { month: 'long' });
+        var currMonth = d.getMonth();
+        var prevMonth = currMonth === 0 ? 11 : currMonth - 1;
+        d.setMonth(prevMonth, 1);
+        var prevMonthName = d.toLocaleString('default', { month: 'long' });
+        var month = d.getMonth();
+        if (month == "0") month = "10";
+        else if (month == "1") month = "11";
+        else if (month == "2") month = "12";
+        else if (month == "3") month = "1";
+        else if (month == "4") month = "2";
+        else if (month == "5") month = "3";
+        else if (month == "6") month = "4";
+        else if (month == "7") month = "5";
+        else if (month == "8") month = "6";
+        else if (month == "9") month = "7";
+        else if (month == "10") month = "8";
+        else if (month == "11") month = "9";
+
+
+        $('#h_col2').text(prepreYear + ' - ' + previousYear);
+        $('#h_col1').text('April -' + prepreYear + ' to ' + currmonth + ' - ' + previousYear);
+        $('#h_col3').text('April -' + previousYear + ' to ' + prevMonthName + ' - ' + previousYear);
+        $('#h_col4').text('April -' + previousYear + ' to ' + currmonth + ' - ' + year);
+    });
+
+    function addmodel() {
+        var date = $('#h_date').val();
+        if (date == '') {
+            alert("Please select date!");
+            return false;
+        }
+        const d = new Date(date);
+        var month = d.getMonth();
+        if (month == "0") month = "10";
+        else if (month == "1") month = "11";
+        else if (month == "2") month = "12";
+        else if (month == "3") month = "1";
+        else if (month == "4") month = "2";
+        else if (month == "5") month = "3";
+        else if (month == "6") month = "4";
+        else if (month == "7") month = "5";
+        else if (month == "8") month = "6";
+        else if (month == "9") month = "7";
+        else if (month == "10") month = "8";
+        else if (month == "11") month = "9";
+        $("#createModal").modal("show");
+        $('#date').val($('#h_date').val());
+        $('#month').val(month);
+
+    }
+    function searchbtn() {
+
+        var h_date = $('#h_date').val();
+        if (h_date == '') {
+            alert("Please select date!");
+            return false;
+        }
+        const d = new Date(h_date);
+        //var currmonth = d.getMonth();
+
+        var year = d.getFullYear();
+        d.setFullYear(d.getFullYear() - 1);
+        var previousYear = d.getFullYear();
+        var prepreYear = previousYear - 1;
+        var currmonth = d.toLocaleString('default', { month: 'long' });
+        var currMonth = d.getMonth();
+        var prevMonth = currMonth === 0 ? 11 : currMonth - 1;
+        d.setMonth(prevMonth, 1);
+        var prevMonthName = d.toLocaleString('default', { month: 'long' });
+        var month = d.getMonth();
+        if (month == "0") month = "10";
+        else if (month == "1") month = "11";
+        else if (month == "2") month = "12";
+        else if (month == "3") month = "1";
+        else if (month == "4") month = "2";
+        else if (month == "5") month = "3";
+        else if (month == "6") month = "4";
+        else if (month == "7") month = "5";
+        else if (month == "8") month = "6";
+        else if (month == "9") month = "7";
+        else if (month == "10") month = "8";
+        else if (month == "11") month = "9";
+
+
+        $('#h_col2').text(prepreYear + ' - ' + previousYear);
+        $('#h_col1').text('April -' + prepreYear + ' to ' + currmonth + ' - ' + previousYear);
+        $('#h_col3').text('April -' + previousYear + ' to ' + prevMonthName + ' - ' + previousYear);
+        $('#h_col4').text('April -' + previousYear + ' to ' + currmonth + ' - ' + year);
+
+        var data = {
+            h_date: $('#h_date').val(),
+            month: month,
+        };
+        // window.location.href = '/Highlights/Index?h_date=' + h_date;
+        $.ajax({
+            type: 'POST',
+            url: "Highlights/Search?h_date=" + h_date, // Use the form's action attribute
+            data: data, // Serialize the form data
+            success: function (response) {
+                var htmlrpt = '';
+                $('#htmlrpt').html(htmlrpt);
+                for (var i = 0; i < response.length; i++) {
+
+                    htmlrpt += '<tr><td><b>' + response[i].h_particulars + '</b></td><td>' + response[i].h_col1 + '</td><td>' + response[i].h_col2 + '</td><td>' + response[i].h_col3 + '</td><td>' + response[i].h_col4 + '</td><td>' + response[i].h_mom + '</span ></td><td>' + response[i].h_yoy + '</td><td>' + response[i].h_ytd + '</td></tr>';
+                }
+                $('#htmlrpt').html(htmlrpt);
+            },
+            error: function (xhr, status, error) {
+            }
+        });
+    }
+    function getmonth(date) {
+
+        const d = new Date(date);
+        var month = d.getMonth();
+        if (month == "0") month = "10";
+        else if (month == "1") month = "11";
+        else if (month == "2") month = "12";
+        else if (month == "3") month = "1";
+        else if (month == "4") month = "2";
+        else if (month == "5") month = "3";
+        else if (month == "6") month = "4";
+        else if (month == "7") month = "5";
+        else if (month == "8") month = "6";
+        else if (month == "9") month = "7";
+        else if (month == "10") month = "8";
+        else if (month == "11") month = "9";
+
+    }
+    function Excel() {
+        window.location.href = 'Highlights/Excel';
+    }
+</script>

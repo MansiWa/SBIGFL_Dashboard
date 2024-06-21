@@ -1,0 +1,311 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization;
+@using Microsoft.Extensions.Localization
+@inject IViewLocalizer Localizer;
+@model IEnumerable<PrintSoftWeb.Models.TBillModel>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "T-Bill Cut Off";
+}
+<head>
+    <link href="~/css/main.css" rel="stylesheet" />
+    <style type="text/css">
+        .table100 {
+            border: 0px !important;
+        }
+    </style>
+</head>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <div class="row">
+            <div class="col-lg-6">
+                <h4 class="m-0 font-weight-bold text-primary">@Localizer["T-Bill Cut Off rate"]</h4>
+            </div>
+
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-lg-10">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label for="name" class="form-label float-lg-end">@Localizer["Date"]:<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control d-none" id="tbr_id" name="name">
+
+                        <input type="date" class="form-control" id="tbr_date" name="name">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2">
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-lg-10">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label for="name" class="form-label float-lg-end">@Localizer["30 Days"]:<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control" maxlength="100" id="tbr_30_days" onkeydown="return DecimalNumber(event)" placeholder="@Localizer["Enter Rate"]" name="name">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2">
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-lg-10">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label for="name" class="form-label float-lg-end">@Localizer["60 Days"]:<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <input type="text" maxlength="100" class="form-control" id="tbr_60_days" onkeydown="return DecimalNumber(event)" placeholder="@Localizer["Enter Rate"]" name="name">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2">
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-lg-10">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label for="name" class="form-label float-lg-end">@Localizer["90 Days"]:<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <input type="text" maxlength="100" class="form-control" id="tbr_90_days" onkeydown="return DecimalNumber(event)" placeholder="@Localizer["Enter Rate"]" name="name">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2">
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-lg-10">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label for="name" class="form-label float-lg-end">@Localizer["182 days"]:<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <input type="text" maxlength="100" class="form-control" id="tbr_182_days" onkeydown="return DecimalNumber(event)" placeholder="@Localizer["Enter Rate"]" name="name">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2">
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-lg-10">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label for="name" class="form-label float-lg-end">@Localizer["364 days"]:</label>
+                    </div>
+                    <div class="col-lg-8">
+                        <input type="text" maxlength="100" class="form-control" id="tbr_364_days" onkeydown="return DecimalNumber(event)" placeholder="@Localizer["Enter Rate"]" name="name">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2">
+            </div>
+        </div>
+
+    </div>
+    <div class="card-footer">
+        <div class="row">
+            <div class="col-lg-10">
+                <div class="row">
+                    <div class="col-lg-4">
+                    </div>
+                    <div class="col-lg-8">
+                        <button class="btn btn-success" onclick="submitrating()" type="button">@Localizer["Save"]</button>
+                        <button class="btn btn-secondary ml-2" onclick="clearrating()" type="button">@Localizer["Clear"]</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2">
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="card shadow mb-4">
+    <!--Start Header -->
+    <div class="card-header py-3">
+        <div class="row align-items-center justify-content-end">
+            <div class="col-auto d-flex flex-wrap toggle">
+                <div class="justify-content-lg-end justify-content-md-end justify-content-center mt-lg-0 mt-md-0 mt-3">
+                    <input type="text" id="custom-search" class="form-control" placeholder=@Localizer["Search"] />
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+
+        <div class="table100 ver2 m-b-110">
+
+            <table class="table table-bordered" id="dataTable1" width="100%" cellspacing="0" data-vertable="ver2">
+                <thead>
+                    <tr class="row100 head">
+                        <th>Sr.No.</th>
+                        <th class="d-none"></th>
+                        <th>Date</th>
+                        <th>30 Days</th>
+                        <th>60 Days</th>
+                        <th>90 Days</th>
+                        <th>182 Days</th>
+                        <th>364 Days</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @{
+
+
+                        int no = 1;
+                    }
+                    @foreach (var item in Model)
+                    {
+
+                        <tr class="align-items-center row100">
+                            <td>
+                                @no
+                            </td>
+                            <td class="d-none"></td>
+                            <td>@String.Format("{0:dd/MM/yyyy}", item.tbr_date)</td>
+                            <td> @Html.DisplayFor(modelItem => item.tbr_30_days)</td>
+                            <td> @Html.DisplayFor(modelItem => item.tbr_60_days)</td>
+                            <td> @Html.DisplayFor(modelItem => item.tbr_90_days)</td>
+                            <td> @Html.DisplayFor(modelItem => item.tbr_182_days)</td>
+                            <td> @Html.DisplayFor(modelItem => item.tbr_364_days)</td>
+                            <td>
+                                <div class="d-inline-flex">
+                                    <a class='editicon text-primary' title="Edit" onclick="editLinkClick('@item.tbr_id','@item.tbr_date','@item.tbr_30_days','@item.tbr_60_days','@item.tbr_90_days','@item.tbr_182_days','@item.tbr_364_days')"> <span class='fas fa-edit'></span></a>
+                                    <a href="@Url.Action("Delete", new { tbr_id = @item.tbr_id })" onclick="return confirm('Are you sure you want to delete?')" class='deleteicon text-danger' title="Delete"> <span class='fa fa-trash ml-2'></span></a>
+                                </div>
+                            </td>
+                        </tr>
+                        no++;
+
+                    }
+                </tbody>
+            </table>
+        </div>
+        <!-- start Pagination-->
+        <div class="row mt-3">
+            <div class="col-lg-5 col-md-5 col-12 ">
+                <div class="row ">
+                    <div class="col-lg-3 col-md-3 col-12 d-flex justify-content-lg-start justify-content-md-start justify-content-center ">
+                        <h6 class="mt-2">@Localizer["Show"]</h6>&nbsp;&nbsp;
+                        <select name="table_id_length" id="table_length_select" aria-controls="table_id" class="form-select w-auto">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                        &nbsp;&nbsp;
+                        <h6 class="mt-2">@Localizer["entries"]</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2"></div>
+            <div class="col-lg-5 col-md-5 col-12 mt-lg-0 mt-md-0 mt-3">
+                <nav aria-label="Page navigation example">
+                    <div id="table_id_length">
+
+                        <div id="custom-pagination" class=" d-flex text-center text-lg-end justify-content-end  text-end float-end">
+                            <ul class="pagination justify-content-lg-end justify-content-md-end justify-content-center">
+                                <li class="page-item disabled">
+                                    <button class="page-link" href="#" aria-label="Previous" data-page="0"> <span aria-hidden="true">&laquo;</span></button>
+                                </li>
+                                <li class="page-item active"><button class="page-link" href="#" data-page="1">1</button></li>
+
+                                <li class="page-item "><button class="page-link" href="#" data-page="2" aria-label="Next">  <span aria-hidden="true">&raquo;</span></button></li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function editLinkClick(tbr_id, tbr_date, tbr_30_days, tbr_60_days, tbr_90_days, tbr_182_days, tbr_364_days) {
+
+
+        //$("#createModal").modal("show");
+        $("#tbr_id").val(tbr_id);
+        $("#tbr_30_days").val(tbr_30_days);
+        $("#tbr_60_days").val(tbr_60_days);
+        $("#tbr_90_days").val(tbr_90_days);
+        $("#tbr_182_days").val(tbr_182_days);
+        $("#tbr_364_days").val(tbr_364_days);
+        var dateParts = tbr_date.split(' ')[0].split('/');
+        var year = dateParts[2];
+        var month = ('0' + dateParts[0]).slice(-2); // Add leading zero if necessary
+        var day = ('0' + dateParts[1]).slice(-2); // Add leading zero if necessary
+        var formatted_date = year + '-' + month + '-' + day;
+        $("#tbr_date").val(formatted_date);
+    }
+    function clearrating() {
+        $("#tbr_id").val("");
+        $("#tbr_date").val("");
+        $("#tbr_30_days").val("");
+        $("#tbr_60_days").val("");
+        $("#tbr_90_days").val("");
+        $("#tbr_182_days").val("");
+        $("#tbr_364_days").val("");
+    }
+    function submitrating() {
+        if ($("#tbr_date").val() == "") {
+            alert("Please select date!");
+            return false;
+        } else if ($("#tbr_30_days").val() == "") {
+            alert("Please Enter 30 days Value!");
+            return false;
+        } else if ($("#tbr_60_days").val() == "") {
+            alert("Please Enter 60 days Value!");
+            return false;
+        }else if ($("#tbr_90_days").val() == "") {
+            alert("Please Enter 90 days Value!");
+            return false;
+        }else if ($("#tbr_182_days").val() == "") {
+            alert("Please Enter 182 days Value!");
+            return false;
+        }
+        var data = {
+            tbr_id:$("#tbr_id").val(),
+            tbr_date: $("#tbr_date").val(),
+            tbr_30_days: appendPercentage($("#tbr_30_days").val()),
+            tbr_60_days: appendPercentage($("#tbr_60_days").val()),
+            tbr_90_days: appendPercentage($("#tbr_90_days").val()),
+            tbr_182_days: appendPercentage($("#tbr_182_days").val()),
+            tbr_364_days: appendPercentage($("#tbr_364_days").val())
+        };
+        $.ajax({
+            type: 'POST',
+            url: "TBillRate/Create", // Use the form's action attribute
+            data: data, // Serialize the form data
+            success: function (response) {
+                window.location.reload();
+            },
+            error: function (xhr, status, error) {
+                window.location.reload();
+            }
+        });
+    }
+    function appendPercentage(value) {
+        // Check if the value already contains a '%' sign
+        if (value && value.indexOf('%') === -1) {
+            return value + '%'; // Append '%' sign if not present
+        }
+        return value; // Return the original value if '%' sign is already present
+    }
+    myFunction();
+    $('#table_length_select').change();
+</script>
+

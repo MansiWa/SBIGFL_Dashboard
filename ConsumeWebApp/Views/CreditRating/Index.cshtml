@@ -1,0 +1,268 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization;
+@using Microsoft.Extensions.Localization
+@inject IViewLocalizer Localizer;
+@model IEnumerable<PrintSoftWeb.Models.CreditRatingModel>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Credit Rating";
+}
+<head>
+    <link href="~/css/main.css" rel="stylesheet" />
+    <style type="text/css">
+        .table100 {
+            border: 0px !important;
+        }
+    </style>
+</head>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <div class="row">
+            <div class="col-lg-6">
+                <h4 class="m-0 font-weight-bold text-primary">@Localizer["Credit Rating"]</h4>
+            </div>
+
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-lg-10">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label for="name" class="form-label float-lg-end">@Localizer["Company Name"]:<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control" maxlength="100" id="cr_companyname" placeholder="@Localizer["Enter Company Name"]" name="name">
+                        <input type="text" class="form-control d-none" maxlength="100" id="cr_id" name="name">
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2">
+            </div>
+        </div><div class="row mt-4">
+            <div class="col-lg-10">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label for="name" class="form-label float-lg-end">@Localizer["Rationale date"]:<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <input type="date" class="form-control" id="cr_date" placeholder="@Localizer["Select Date"]">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2">
+            </div>
+        </div><div class="row mt-4">
+            <div class="col-lg-10">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label for="name" class="form-label float-lg-end">@Localizer["Long Term Rating"]:<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control" maxlength="100" id="cr_ltr" placeholder="@Localizer["Enter Long Term Rating"]" name="name">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2">
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-lg-10">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label for="name" class="form-label float-lg-end">@Localizer["Short Term Rating"]:<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <input type="text" maxlength="100" class="form-control" id="cr_str" placeholder="@Localizer["Enter Short Term Rating"]" name="name">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2">
+            </div>
+        </div>
+
+    </div>
+    <div class="card-footer">
+        <div class="row">
+            <div class="col-lg-10">
+                <div class="row">
+                    <div class="col-lg-4">
+                    </div>
+                    <div class="col-lg-8">
+                        <button class="btn btn-success" onclick="submitrating()" type="button">@Localizer["Save"]</button>
+                        <button class="btn btn-secondary ml-2" onclick="clearrating()" type="button">@Localizer["Clear"]</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2">
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="card shadow mb-4">
+    <!--Start Header -->
+    <div class="card-header py-3">
+        <div class="row align-items-center justify-content-end">
+            <div class="col-auto d-flex flex-wrap toggle">
+                <div class="justify-content-lg-end justify-content-md-end justify-content-center mt-lg-0 mt-md-0 mt-3">
+                    <input type="text" id="custom-search" class="form-control" placeholder=@Localizer["Search"] />
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+
+        <div class="table100 ver2 m-b-110">
+
+            <table class="table table-bordered" id="dataTable1" width="100%" cellspacing="0" data-vertable="ver2">
+                <thead>
+                    <tr class="row100 head">
+                        <th>Sr.No</th>
+                        <th class="d-none"></th>
+                        <th>Rationale dated</th>
+                        <th>Company Name</th>
+
+                        <th>Long Term Rating</th>
+                        <th>Short Term Rating</th>
+                        <th>Action</th>
+                    </tr>
+
+                </thead>
+                <tbody>
+
+                    @{
+
+
+                        int no = 1;
+                    }
+                    @foreach (var item in Model)
+                    {
+
+                        <tr class="align-items-center row100">
+                            <td>
+                                @no
+                            </td>
+                            <td class="d-none"></td>
+                            <td>@String.Format("{0:dd/MM/yyyy}", item.cr_date)</td>
+                            <td> @Html.DisplayFor(modelItem => item.cr_companyname)</td>
+                            <td> @Html.DisplayFor(modelItem => item.cr_ltr)</td>
+                            <td> @Html.DisplayFor(modelItem => item.cr_str)</td>
+                            <td>
+                                <div class="d-inline-flex">
+                                    <a class='editicon text-primary' title="Edit" onclick="editLinkClick('@item.cr_id','@item.cr_date','@item.cr_companyname','@item.cr_ltr','@item.cr_str')"> <span class='fas fa-edit'></span></a>
+                                    <a href="@Url.Action("Delete", new { cr_id = @item.cr_id })" onclick="return confirm('Are you sure you want to delete?')" class='deleteicon text-danger' title="Delete" > <span class='fa fa-trash ml-2'></span></a>
+                                </div>
+                            </td>
+                        </tr>
+                        no++;
+
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- start Pagination-->
+        <div class="row mt-3">
+            <div class="col-lg-5 col-md-5 col-12 ">
+                <div class="row ">
+                    <div class="col-lg-3 col-md-3 col-12 d-flex justify-content-lg-start justify-content-md-start justify-content-center ">
+                        <h6 class="mt-2">@Localizer["Show"]</h6>&nbsp;&nbsp;
+                        <select name="table_id_length" id="table_length_select" aria-controls="table_id" class="form-select w-auto">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                        &nbsp;&nbsp;
+                        <h6 class="mt-2">@Localizer["entries"]</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2"></div>
+            <div class="col-lg-5 col-md-5 col-12 mt-lg-0 mt-md-0 mt-3">
+                <nav aria-label="Page navigation example">
+                    <div id="table_id_length">
+
+                        <div id="custom-pagination" class=" d-flex text-center text-lg-end justify-content-end  text-end float-end">
+                            <ul class="pagination justify-content-lg-end justify-content-md-end justify-content-center">
+                                <li class="page-item disabled">
+                                    <button class="page-link" href="#" aria-label="Previous" data-page="0"> <span aria-hidden="true">&laquo;</span></button>
+                                </li>
+                                <li class="page-item active"><button class="page-link" href="#" data-page="1">1</button></li>
+
+                                <li class="page-item "><button class="page-link" href="#" data-page="2" aria-label="Next">  <span aria-hidden="true">&raquo;</span></button></li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+
+       
+
+    </div>
+</div>
+<script>
+    function editLinkClick( cr_id, cr_date, cr_companyname, cr_ltr, cr_str) {
+
+
+        //$("#createModal").modal("show");
+        $("#cr_id").val(cr_id);
+        $("#cr_companyname").val(cr_companyname);
+        $("#cr_str").val(cr_str);
+        $("#cr_ltr").val(cr_ltr);
+        var dateParts = cr_date.split(' ')[0].split('/');
+        var year = dateParts[2];
+        var month = ('0' + dateParts[0]).slice(-2); // Add leading zero if necessary
+        var day = ('0' + dateParts[1]).slice(-2); // Add leading zero if necessary
+        var formatted_date = year + '-' + month + '-' + day;
+        $("#cr_date").val(formatted_date);
+    }
+
+    function clearrating() {
+        $("#cr_companyname").val("");
+        $("#cr_str").val("");
+        $("#cr_id").val("");
+        $("#cr_ltr").val("");
+        $("#cr_date").val("");
+    }
+    function submitrating() {
+        if ($("#cr_companyname").val() == "") {
+            alert("Please Enter Company Name!");
+            return false;
+        } else if ($("#cr_createddate").val() == "") {
+            alert("Please Select Date!");
+            return false;
+        } else if ($("#cr_str").val() == "") {
+            alert("Please Enter Short Term Rating!");
+            return false;
+        } else if ($("#cr_ltr").val() == "") {
+            alert("Please Enter Long Term Rating!");
+            return false;
+        }
+        var data = {
+            cr_id: $("#cr_id").val(),
+            cr_companyname: $("#cr_companyname").val(),
+            cr_str: $("#cr_str").val(),
+            cr_ltr: $("#cr_ltr").val(),
+            cr_date: $("#cr_date").val()
+        };
+        $.ajax({
+            type: 'POST',
+            url: "CreditRating/Create", // Use the form's action attribute
+            data: data, // Serialize the form data
+            success: function (response) {
+                window.location.reload();
+            },
+            error: function (xhr, status, error) {
+                window.location.reload();
+            }
+        });
+    }
+    myFunction();
+    $('#table_length_select').change();
+</script>
+

@@ -1,0 +1,1167 @@
+﻿@model PrintSoftWeb.Controllers.MyViewModel
+
+<head>
+    <link href="~/css/style.bundle.css" rel="stylesheet" />
+    
+    <script src="~/js/chart.roundedbarcharts.js"></script>
+    <script src="~/js/chart.js"></script>
+    @* <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-3d"></script> *@
+    <link href="~/css/main.css" rel="stylesheet" />
+    <link href="~/css/util.css" rel="stylesheet" />
+    <script src="~/js/custom.js"></script>
+        <link href="~/css/main.css" rel="stylesheet" />
+        <style type="text/css">
+            .table100 {
+                border: 0px !important;
+            }
+        </style>
+</head>
+@{
+    List<PrintSoftWeb.Models.borrow> menuList = new List<PrintSoftWeb.Models.borrow>();
+    var datemodel = @Model.borrow.First();
+    menuList = @Model.borrow.ToList();
+
+}
+<div id="kt_header" class="header" data-kt-sticky="true" data-kt-sticky-name="header" data-kt-sticky-offset="{default: '200px', lg: '300px'}">
+    <!--begin::Container-->
+    <div class="container-fluid d-flex align-items-center justify-content-between" id="kt_header_container">
+        <!--begin::Page title-->
+        <div class="page-title d-flex flex-column align-items-start justify-content-center flex-wrap me-lg-auto pb-5 pb-lg-0" data-kt-swapper="true" data-kt-swapper-mode="prepend" data-kt-swapper-parent="{default: '#kt_content_container', lg: '#kt_header_container'}">
+            <!--begin::Heading-->
+            <h1 class="text-black fw-bold my-0 fs-2 text-start">Treasury Dashboard </h1>
+            <!--end::Heading-->
+        </div>
+       
+        <!--end::Page title-->
+        <!--begin::Logo
+           <div class="logo ms-auto">
+               <p class="logo-link">
+                   <img src="~/images/sbilogo.png" alt="Logo" style="border-radius:7%" height="65px" width="120px" class="logo-img">
+               </p>
+           </div>
+        end::Logo-->
+    </div>
+    
+</div>
+<div class="col-md-12 mt-3">
+
+<div class="card mycard bcolor1">
+    <div class="card-body p-4" >
+
+        <!--begin::Nav-->
+            <ul class="nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent listdesign fw-bold">
+                <!--begin::Nav item-->
+                @*  <li class="nav-item">
+                <a class="nav-link nav-link2 text-active-primary p-5 active" >Treasury</a>
+                </li> *@
+                <li class="nav-item">
+                    <a class="nav-link nav-link2 text-active-primary p-5" id="NavBorrowing" onclick="move2('Borrowing')">Borrowing</a>
+                </li>
+                <!--end::Nav item-->
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link2 text-active-primary p-5" id="NavRFR" onclick="move2('RFR')">RFR & Credit Rating</a>
+                </li>
+                <!--end::Nav item-->
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link2 text-active-primary p-5" id="NavPrime_Ref_Rate"  onclick="move2('Prime_Ref_Rate')">PRR & COB</a>
+                </li>
+                <!--end::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link2 text-active-primary p-5" id="NavT_Bill"  onclick="move2('T_Bill')">T- Bill cut off</a>
+                </li>
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link2 text-active-primary p-5" id="NavAssets"  onclick="move2('Assets')">Assets And Liabilities</a>
+                </li>
+                <!--end::Nav item-->
+            </ul>
+            <form asp-controller="TreasuryDashboard" asp-action="Find" method="get">
+                <div class=" d-flex align-items-center " style="position:absolute;top:16px;right:16px;">
+
+                    @{
+                        string dateValue = TempData["Date"] as string;
+                        DateTime parsedDate;
+                        if (DateTime.TryParse(dateValue, out parsedDate))
+                        {
+                            <input type="date" class="form-control" id="treDate" name="treDate" value="@parsedDate.ToString("yyyy-MM-dd")">
+                        }
+                        else
+                        {
+                            <input type="date" class="form-control" id="treDate" name="treDate" value="">
+                        }
+                    }
+
+                    <button class="btn btn-md text-white bg-success mt-3 mt-lg-0 mt-md-0 ml-2" title="Search"><i class="fa fa-search" aria-hidden="true"></i></button>
+                </div>
+            </form>
+        </div>
+</div>
+</div>
+<div class="col-md-12  m-3 d-flex flex-column " style="padding-right: 33px;">
+    @* Treasury *@
+    <div class="card mycard bcolor d-none">
+        <div class="card-body pt-9 pb-4" style="padding: 1px 7px 4px 0px;">
+
+            <!--begin::Nav-->
+            <ul class="nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent listdesign fw-bold">
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link2 text-active-primary py-5 active" id="NavOverview2" onclick="move2('Overview2')">Overview</a>
+                </li>
+                <!--end::Nav item-->
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link2 text-active-primary py-5" id="NavBorrowing" onclick="move2('Borrowing')">Borrowing</a>
+                </li>
+                <!--end::Nav item-->
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link2 text-active-primary py-5" id="NavRFR" onclick="move2('RFR')">RFR</a>
+                </li>
+                <!--end::Nav item-->
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link2 text-active-primary py-5" id="NavCredit_Rating" style="width: 64px;" onclick="move2('Credit_Rating')">Credit Rating</a>
+                </li>
+                <!--end::Nav item-->
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link2 text-active-primary py-5" id="NavPrime_Ref_Rate" style="width: 109px;" onclick="move2('Prime_Ref_Rate')">Prime Reference Rate</a>
+                </li>
+                <!--end::Nav item-->
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link2 text-active-primary py-5 " id="NavCOB" style="width: 67px;" onclick="move2('COB')">Cost Of Borrowing</a>
+                </li>
+                <!--end::Nav item-->
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link2 text-active-primary py-5" id="NavT_Bill" style="width: 50px;" onclick="move2('T_Bill')">T- Bill cut off</a>
+                </li>
+                <!--end::Nav item-->
+                 <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link2 text-active-primary py-5" id="NavAssets" style="width: 50px;" onclick="move2('Assets')">Assets And Liabilities</a>
+                </li>
+                <!--end::Nav item-->
+
+            </ul>
+            <!--end::Nav-->
+        </div>
+    </div>
+    <!--end::Navbar-->
+    <!--begin::Row-->
+    @*     <div class="card mycard fw-bold mt-3">
+    *@        <div class="col-md-4 pt-10 pb-10 d-flex justify-content-center card card-flush card-body mycard list-group-horizontal mr-3 h-400 w-400 d-none" id="Overview2">
+        <!--begin::Col-->
+        <!--begin::Wrapper-->
+        <div class="">
+            <!--begin::Chart-->
+            <div class="col-lg-12  d-flex justify-content-end align-items-center">
+                <div class="col-auto">
+                    <div class=" d-flex mt-3 mt-lg-0 mt-md-3">
+                        <div class="col-lg-3 d-flex align-items-center p-0" style="width:20% !important">
+                            <label for="name" class="form-label fw-bold p-0"> Date : </label>
+                        </div>
+                        <div class="col-lg-8 d-flex p-0">
+                            <input type="date" class="form-control" id="date" name="name">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-auto p-0">
+                    <button class="btn btn-md text-white bg-success mt-3 mt-lg-0 mt-md-0 ml-0" type="button" title="Search" onclick="search2()">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                    </button>
+
+                </div>
+
+            </div>
+            <div class="position-relative d-flex pt-5 flex-center mb-1" @* style="padding-top: 84px !important;padding-left: 72px !important;" *@>
+
+                <div class="d-flex flex-wrap flex-center flex-md-column">
+                    <canvas id="myPieChart2" width="400" height="400"></canvas>
+                    <p class="pt-6 cirhead2">Treasury</p>
+                </div>
+                <div class="legend-container d-none">
+                    <ul class="legend-list">
+                        <li class="legend-item"><span class="color-box" style="background-color: #E1A34D;"></span><span>Prime Reference Rate</span></li>
+                        <li class="legend-item"><span class="color-box" style="background-color: #D76A66;"></span><span>Borrowing</span></li>
+                        <li class="legend-item"><span class="color-box" style="background-color: #72B9f0;"></span><span>RFR</span></li>
+                        <li class="legend-item"><span class="color-box" style="background-color: #744FE6;"></span><span>Credit Rating</span></li>
+                        <li class="legend-item"><span class="color-box" style="background-color: #F4D065;"></span><span>COB</span></li>
+                        <li class="legend-item"><span class="color-box" style="background-color: #6fC884;"></span><span>T-Bill</span></li>
+                    </ul>
+
+                </div>
+                <!-- JavaScript code to render the pie chart -->
+                <script>
+                    // Data for the pie chart
+                    const pieChartData2 = [
+                        { label: 'Borrowing', value: 16.5 },
+                        { label: 'RFR', value: 16.5 },
+                        { label: 'Credit Rating', value: 16.5 },
+                        { label: 'Prime Reference Rate', value: 16.5 },
+                        { label: 'COB', value: 16.5 },
+                        { label: 'T Bill', value: 16.5 }
+                    ];
+
+                    // Extract labels and data from the data array
+                    const labels2 = pieChartData2.map(item => item.label);
+                    const data2 = pieChartData2.map(item => item.value);
+
+                    // Render the pie chart using Chart.js library
+                    const ctx2 = document.getElementById('myPieChart2').getContext('2d');
+                    const myPieChart2 = new Chart(ctx2, {
+                        type: 'doughnut',
+                        data: {
+                            labels: labels2,
+                            datasets: [{
+                                data: data2,
+                                backgroundColor: [
+                                    '#D76A66',//'rgba(0, 185, 255, 0.99)',   //  Blue
+                                    '#72B9f0',//'rgba(255, 108, 22, 0.99)', // Orange
+                                    '#744FE6',//'rgba(86, 217, 22, 1)',   //Green
+                                    '#E1A34D',//'rgba(255, 47, 92, 1)',   //red
+                                    '#883097f7',//' rgba(255, 209, 0, 0.96)',  // Yellow
+                                    '#6fC884'//'rgba(210, 118, 246, 0.96)'    // purple
+                                ]
+
+                            }]
+                        },
+                        options: {
+                            plugins: {
+                                chartJsPlugin3d: {
+                                    enabled: true,
+                                    alpha: 85,
+                                    beta: 50
+                                },
+                                legend: {
+                                    position: 'bottom',
+                                    align: 'center',
+                                    labels: {
+                                        color: 'black',
+                                        boxWidth: 40,
+                                        padding: 20
+                                    }
+                                },
+                                tooltip: {
+                                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                    displayColors: false
+                                }
+                            },
+                            cutout: '60%',
+                            responsive: false,
+                            height: 400,
+                            width: 550,
+                            onClick: (event, elements) => {
+                                if (elements && elements.length > 0) {
+                                    const index = elements[0].index;
+                                    const label = labels2[index];
+                                    if (label == 'T Bill') {
+                                        move2('T_Bill');
+                                    }
+                                    else if (label == 'Prime Reference Rate') {
+                                        move2('Prime_Ref_Rate');
+                                    } else if (label == 'Credit Rating') {
+                                        move2('Credit_Rating');
+                                    }
+                                    else {
+                                        move2(label);
+                                    }
+
+                                }
+                            }
+                        }
+                    });
+
+                </script>
+            </div>
+            <!--end::Chart-->
+            <!--begin::Labels-->
+            <!--end::Labels-->
+        </div>                <!--end::Wrapper-->
+
+    </div>
+    <div class="col-md-12   Add2 row2 mt-3 gx-6 gx-xl-9 p-3 allcontainer pb-4" id="Borrowing">
+        <div class=" d-flex pl-0  align-items-center"@*  style="height: 26px;" *@>
+            <div class="col-md-12">
+                <h3 style="color: midnightblue;">
+                    Borrowing
+                </h3>
+            </div>
+            <div class="col-md-4  d-flex justify-content-end align-items-center" style="position: absolute;right: 12px;top: 0px;">
+                <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                    Amount in Cr.
+                </a>
+            </div>
+
+        </div>
+        <hr />
+        <!--begin::Col-->
+        <div class="row">
+        <div class=" col-lg-6 d-flex flex-wrap flex-center flex-md-column" @* style="padding-left:30px; *@>
+            <canvas id="MyBarChart" width="530" height="400"></canvas>
+@*             <p class="pt-6" style="color: midnightblue;font-size: 20px;">Borrowing</p>
+ *@        </div>
+
+        <script>
+            // Extract data from the table
+            var labels = ['TIER II BOND', 'Commercial Paper', 'Bank Line WCL', 'FOREX'];//, 'Bank_Line_CC'
+            var amounts = [@datemodel.TIER_II_BOND, @datemodel.Commercial_Paper, @datemodel.Bank_Line_WCL, @datemodel.FOREX];//0,
+            //     var amounts = [];
+            //     foreach(var item in List < BorrowAndRFRModels > @Model.BorrowAndRFRModels)
+            // {
+            //     amounts.Add(item.TIER_II_BOND);
+            //     amounts.Add(item.Commercial_Paper);
+            //     amounts.Add(item.Bank_Line_WCL)
+            //     amounts.Add(item.FOREX);
+            // }
+            //var amountsInCrores = @datemodel;
+            //console.log(amountsInCrores);
+            console.log(amounts);
+            // Create the bar graph
+            var ctx = document.getElementById('MyBarChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Amount (Rs. in Crores)',
+                        data: amounts,
+                        backgroundColor: [
+                            'rgba(0, 185, 255, 0.99)',   //  Blue
+                            'rgba(255, 108, 22, 0.99)', // Orange
+                            // 'rgba(86, 217, 22, 1)',   //Green
+                            'rgba(255, 47, 92, 1)',   //red
+                            ' rgba(86, 217, 22, 1)'  //Green
+                        ]
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: {
+                            display: false ,// Hide the legend
+                                labels: {
+                                    color: 'red',
+                                    boxWidth: 40,
+                                    padding: 20
+                                }
+                        }
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                                callback: function (value, index, values) {
+                                    return value + ' Cr';
+                                }
+                            }
+                        }]
+                    },
+                    responsive: false,
+                    height: 400,
+                    width: 530,
+                    onClick: (event, elements) => {
+                        if (elements && elements.length > 0) {
+                            const index = elements[0].index;
+                            const label = labels[index];
+                            //moveb2(label);
+                            if (label == 'TIER II BOND') {
+                                moveb2('TIER_II_BOND');
+                            }
+                            else if (label == 'Commercial Paper') {
+                                moveb2('Commercial_Paper');
+                            } else if (label == 'Bank Line WCL') {
+                                moveb2('Bank_Line_WCL');
+                            }
+                            else {
+                                moveb2(label);
+                            }
+                        }
+                    }
+                }
+            })
+        </script>
+           
+        <div class="col-lg-6">
+       
+        <div class="table100 ver3 m-b-30 ">
+            <table data-vertable="ver3">
+                <thead>
+                    <tr class="row100 head">
+                                <th class="column100 " data-column="column2">Perticulars</th>
+                                <th class="column100 " data-column="column3">No of Accounts</th>
+                                <th class="column100 " data-column="column4">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+
+                        if (Model != null)
+                        {
+                                    @foreach (var item in Model.borrowvalue)
+                                    {
+
+                                <tr class="align-items-center row100">
+                                    <td class="column100 column2 " data-column="column2">@Html.DisplayFor(modelItem => item.Perticulars)</td>
+                                    <td class="column100 column3 " data-column="column3">@Html.DisplayFor(modelItem => item.NoOfAccount)</td>
+                                    <td class="column100 column4 " data-column="column4">@Html.DisplayFor(modelItem => item.Amount)</td>
+                                </tr>
+
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="col-md-12 mt-3 row2 gx-6 gx-xl-9 allcontainer" id="TIER_II_BOND">
+        <!--begin::Col-->
+
+        <div class="col-lg-12  d-flex pl-0  align-items-center" style="height: 26px;">
+            <div class="col-md-4">
+                <h3 style="color: midnightblue;">
+                    TIER II BOND
+                </h3>
+            </div>
+            <div class="col-md-4  d-flex justify-content-end align-items-center" style="position: absolute;right: 12px;top: 0px;">
+                <button class="btn btn-md text-light bg-primary " style="height: 33px;" type="button" onclick="move2('Borrowing')">
+                    <i class="fa fa-angle-left d-flex"></i>
+                </button>
+                <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                    Amount in Cr.
+                </a>
+
+            </div>
+
+        </div>
+        <hr />
+        <div class="table100 ver3 m-b-30">
+            <table data-vertable="ver3">
+                <thead>
+                    <tr class="row100 head">
+                        <th class="column100 " width="8%" data-column="column1">Sr. no</th>
+                        <th class="column100 " data-column="column2">Name</th>
+                        <th class="column100 " data-column="column3">Issued Date</th>
+                        <th class="column100 " data-column="column4">Rate (%)</th>
+                        <th class="column100 " data-column="column5">Intrest Paid UpTo</th>
+                        <th class="column100 " data-column="column6">Next Intrest Payment Due on</th>
+                        <th class="column100 " data-column="column7">Maturity / Due Dt</th>
+                        <th class="column100 " data-column="column8">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int no6 = 1;
+
+                        if (Model != null)
+                        {
+                            @foreach (var item in Model.BorrowAndRFRModels2)
+                            {
+
+                                <tr class="align-items-center row100">
+                                    <td class="column100 column1 " width="8%" data-column="column1">@no6</td>
+                                    <td class="column100 column2 " data-column="column2">@Html.DisplayFor(modelItem => item.Name)</td>
+                                    <td class="column100 column3 " data-column="column3">@String.Format("{0:dd/MM/yyyy}", item.Issued_Date)</td>
+                                    <td class="column100 column4 " data-column="column4">@Html.DisplayFor(modelItem => item.Rate)%</td>
+                                    <td class="column100 column5 " data-column="column5">@String.Format("{0:dd/MM/yyyy}", item.Paid_UpTo)</td>
+                                    <td class="column100 column5 " data-column="column6">@String.Format("{0:dd/MM/yyyy}", item.PymntDue_Date)</td>
+                                    <td class="column100 column6 " data-column="column7">@String.Format("{0:dd/MM/yyyy}", item.Due_Date)</td>
+                                    <td class="column100 column7 " data-column="column8">@Html.DisplayFor(modelItem => item.Amount)</td>
+                                </tr>
+                                no6++;
+
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>    <!--end::Col-->
+    </div>
+    <div class="col-md-12 mt-3 row2 gx-6 gx-xl-9 allcontainer" id="Commercial_Paper">
+        <!--begin::Col-->
+        <div class="col-lg-12  d-flex pl-0  align-items-center" style="height: 26px;">
+            <div class="col-md-4">
+                <h3 style="color: midnightblue;">
+                    Commercial Paper
+                </h3>
+            </div>
+            <div class="col-md-4  d-flex justify-content-end align-items-center" style="position: absolute;right: 12px;top: 0px;">
+                <button class="btn btn-md text-light bg-primary " style="height: 33px;" type="button" onclick="move2('Borrowing')">
+                    <i class="fa fa-angle-left d-flex"></i>
+                </button>
+                <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                    Amount in Cr.
+                </a>
+
+            </div>
+
+        </div>
+        <hr />
+        <div class="table100 ver3 m-b-30">
+            <table data-vertable="ver3">
+                <thead>
+                    <tr class="row100 head">
+                        <th class="column100 " width="8%" data-column="column1">Sr. no</th>
+                        <th class="column100 " data-column="column2">ISIN NO.</th>
+                        <th class="column100 " data-column="column3">INVESTOR</th>
+                        <th class="column100 " data-column="column4">CP NOS</th>
+                        <th class="column100 " data-column="column5">Issued Date</th>
+                        <th class="column100 " data-column="column6">CP Deal Rate (%)</th>
+                        <th class="column100 " data-column="column7">CP Total Cost(CP Deal Rate+Stamp duty+IPA Charges) (%)</th>
+                        <th class="column100 " data-column="column8">No of Days</th>
+                        <th class="column100 " data-column="column9">Due Date</th>
+                        <th class="column100 " data-column="column10">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int no7 = 1;
+
+                        if (Model != null)
+                        {
+                            @foreach (var item in Model.BorrowAndRFRModels3)
+                            {
+
+                                <tr class="align-items-center row100">
+                                    <td class="column100 column1 " width="8%" data-column="column1">@no7</td>
+                                    <td class="column100 column2 " data-column="column2">@Html.DisplayFor(modelItem => item.ISIN_No)</td>
+                                    <td class="column100 column3 tal" data-column="column3">@Html.DisplayFor(modelItem => item.Investor)</td>
+                                    <td class="column100 column4 " data-column="column4">@Html.DisplayFor(modelItem => item.CP_NOS)</td>
+                                    <td class="column100 column5 " data-column="column5">@String.Format("{0:dd/MM/yyyy}", item.Issued_Date)</td>
+                                    <td class="column100 column6 " data-column="column6">@Html.DisplayFor(modelItem => item.CP_Deal_Rate)%</td>
+                                    <td class="column100 column7 " data-column="column7">@Html.DisplayFor(modelItem => item.CP_Total_Cost)%</td>
+                                    <td class="column100 column8 " data-column="column8">@Html.DisplayFor(modelItem => item.No_Of_Days)</td>
+                                    <td class="column100 column9 " data-column="column9">@String.Format("{0:dd/MM/yyyy}", item.Due_Date)</td>
+                                    <td class="column100 column10 " data-column="column10">@Html.DisplayFor(modelItem => item.Amount)</td>
+                                </tr>
+                                no7++;
+
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>    <!--end::Col-->
+    </div>
+    <div class="col-md-12  mt-3 row2 gx-6 gx-xl-9 allcontainer" id="Bank_Line_CC">
+        <!--begin::Col-->
+        <div class="col-lg-12  d-flex pl-0  align-items-center" style="height: 26px;">
+            <div class="col-md-4">
+                <h3 style="color: midnightblue;">
+                    Bank Line CC
+                </h3>
+            </div>
+            <div class="col-md-4  d-flex justify-content-end align-items-center" style="position: absolute;right: 12px;top: 0px;">
+                <button class="btn btn-md text-light bg-primary " style="height: 33px;" type="button" onclick="move2('Borrowing')">
+                    <i class="fa fa-angle-left d-flex"></i>
+                </button>
+                <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                    Amount in Cr.
+                </a>
+
+            </div>
+
+        </div>
+        <hr />
+        <div class="table100 ver3 m-b-30">
+            <table data-vertable="ver3">
+                <thead>
+                    <tr class="row100 head">
+                        <th class="column100 " width="8%" data-column="column1">Sr. no</th>
+                        <th class="column100 " data-column="column2">Bank Name</th>
+                        <th class="column100 " data-column="column3">Issue Date</th>
+                        <th class="column100 " data-column="column4">Type of Loan</th>
+                        <th class="column100 " data-column="column5">Rate (%)</th>
+                        <th class="column100 " data-column="column6">Tenor (No of Days)</th>
+                        <th class="column100 " data-column="column7">Due Dt</th>
+                        <th class="column100 " data-column="column8">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int no8 = 1;
+
+                        if (Model != null)
+                        {
+                            @foreach (var item in Model.BorrowAndRFRModels4)
+                            {
+
+                                <tr class="align-items-center row100">
+                                    <td class="column100 column1 " width="8%" data-column="column1">@no8</td>
+                                    <td class="column100 column2 tal" data-column="column2">@Html.DisplayFor(modelItem => item.Bank_Name)</td>
+                                    <td class="column100 column3 " data-column="column3">@String.Format("{0:dd/MM/yyyy}", item.Issued_Date)</td>
+                                    <td class="column100 column4 " data-column="column4">@Html.DisplayFor(modelItem => item.Type_of_Loan)</td>
+                                    <td class="column100 column5 " data-column="column5">@Html.DisplayFor(modelItem => item.Rate)%</td>
+                                    <td class="column100 column6 " data-column="column6">@Html.DisplayFor(modelItem => item.No_Of_Days)</td>
+                                    <td class="column100 column7 " data-column="column7">@String.Format("{0:dd/MM/yyyy}", item.Due_Date)</td>
+                                    <td class="column100 column8 " data-column="column8">@Html.DisplayFor(modelItem => item.Amount)</td>
+                                </tr>
+                                no8++;
+
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>    <!--end::Col-->
+    </div>
+    <div class="col-md-12 mt-3 row2 gx-6 gx-xl-9 allcontainer" id="Bank_Line_WCL">
+        <!--begin::Col-->
+        <div class="col-lg-12  d-flex pl-0  align-items-center" style="height: 26px;">
+            <div class="col-md-4">
+                <h3 style="color: midnightblue;">
+                    Bank Line WCL
+                </h3>
+            </div>
+            <div class="col-md-4  d-flex justify-content-end align-items-center" style="position: absolute;right: 12px;top: 0px;">
+                <button class="btn btn-md text-light bg-primary " style="height: 33px;" type="button" onclick="move2('Borrowing')">
+                    <i class="fa fa-angle-left d-flex"></i>
+                </button>
+                <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                    Amount in Cr.
+                </a>
+
+            </div>
+
+        </div>
+        <hr />
+        <div class="table100 ver3 m-b-30">
+            <table data-vertable="ver3">
+                <thead>
+                    <tr class="row100 head">
+                        <th class="column100 " width="8%" data-column="column1">Sr. no</th>
+                        <th class="column100 " data-column="column2">Bank Name</th>
+                        <th class="column100 " data-column="column3">Issue Date</th>
+                        <th class="column100 " data-column="column4">Type of Loan</th>
+                        <th class="column100 " data-column="column5">Rate (%)</th>
+                        <th class="column100 " data-column="column6">Tenor (No of Days)</th>
+                        <th class="column100 " data-column="column7">Due Dt</th>
+                        <th class="column100 " data-column="column8">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int no9 = 1;
+
+                        if (Model != null)
+                        {
+                            @foreach (var item in Model.BorrowAndRFRModels5)
+                            {
+
+                                <tr class="align-items-center row100">
+                                    <td class="column100 column1 " width="8%" data-column="column1">@no9</td>
+                                    <td class="column100 column2 tal" data-column="column2">@Html.DisplayFor(modelItem => item.Bank_Name)</td>
+                                    <td class="column100 column3 " data-column="column3">@String.Format("{0:dd/MM/yyyy}", item.Issued_Date)</td>
+                                    <td class="column100 column4 " data-column="column4">@Html.DisplayFor(modelItem => item.Type_of_Loan)</td>
+                                    <td class="column100 column5 " data-column="column5">@Html.DisplayFor(modelItem => item.Rate)%</td>
+                                    <td class="column100 column6 " data-column="column6">@Html.DisplayFor(modelItem => item.No_Of_Days)</td>
+                                    <td class="column100 column7 " data-column="column7">@String.Format("{0:dd/MM/yyyy}", item.Due_Date)</td>
+                                    <td class="column100 column8 " data-column="column8">@Html.DisplayFor(modelItem => item.Amount)</td>
+                                </tr>
+                                no9++;
+
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>    <!--end::Col-->
+    </div>
+    <div class="col-md-12  mt-3 row2 gx-6 gx-xl-9 allcontainer" id="FOREX">
+        <!--begin::Col-->
+        <div class="col-lg-12  d-flex pl-0  align-items-center" style="height: 26px;">
+            <div class="col-md-4">
+                <h3 style="color: midnightblue;">
+                    FOREX
+                </h3>
+            </div>
+            <div class="col-md-4  d-flex justify-content-end align-items-center" style="position: absolute;right: 12px;top: 0px;">
+                <button class="btn btn-md text-light bg-primary " style="height: 33px;" type="button" onclick="move2('Borrowing')">
+                    <i class="fa fa-angle-left d-flex"></i>
+                </button>
+                <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                    Amount in Cr.
+                </a>
+
+            </div>
+
+        </div>
+        <hr />
+        <div class="table100 ver3 m-b-30">
+            <table data-vertable="ver3">
+                <thead>
+                    <tr class="row100 head">
+                        <th class="column100 " width="8%" data-column="column1">Sr. no</th>
+                        <th class="column100 " data-column="column2">SBI LONDON</th>
+                        <th class="column100 " data-column="column3">OUTSTANDING</th>
+                        <th class="column100 " data-column="column4"> CONVERSION RATE </th>
+                        <th class="column100 " data-column="column5">INR O/S</th>
+                        <th class="column100 " data-column="column6">USD Equiv O/S</th>
+                        <th class="column100 " data-column="column7">Limit</th>
+                        <th class="column100 " data-column="column8">Reference Rate(%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int no10 = 1;
+
+                        if (Model != null)
+                        {
+                            @foreach (var item in Model.BorrowAndRFRModels6)
+                            {
+
+                                <tr class="align-items-center row100">
+                                    <td class="column100 column1 " width="8%" data-column="column1">@no10</td>
+                                    <td class="column100 column2 " data-column="column2">@Html.DisplayFor(modelItem => item.SBI_LONDON)</td>
+                                    <td class="column100 column3 " data-column="column3">@String.Format("{0:dd/MM/yyyy}", item.OUTSTANDING)</td>
+                                    <td class="column100 column4 " data-column="column4">@Html.DisplayFor(modelItem => item.CONVERSION_RATE)</td>
+                                    <td class="column100 column5 " data-column="column5">@Html.DisplayFor(modelItem => item.INR_OS)</td>
+                                    <td class="column100 column6 " data-column="column6">@Html.DisplayFor(modelItem => item.USD_Equiv_OS)</td>
+                                    <td class="column100 column7 " data-column="column7" r>@Html.DisplayFor(modelItem => item.Limit)</td>
+                                    <td class="column100 column8 " data-column="column8">@Html.DisplayFor(modelItem => item.Reference_Rate)</td>
+                                </tr>
+                                no10++;
+
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>    <!--end::Col-->
+    </div>
+
+    <div class="row  Add2 row2 mt-3 gx-6 gx-xl-9 p-3 allcontainer pb-4" id="RFR">
+
+    <div class=" mt-3   " @* id="RFR" *@>
+        <div class="  gx-6 gx-xl-9 h-200 allcontainer">
+            <!--begin::Col-->
+            <div class="col-lg-12  d-flex pl-0">
+                <div class="col-md-5">
+                    <h3 style="color: midnightblue;">
+                        Risk Free Rate (RFR)
+                    </h3>
+                </div>
+                @*  <div class="col-md-4  d-flex justify-content-end align-items-center" style="position: absolute;right: 12px;top: 0px;">
+                <a class="mt-3 mt-lg-0 mt-md-0 ml-2">// (Feb-24)
+                Amount in Cr.
+                </a>
+
+                </div>
+                *@
+            </div>
+            <hr />
+            <div class="table100 ver2 m-b-30">
+                <table data-vertable="ver2">
+                    <thead>
+                        <tr class="row100 head">
+                            <th class="column100 " width="10%" data-column="column1">Sr no</th>
+                            <th class="column100 " data-column="column2">Currency</th>
+                            <th class="column100 " data-column="column3">RFR</th>
+                            <th class="column100 " data-column="column4">Period</th>
+                            <th class="column100 " data-column="column5">Amount (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int no5 = 1;
+
+                            if (Model != null)
+                            {
+                                @foreach (var item in Model.BorrowAndRFRModels1)
+                                {
+
+                                    <tr class="align-items-center row100">
+                                        <td class="column100 column1 " width="10%" data-column="column1">@no5</td>
+                                        <td class="column100 column2 " data-column="column2">@Html.DisplayFor(modelItem => item.Currency)</td>
+                                        <td class="column100 column3 " data-column="column3">@Html.DisplayFor(modelItem => item.RFR)</td>
+                                        <td class="column100 column4 " data-column="column4">@String.Format("{0:MMM/yyyy}", item.EffectiveDate)</td>
+                                        <td class="column100 column5 " data-column="column5">@Html.DisplayFor(modelItem => item.Rate)</td>
+                                    </tr>
+                                    no5++;
+
+                                }
+                            }
+                        }
+                        @*<tr class="align-items-center row100">
+                        <td class="column100 column1 " width="8%" data-column="column1">1</td>
+                        <td class="column100 column2 " data-column="column2">GBP</td>
+                        <td class="column100 column3 " data-column="column3">SONIA</td>
+                        <td class="column100 column4 " data-column="column4">5.18%</td>
+                        </tr>
+                        <tr class="align-items-center row100">
+                        <td class="column100 column1 " width="8%" data-column="column1">2</td>
+                        <td class="column100 column2 " data-column="column2">EUR</td>
+                        <td class="column100 column3 " data-column="column3">ESTR</td>
+                        <td class="column100 column4 " data-column="column4">3.90%</td>
+                        </tr>
+                        <tr class="align-items-center row100">
+                        <td class="column100 column1 " width="8%" data-column="column1">3</td>
+                        <td class="column100 column2 " data-column="column2">USD</td>
+                        <td class="column100 column3 " data-column="column3">SOFR</td>
+                        <td class="column100 column4 " data-column="column4">5.34%</td>
+                        </tr>*@
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="mt-3   " @* id="Credit_Rating" *@>
+        <div class=" gx-6 gx-xl-9 h-200 allcontainer">
+            <!--begin::Col-->
+            <div class="col-lg-12  d-flex pl-0">
+                <div class="col-md-4">
+                    <h3 style="color: midnightblue;">
+                        Credit Rating
+                    </h3>
+                </div>
+                @*  <div class="col-md-4  d-flex justify-content-end align-items-center" style="position: absolute;right: 12px;top: 0px;">
+                <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                Amount in Cr.
+                </a>
+
+                </div>
+                *@
+            </div>
+            <hr />
+            <div class="table100 ver1 m-b-30">
+                <table data-vertable="ver1">
+                    <thead class="text-align-center">
+                        <tr class="row100 head" style="text-align:center">
+                            <th class="column100 " width="8%" data-column="column1" rowspan="2">Sr No</th>
+                            <th class="column100 " data-column="column2">Rationale Dated</th>
+                            <th class="column100 " data-column="column3">Company Name</th>
+                            <th class="column100 " data-column="column4">Long Term Rating</th>
+                            <th class="column100 " data-column="column5">Short Term Rating</th>
+                        </tr>
+                        @* <tr class="row100 head">
+                        <th class="column100 " data-column="column1">Long Term Rating</th>
+                        <th class="column100 " data-column="column2">Short Term Rating</th>
+                        @*    <th class="column100 " data-column="column3">Long Term Rating</th>
+                        <th class="column100 " data-column="column4">Short Term Rating</th>
+                        </tr> *@
+                    </thead>
+                    <tbody>
+                        @{
+                            int no4 = 1;
+
+                            if (Model != null)
+                            {
+                                @foreach (var item in Model.CreditRatingModels)
+                                {
+
+                                    <tr class=" row100">
+                                        <td class="column100 column1 " data-column="column1">@no4</td>
+                                        <td class="column100 column2 " data-column="column2">@String.Format("{0:dd/MM/yyyy}", item.cr_createddate)</td>
+                                        <td class="column100 column3 " data-column="column3">@Html.DisplayFor(modelItem => item.cr_companyname)</td>
+                                        <td class="column100 column4 " data-column="column4">@Html.DisplayFor(modelItem => item.cr_ltr)</td>
+                                        <td class="column100 column5 " data-column="column5">@Html.DisplayFor(modelItem => item.cr_str)</td>
+                                    </tr>
+                                    no4++;
+
+                                }
+                            }
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+    <div class=" row  Add2 row2 mt-3 gx-6 gx-xl-9 p-3 allcontainer pb-4" id="Prime_Ref_Rate">
+
+    <div class=" mt-3  " @* id="Prime_Ref_Rate" *@>
+        <div class=" mt-3  h-200 gx-6 gx-xl-9 allcontainer">
+            <!--begin::Col-->
+            <div class="col-lg-12  d-flex pl-0">
+                <div class="col-md-6">
+                    <h3 style="color: midnightblue;">
+                        Prime Reference Rate (PRR)
+                    </h3>
+                </div>
+                @*  <div class="col-md-4  d-flex justify-content-end align-items-center" style="position: absolute;right: 12px;top: 0px;">
+                <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                Amount in Cr.
+                </a>
+
+                </div>
+                *@
+            </div>
+            <hr />
+            <div class="table100 ver6 m-b-30">
+                <table data-vertable="ver6">
+                    <thead>
+                        <tr class="row100 head">
+                            <th class="column100 " width="10%" data-column="column1">Sr No</th>
+                            <th class="column100 " data-column="column2">Date</th>
+                            <th class="column100 " data-column="column3">Rate (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int no3 = 1;
+
+                            if (Model != null)
+                            {
+                                @foreach (var item in Model.OtherCreditRatingModels)
+                                {
+
+                                    <tr class="row100">
+                                        <td class="column100 column1 " width="10%" data-column="column1">@no3</td>
+                                        <td class="column100 column2 " data-column="column2">@String.Format("{0:dd/MM/yyyy}", item.pr_date)</td>
+                                        <td class="column100 column3 " data-column="column3"> @Html.DisplayFor(modelItem => item.pr_rate)%</td>
+                                    </tr>
+                                    no3++;
+
+                                }
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class=" mt-3  "@*  id="COB" *@>
+        <div class="mt-3 h-200 gx-6 gx-xl-9 allcontainer">
+            <div class="col-lg-12  d-flex pl-0">
+                <div class="col-md-5">
+                    <h3 style="color: midnightblue;">
+                        Cost of Borrowing (COB)
+                    </h3>
+                </div>
+                @*  <div class="col-md-4  d-flex justify-content-end align-items-center" style="position: absolute;right: 12px;top: 0px;">
+                <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                Amount in Cr.
+                </a>
+
+                </div>
+                *@
+            </div>
+            <hr />
+            <div class="table100 ver4 m-b-30">
+                <table data-vertable="ver4">
+                    <thead>
+                        <tr class="row100 head">
+                            <th class="column100 " width="7%" data-column="column1">Sr No</th>
+                            <th class="column100 " data-column="column2">Period</th>
+                            <th class="column100 " data-column="column3">Financial Year</th>
+                            <th class="column100 " data-column="column4">Average COB (Including NCDs) (%)</th>
+                            <th class="column100 " data-column="column5">Marginal COB (Excluding NCDs) (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+
+
+                            int no2 = 1;
+
+                            if (Model != null)
+                            {
+                                @foreach (var item in Model.CostOfBorrowingModels)
+                                {
+
+                                    <tr class=" row100">
+                                        <td class="column100 column1 " width="8%" data-column="column1">@no2</td>
+                                        <td class="column100 column2 " data-column="column2"> @Html.DisplayFor(modelItem => item.cob_period)</td>
+                                        <td class="column100 column3 " data-column="column3"> @Html.DisplayFor(modelItem => item.cob_finantialyear)</td>
+                                        <td class="column100 column4 " data-column="column4"> @Html.DisplayFor(modelItem => item.cob_includingncd)%</td>
+                                        <td class="column100 column5 " data-column="column5"> @Html.DisplayFor(modelItem => item.cob_excludingncd)%</td>
+
+                                    </tr>
+                                    no2++;
+
+                                }
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+   </div>
+    <div class=" col-md-12   Add2 row2 mt-3 gx-6 gx-xl-9 p-3 allcontainer pb-4" id="T_Bill">
+
+    <div class="col-md-12  mt-3 " @* id="T_Bill" *@>
+        <div class=" mt-3 gx-6 gx-xl-9 allcontainer">
+            <!--begin::Col-->
+            <div class="col-lg-12  d-flex pl-0">
+                <div class="col-md-4">
+                    <h3 style="color: midnightblue;">
+                        T-Bill Rate
+                    </h3>
+                </div>
+                @*  <div class="col-md-4  d-flex justify-content-end align-items-center" style="position: absolute;right: 12px;top: 0px;">
+                <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                Amount in Cr.
+                </a>
+
+                </div>
+                *@
+            </div>
+            <hr />
+            <div class="table100 ver5 m-b-30">
+                <table data-vertable="ver5">
+                    <thead>
+                        <tr class="row100 head align-items-center">
+                            <th class="column100 " width="8%" data-column="column1">Sr.No.</th>
+                            <th class="column100 " data-column="column2">Date</th>
+
+                            <th class="column100 " data-column="column3">91 Days</th>
+                            <th class="column100 " data-column="column4">182 Days</th>
+                            <th class="column100 " data-column="column5">364 Days</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @{
+
+
+                            int no = 1;
+
+                            if (Model != null)
+                            {
+                                @foreach (var item in Model.TBillModels)
+                                {
+
+                                    <tr class=" row100">
+                                        <td class="column100 column1 " width="8%" data-column="column1">@no</td>
+                                        <td class="column100 column2 " data-column="column2">@String.Format("{0:dd/MM/yyyy}", item.tbr_date)</td>
+
+                                        <td class="column100 column3 " data-column="column3"> @Html.DisplayFor(modelItem => item.tbr_90_days)</td>
+                                        <td class="column100 column4 " data-column="column4"> @Html.DisplayFor(modelItem => item.tbr_182_days)</td>
+                                        <td class="column100 column5 " data-column="column5"> @Html.DisplayFor(modelItem => item.tbr_364_days)</td>
+
+                                    </tr>
+                                    no++;
+
+                                }
+                            }
+                        }
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+    <div class="row  Add2 row2 mt-3 gx-6 gx-xl-9 p-3 allcontainer pb-4" id="Assets">
+        <!--begin::Col-->
+        <div class="col-md-12  mt-3 " @* id="T_Bill" *@>
+            <div class=" mt-3 gx-6 gx-xl-9 allcontainer">
+        <div class="col-lg-12  d-flex pl-0">
+            <div class="col-md-4">
+                <h3 style="color: midnightblue;">
+                    Assets & Liabilities
+                </h3>
+            </div>
+             <div class="col-md-4  d-flex justify-content-end align-items-center" style="position: absolute;right: 12px;top: 0px;">
+            <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+            Amount in Cr.
+            </a>
+
+            </div>
+           
+        </div>
+        <hr />
+        <div class="table100 ver6 m-b-110">
+            <table data-vertable="ver6">
+                <thead class="text-align-center">
+                  @*   <tr class="row100 head"> *@
+                        @{
+                            if (Model != null && Model.Assets.Any())
+                            {
+                                var firstItem = Model.Assets.First();
+                            <tr class="row100 head">
+                                
+                                <th class="column100 " data-column="column2">@firstItem.al_particulars</th>
+                                <th class="column100" data-column="column3">@firstItem.al_col1</th>
+                                <th class="column100" data-column="column4">@firstItem.al_col2</th>
+                                <th class="column100" data-column="column5">@firstItem.al_col3</th>
+                                <th class="column100" data-column="column6">@firstItem.al_col4</th>
+                                <th class="column100" data-column="column6">@firstItem.al_col5</th>
+                            </tr>
+                            }
+                        }
+                </thead>
+                <tbody>
+                    @{
+                        int no20 = 1; // Start from 2 since 1 is already used for the first row
+
+                        if (Model != null)
+                        {
+                            var remainingItems = Model.Assets.Skip(1); // Skip the first item
+                            foreach (var item in remainingItems)
+                            {
+                                <tr class="row100">
+                                    
+                                    <td class="column100 column2 " data-column="column2">@item.al_particulars</td>
+                                    <td class="column100 column3" data-column="column3">@item.al_col1</td>
+                                    <td class="column100 column4" data-column="column4">@item.al_col2</td>
+                                    <td class="column100 column5" data-column="column5">@item.al_col3</td>
+                                    <td class="column100 column6" data-column="column6">@item.al_col4</td>
+                                    <td class="column100 column6" data-column="column6">@item.al_col5</td>
+                                </tr>
+                                no20++;
+                            }
+                        }
+                    }
+                    <!-- Repeat the above row structure for other data entries -->
+                </tbody>
+            </table>
+        </div>    <!--end::Col-->
+    </div>
+    </div>
+    </div>
+
+</div>
+<script>
+    $(document).ready(function () {
+
+
+        document.getElementById('TIER_II_BOND').style.display = 'none';
+        document.getElementById('Commercial_Paper').style.display = 'none';
+        document.getElementById('Bank_Line_CC').style.display = 'none';
+        document.getElementById('Bank_Line_WCL').style.display = 'none';
+        document.getElementById('FOREX').style.display = 'none';
+        document.getElementById('RFR').style.display = 'none';
+        document.getElementById('Prime_Ref_Rate').style.display = 'none';
+        document.getElementById('T_Bill').style.display = 'none';
+        document.getElementById('Assets').style.display = 'none';
+
+    });
+
+    function move2(id) {
+        $('.row2').hide();
+        $('.Add2').hide();
+        document.getElementById(id).style.display = 'block';
+        $('.nav-link2').removeClass('active');
+
+        $('#Nav' + id).addClass('active');
+    } function moveb2(id) {
+        $('.row2').hide();
+        document.getElementById(id).style.display = 'block';
+        // $('.nav-link2').removeClass('active');
+        $('#Add2').hide();
+
+        // $('#Nav' + id).addClass('active');
+    }
+    function search3() {
+        document.getElementById('RFR').style.display = 'none';
+        document.getElementById('Credit_Rating').style.display = 'none';
+        document.getElementById('Prime_Ref_Rate').style.display = 'none';
+        document.getElementById('COB').style.display = 'none';
+        document.getElementById('T_Bill').style.display = 'none';
+        document.getElementById('TIER_II_BOND').style.display = 'none';
+        document.getElementById('Commercial_Paper').style.display = 'none';
+        document.getElementById('Bank_Line_CC').style.display = 'none';
+        document.getElementById('Bank_Line_WCL').style.display = 'none';
+        document.getElementById('FOREX').style.display = 'none';
+        document.getElementById('Borrowing').style.display = 'block';
+    }
+
+</script>

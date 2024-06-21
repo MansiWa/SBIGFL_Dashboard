@@ -1,0 +1,300 @@
+
+Log Entry : 12:20:28 PM Thursday, March 28, 2024
+  :
+  :Started
+-------------------------------
+
+Log Entry : 12:20:28 PM Thursday, March 28, 2024
+  :
+  :Open connection
+-------------------------------
+
+Log Entry : 12:20:30 PM Thursday, March 28, 2024
+  :
+  :dt count8876
+-------------------------------
+
+Log Entry : 12:20:30 PM Thursday, March 28, 2024
+  :
+  :before loop8876
+-------------------------------
+
+Log Entry : 12:20:31 PM Thursday, March 28, 2024
+  :
+  :after loop8876
+-------------------------------
+
+Log Entry : 12:20:31 PM Thursday, March 28, 2024
+  :
+  :before upload8876
+-------------------------------
+
+Log Entry : 12:19:08 PM Saturday, March 30, 2024
+  :
+  :Started
+-------------------------------
+
+Log Entry : 12:19:08 PM Saturday, March 30, 2024
+  :
+  :Open connection
+-------------------------------
+
+Log Entry : 12:19:12 PM Saturday, March 30, 2024
+  :
+  :dt count8873
+-------------------------------
+
+Log Entry : 12:19:12 PM Saturday, March 30, 2024
+  :
+  :before loop8873
+-------------------------------
+
+Log Entry : 12:19:13 PM Saturday, March 30, 2024
+  :
+  :after loop8873
+-------------------------------
+
+Log Entry : 12:19:14 PM Saturday, March 30, 2024
+  :
+  :before upload8873
+-------------------------------
+
+Log Entry : 12:21:46 PM Saturday, March 30, 2024
+  :
+  :Started
+-------------------------------
+
+Log Entry : 12:21:46 PM Saturday, March 30, 2024
+  :
+  :Open connection
+-------------------------------
+
+Log Entry : 12:21:48 PM Saturday, March 30, 2024
+  :
+  :dt count8873
+-------------------------------
+
+Log Entry : 12:21:48 PM Saturday, March 30, 2024
+  :
+  :before loop8873
+-------------------------------
+
+Log Entry : 12:21:49 PM Saturday, March 30, 2024
+  :
+  :after loop8873
+-------------------------------
+
+Log Entry : 12:21:49 PM Saturday, March 30, 2024
+  :
+  :before upload8873
+-------------------------------
+
+Log Entry : 1:40:00 PM Thursday, May 9, 2024
+  :
+  :Started
+-------------------------------
+
+Log Entry : 1:40:00 PM Thursday, May 9, 2024
+  :
+  :Open connection
+-------------------------------
+
+Log Entry : 1:40:01 PM Thursday, May 9, 2024
+  :
+  :dt count8844
+-------------------------------
+
+Log Entry : 1:40:01 PM Thursday, May 9, 2024
+  :
+  :before loop8844
+-------------------------------
+
+Log Entry : 1:40:01 PM Thursday, May 9, 2024
+  :
+  :after loop8844
+-------------------------------
+
+Log Entry : 1:40:17 PM Thursday, May 9, 2024
+  :
+  :before upload8844
+-------------------------------
+
+Log Entry : 5:13:54 PM Friday, May 10, 2024
+  :
+  :Started
+-------------------------------
+
+Log Entry : 5:13:54 PM Friday, May 10, 2024
+  :
+  :Open connection
+-------------------------------
+
+Log Entry : 5:14:11 PM Friday, May 10, 2024
+  :
+  :dt count8844
+-------------------------------
+
+Log Entry : 5:14:11 PM Friday, May 10, 2024
+  :
+  :before loop8844
+-------------------------------
+
+Log Entry : 5:14:11 PM Friday, May 10, 2024
+  :
+  :after loop8844
+-------------------------------
+
+Log Entry : 5:14:14 PM Friday, May 10, 2024
+  :
+  :before upload8844
+-------------------------------
+
+Log Entry : 3:15:06 PM Monday, May 13, 2024
+  :
+  :Started
+-------------------------------
+
+Log Entry : 3:15:06 PM Monday, May 13, 2024
+  :
+  :Open connection
+-------------------------------
+
+Log Entry : 3:15:09 PM Monday, May 13, 2024
+  :
+  :dt count8844
+-------------------------------
+
+Log Entry : 3:15:09 PM Monday, May 13, 2024
+  :
+  :before loop8844
+-------------------------------
+
+Log Entry : 3:15:09 PM Monday, May 13, 2024
+  :
+  :after loop8844
+-------------------------------
+
+Log Entry : 3:15:26 PM Monday, May 13, 2024
+  :
+  :before upload8844
+-------------------------------
+
+Log Entry : 5:40:09 PM Tuesday, June 18, 2024
+  :
+  :Started
+-------------------------------
+
+Log Entry : 5:40:09 PM Tuesday, June 18, 2024
+  :
+  :Open connection
+-------------------------------
+
+Log Entry : 5:40:10 PM Tuesday, June 18, 2024
+  :
+  :dt count8629
+-------------------------------
+
+Log Entry : 5:40:10 PM Tuesday, June 18, 2024
+  :
+  :before loop8629
+-------------------------------
+
+Log Entry : 5:40:10 PM Tuesday, June 18, 2024
+  :
+  :after loop8629
+-------------------------------
+
+Log Entry : 5:40:28 PM Tuesday, June 18, 2024
+  :
+  :before upload8629
+-------------------------------
+
+Log Entry : 2:57:24 PM Wednesday, June 19, 2024
+  :
+  :Started
+-------------------------------
+
+Log Entry : 2:57:24 PM Wednesday, June 19, 2024
+  :
+  :Open connection
+-------------------------------
+
+Log Entry : 2:57:25 PM Wednesday, June 19, 2024
+  :
+  :dt count8629
+-------------------------------
+
+Log Entry : 2:57:25 PM Wednesday, June 19, 2024
+  :
+  :before loop8629
+-------------------------------
+
+Log Entry : 2:57:25 PM Wednesday, June 19, 2024
+  :
+  :after loop8629
+-------------------------------
+
+Log Entry : 2:57:28 PM Wednesday, June 19, 2024
+  :
+  :before upload8629
+-------------------------------
+
+Log Entry : 3:09:37 PM Thursday, June 20, 2024
+  :
+  :Started
+-------------------------------
+
+Log Entry : 3:09:37 PM Thursday, June 20, 2024
+  :
+  :Open connection
+-------------------------------
+
+Log Entry : 3:09:39 PM Thursday, June 20, 2024
+  :
+  :dt count8929
+-------------------------------
+
+Log Entry : 3:09:39 PM Thursday, June 20, 2024
+  :
+  :before loop8929
+-------------------------------
+
+Log Entry : 3:09:39 PM Thursday, June 20, 2024
+  :
+  :after loop8929
+-------------------------------
+
+Log Entry : 3:09:42 PM Thursday, June 20, 2024
+  :
+  :before upload8929
+-------------------------------
+
+Log Entry : 3:20:20 PM Thursday, June 20, 2024
+  :
+  :Started
+-------------------------------
+
+Log Entry : 3:20:20 PM Thursday, June 20, 2024
+  :
+  :Open connection
+-------------------------------
+
+Log Entry : 3:20:20 PM Thursday, June 20, 2024
+  :
+  :dt count8929
+-------------------------------
+
+Log Entry : 3:20:20 PM Thursday, June 20, 2024
+  :
+  :before loop8929
+-------------------------------
+
+Log Entry : 3:20:21 PM Thursday, June 20, 2024
+  :
+  :after loop8929
+-------------------------------
+
+Log Entry : 3:20:36 PM Thursday, June 20, 2024
+  :
+  :before upload8929
+-------------------------------

@@ -1,0 +1,642 @@
+﻿@using System.Globalization;
+@model PrintSoftWeb.Models.BusinessModel
+
+<head>
+    <link href="~/css/style.bundle.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-3d"></script>
+    <link href="~/css/main.css" rel="stylesheet" />
+    <link href="~/css/util.css" rel="stylesheet" />
+    <script src="~/js/custom.js"></script>
+
+</head>
+<div id="kt_header" class="header" data-kt-sticky="true" data-kt-sticky-name="header" data-kt-sticky-offset="{default: '200px', lg: '300px'}">
+    <!--begin::Container-->
+    <div class="container-fluid d-flex align-items-center justify-content-between" id="kt_header_container">
+        <!--begin::Page title-->
+        <div class="page-title d-flex flex-column align-items-start justify-content-center flex-wrap me-lg-auto pb-5 pb-lg-0" data-kt-swapper="true" data-kt-swapper-mode="prepend" data-kt-swapper-parent="{default: '#kt_content_container', lg: '#kt_header_container'}">
+            <!--begin::Heading-->
+            <h1 class="text-black fw-bold my-0 fs-2 text-start">Business Devlopment Dashboard</h1>
+            <!--end::Heading-->
+        </div>
+        <!--end::Page title-->
+        <!--begin::Logo
+        <div class="logo ms-auto">
+            <p class="logo-link">
+                <img src="~/images/sbilogo.png" alt="Logo" style="border-radius:7%" height="65px" width="120px" class="logo-img">
+            </p>
+        </div>
+        end::Logo-->
+    </div>
+</div>
+<div class="col-md-12 mt-3">
+
+    @* business *@
+    <div class="card mycard bcolor ">
+        <div class="card-body  p-4">
+
+            <!--begin::Nav-->
+            <ul class="nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent listdesign fw-bold">
+                <!--begin::Nav item-->
+                @* <li class="nav-item">
+                <a class="nav-link nav-link3 text-active-primary py-5 active" id="NavOverview3" onclick="move3('Overview3')">Overview</a>
+                </li> *@
+                <!--end::Nav item-->
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link3 text-active-primary  p-5 active" id="NavSummary" onclick="move3('Summary')">Summary</a>
+                </li>
+                <!--end::Nav item-->
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link3 text-active-primary   p-5" id="NavNBO" onclick="move3('NBO')">Submitted To Credit</a>
+                </li>
+                <!--end::Nav item--> <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link3 text-active-primary   p-5" id="NavFSA" onclick="move3('FSA')">With Branch For Query Resolution</a>
+                </li>
+                <!--end::Nav item--> <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link3 text-active-primary   p-5" id="NavUnder_Process" onclick="move3('Under_Process')">Sanctioned Pending Activation</a>
+                </li>
+                <!--end::Nav item-->
+                <!--begin::Nav item-->
+                @*<li class="nav-item">
+                <a class="nav-link nav-link3 text-active-primary  p-5" id="Navsanctioned" onclick="move3('sanctioned')">Sanctioned</a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link nav-link3 text-active-primary  p-5" id="NavDisbursal_New" onclick="move3('Disbursal_New')">Disbursal New</a>
+                </li>*@
+                <!--end::Nav item-->
+            </ul>
+            <!--end::Nav-->
+            <form asp-controller="BusinessDev" asp-action="Find" method="get">
+                <div class=" d-flex align-items-center " style="position:absolute;top:16px;right:16px;">
+
+
+                    @{
+                        string dateValue = TempData["Date"] as string;
+                        DateTime parsedDate;
+                        if (DateTime.TryParse(dateValue, out parsedDate))
+                        {
+                            <input type="date" class="form-control" id="CustDate" name="CustDate" value="@parsedDate.ToString("yyyy-MM-dd")">
+                        }
+                        else
+                        {
+                            <input type="date" class="form-control" id="CustDate" name="CustDate" value="">
+                        }
+                    }
+
+                    <button class="btn btn-md text-white bg-success mt-3 mt-lg-0 mt-md-0 ml-2" title="Search"><i class="fa fa-search" aria-hidden="true"></i></button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!--end::Navbar-->
+    <!--begin::Row-->
+    <div class="fw-bold mt-3" style="height:auto">
+
+        <div class=" gx-6 gx-xl-9 p-2 d-flex list-group-horizontal" style="height:auto" id="Overview3">
+            <!--begin::Col-->
+            <div class="col-md-4 p-0 d-none">
+                <!--begin::Summary-->
+                <div class="card card-flush ">
+                    <!--begin::Card header-->
+                    <!--end::Card header-->
+                    <!--begin::Card body-->
+                    <div class="card-body p-0 pt-0">
+                        <!--begin::Wrapper-->
+                        <div class="">
+                            <!--begin::Chart-->
+                            <div class="col-lg-12  d-flex justify-content-end align-items-center">
+                                <div class="col-auto">
+                                    <div class=" d-flex mt-3 mt-lg-0 mt-md-3">
+                                        <div class="col-lg-3 d-flex align-items-center p-0" style="width:20% !important">
+                                            <label for="name" class="form-label fw-bold p-0"> Date : </label>
+                                        </div>
+                                        <div class="col-lg-8 d-flex p-0">
+                                            <input type="date" class="form-control" id="date" name="name">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-auto p-0">
+                                    <button class="btn btn-md text-white bg-success mt-3 mt-lg-0 mt-md-0 ml-0" type="button" title="Search" onclick="search3()">
+                                        <i class="fa fa-search" aria-hidden="true"></i>
+                                    </button>
+
+                                </div>
+
+                            </div>
+                            <div class="position-relative d-flex flex-center pt-5 mb-1">
+
+                                <div class="d-flex flex-wrap flex-center flex-md-column">
+                                    <canvas id="myPieChart3" width="550" height="370"></canvas>
+                                    <p class="pt-6 cirhead">Business</p>
+                                </div>
+                                <div class="legend-container d-none">
+                                    <ul class="legend-list">
+                                        <li class="legend-item"><span class="color-box" style="background-color: #744FE6;"></span><span>Summary</span></li>
+                                        <li class="legend-item"><span class="color-box" style="background-color: #E1A34D;"></span><span>Under_Process</span></li>
+                                        <li class="legend-item"><span class="color-box" style="background-color: #72B9f0;"></span><span>Disbursal_New</span></li>
+                                    </ul>
+
+                                </div>
+                                <!-- JavaScript code to render the pie chart -->
+                                <script>
+                                    // Data for the pie chart
+                                    const pieChartData3 = [
+                                        { label: 'Summary', value: 9.25 },
+                                        { label: 'Under_Process', value: 118 },
+                                        { label: 'Disbursal_New', value: 9.25 },
+
+                                    ];
+
+                                    // Extract labels and data from the data array
+                                    const labels3 = pieChartData3.map(item => item.label);
+                                    const data3 = pieChartData3.map(item => item.value);
+
+                                    // Render the pie chart using Chart.js library
+                                    const ctx3 = document.getElementById('myPieChart3').getContext('2d');
+                                    const myPieChart3 = new Chart(ctx3, {
+                                        type: 'doughnut',
+                                        data: {
+                                            labels: labels3,
+                                            datasets: [{
+                                                data: data3,
+                                                backgroundColor: [
+                                                    '#744FE6',//'rgba(0, 185, 255, 0.99)',   //  Blue
+                                                    '#E1A34D',//'rgba(255, 108, 22, 0.99)', // Orange
+                                                    '#72B9f0'//'rgba(86, 217, 22, 1)',   // Green
+                                                ]
+
+                                            }]
+                                        },
+                                        options: {
+                                            // cutoutPercentage: 70,
+                                            plugins: {
+                                                chartJsPlugin3d: {
+                                                    enabled: true,
+                                                    alpha: 85,
+                                                    beta: 50
+                                                },
+                                                legend: {
+                                                    display: false // Hide the legend
+                                                },
+                                                tooltip: {
+                                                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                                    displayColors: false
+                                                }
+                                            },
+                                            cutout: '50%',
+                                            responsive: false,
+                                            height: 400,
+                                            width: 550,
+                                            onClick: (event, elements) => {
+                                                if (elements && elements.length > 0) {
+                                                    const index = elements[0].index;
+                                                    const label = labels3[index];
+                                                    move3(label);
+                                                }
+                                            }
+                                        }
+                                    });
+
+                                </script>
+                            </div>
+                            <!--end::Chart-->
+                            <!--begin::Labels-->
+                            <!--end::Labels-->
+                        </div>                <!--end::Wrapper-->
+
+                    </div>
+                    <!--end::Card body-->
+                </div>
+                <!--end::Summary-->
+                <div class="ViewContent">
+                </div>
+            </div>
+            <!--end::Col-->
+
+            <div class="Add3 row3 gx-6 gx-xl-9 allcontainer" id="Summary">
+                <!--begin::Col-->
+                <div class="col-lg-12  d-flex justify-content-end align-items-center" @* style="position: absolute;right: 20px;top: 20px;" *@>
+
+                    <div class="col-auto">
+                        <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                            Amount in Cr.
+                        </a>
+
+                    </div>
+
+                </div>
+                <div class="table100 ver6 m-b-30">
+                    <table data-vertable="ver6">
+                        <thead class="text-align-center">
+                            <tr class="row100 head">
+                                <th class="column100" rowspan="3" width="4%" data-column="column1">Sr. No</th>
+                                <th class="column100" rowspan="3" width="8%" data-column="column2">Branch</th>
+                                <th class="column100" colspan="2" data-column="column3">New/Enhancement Propposals Sourced To Credit</th>
+                                <th class="column100" colspan="2" data-column="column4">New Sanctions</th>
+                                <th class="column100" colspan="2" data-column="column5">Activation</th>
+                                <th class="column100" colspan="2" data-column="column6">Sanctions Yet To Be Activated</th>
+                                <th class="column100" colspan="2" data-column="column7">Proposals With Credit</th>
+                                <th class="column100" colspan="2" data-column="column8">Proposals With Branches</th>
+                                <th class="column100" rowspan="3" data-column="column9">Estimated FIU Growth</th>
+
+                            </tr>
+                            <tr class="row100 head">
+                                <th class="column100" rowspan="2" width="5%" data-column="column3">No.</th>
+                                <th class="column100" rowspan="2" width="5%" data-column="column4">Limit</th>
+                                <th class="column100" rowspan="2" width="5%" data-column="column5">No.</th>
+                                <th class="column100" rowspan="2" width="5%" data-column="column6">Limit</th>
+                                <th class="column100" rowspan="2" width="5%" data-column="column7">No.</th>
+                                <th class="column100" rowspan="2" width="5%" data-column="column8">Limit</th>
+                                <th class="column100" rowspan="2" width="5%" data-column="column9">No.</th>
+                                <th class="column100" rowspan="2" width="5%" data-column="column10">Limit</th>
+                                <th class="column100" rowspan="2" width="5%" data-column="column11">No.</th>
+                                <th class="column100" rowspan="2" width="5%" data-column="column12">Limit</th>
+                                <th class="column100" rowspan="2" width="5%" data-column="column13">No.</th>
+                                <th class="column100" rowspan="2" width="5%" data-column="column14">Limit</th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+                            @{
+                                int no1 = 1;
+
+                                if (Model != null)
+                                {
+                                    @foreach (var item in Model.BDSummary)
+                                    {
+
+                                        <tr class="row100">
+                                            <td class="column100 column1" data-column="column1">@no1</td>
+                                            <td class="column100 column2 tal" data-column="column2">@item.Branch</td>
+                                            <td class="column100 column3 " data-column="column3">@item.NewEPSCNo</td>
+                                            <td class="column100 column4 " data-column="column4">@item.NewEPSCLimit</td>
+                                            <td class="column100 column5 " data-column="column5">@item.NewSancNo</td>
+                                            <td class="column100 column6 " data-column="column6">@item.NewSancLimit</td>
+                                            <td class="column100 column7 " data-column="column7">@item.ActNo</td>
+                                            <td class="column100 column8 " data-column="column8">@item.ActLimit</td>
+                                            <td class="column100 column9 " data-column="column9">@item.SancActNo</td>
+                                            <td class="column100 column10 " data-column="column10">@item.SancActLimit</td>
+                                            <td class="column100 column11 " data-column="column11">@item.ProCrNo</td>
+                                            <td class="column100 column12 " data-column="column12">@item.ProCrLimit</td>
+                                            <td class="column100 column13 " data-column="column13">@item.ProBrNo</td>
+                                            <td class="column100 column14 tal" data-column="column14">@item.ProBrlimit</td>
+                                            <td class="column100 column15 " data-column="column15">@item.EstFIU</td>
+
+
+                                        </tr>
+                                        no1++;
+
+                                    }
+                                }
+                            }
+
+                        </tbody>
+                    </table>
+                </div>    <!--end::Col-->
+            </div>
+            <div class="row3 gx-6 gx-xl-9 allcontainer" id="NBO">
+                <!--begin::Col-->
+                <div class="col-lg-12  d-flex justify-content-end align-items-center" @* style="position: absolute;right: 20px;top: 20px;" *@>
+
+                    <div class="col-auto">
+                        <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                            Amount in Cr.
+                        </a>
+
+                    </div>
+
+                </div>
+                <div class="table100 ver4 m-b-30">
+                    <table data-vertable="ver4">
+                        <thead>
+                            <tr class="row100 head">
+                                <th class="column100 " width="4%" data-column="column1">Sr. No</th>
+                                <th class="column100 " data-column="column2">Name Of The Client</th>
+                                <th class="column100 " data-column="column3">New/Existing</th>
+                                <th class="column100 " data-column="column4">Status</th>
+                                <th class="column100 " data-column="column5">Facility</th>
+                                <th class="column100 " data-column="column6">FIU Limit Sanctioned / Recommended</th>
+                                <th class="column100 " data-column="column7">Date Submitted to Credit</th>
+                                <th class="column100 " data-column="column8">Credit Analyst</th>
+                                <th class="column100 " data-column="column9">Credit Priority For May</th>
+                                <th class="column100 " data-column="column11">Expected Disbursement In May</th>
+                                <th class="column100 " data-column="column12">Remark</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int no2 = 1;
+
+                                if (Model != null)
+                                {
+                                    @foreach (var item in Model.BDCredit)
+                                    {
+
+                                        <tr class="row100">
+                                            <td class="column100 column1" data-column="column1">@no2</td>
+                                            <td class="column100 column2 tal" data-column="column2">@item.NameOfClient</td>
+                                            <td class="column100 column3 " data-column="column3">@item.NewExist</td>
+                                            <td class="column100 column4 " data-column="column4">@item.Status</td>
+                                            <td class="column100 column5 " data-column="column5">@item.Facility</td>
+                                            <td class="column100 column7 " data-column="column7">@item.FLS</td>
+                                            <td class="column100 column8 " data-column="column8">@item.Sub_date</td>
+                                            <td class="column100 column9 " data-column="column9">@item.CreditAnalyst</td>
+                                            <td class="column100 column10 " data-column="column10">@item.CreditPriority</td>
+                                            <td class="column100 column11 " data-column="column11">@item.ExpDis</td>
+                                            <td class="column100 column12 " data-column="column12">@item.Remarks</td>
+
+
+                                        </tr>
+                                        no2++;
+
+                                    }
+                                }
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row3 gx-6 gx-xl-9 allcontainer" id="FSA">
+                <!--begin::Col-->
+                <div class="col-lg-12  d-flex justify-content-end align-items-center" @* style="position: absolute;right: 20px;top: 20px;" *@>
+
+                    <div class="col-auto">
+                        <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                            Amount in Cr.
+                        </a>
+
+                    </div>
+
+                </div>
+                <div class="table100 ver3 m-b-30">
+                    <table data-vertable="ver3">
+                        <thead>
+                            <tr class="row100 head">
+                                <th class="column100 " width="4%" data-column="column1">Sr. No</th>
+                                <th class="column100 " data-column="column2">Branch</th>
+                                <th class="column100 " data-column="column3">Name Of The Client</th>
+                                <th class="column100 " data-column="column4">Client</th>
+                                <th class="column100 " data-column="column5">Proposed Limit</th>
+                                <th class="column100 " data-column="column6">Facility</th>
+                                <th class="column100 " data-column="column7">FIU Limit Sanctioned / Recommended</th>
+                                <th class="column100 " data-column="column8">Date Submitted To Credit</th>
+                                <th class="column100 " data-column="column9">Credit Analyst</th>
+                                <th class="column100 " data-column="column10">Credit Priority For May</th>
+                                <th class="column100 " data-column="column11">Expected Disbursement In May</th>
+                                <th class="column100 " data-column="column12">Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int no3 = 1;
+
+                                if (Model != null)
+                                {
+                                    @foreach (var item in Model.BDQuryResolve)
+                                    {
+
+                                        <tr class="row100">
+                                            <td class="column100 column1" data-column="column1">@no3</td>
+                                            <td class="column100 column2 tal" data-column="column2">@item.Branch</td>
+                                            <td class="column100 column3 " data-column="column3">@item.NameOfClient</td>
+                                            <td class="column100 column4 " data-column="column4">@item.NewExist</td>
+                                            <td class="column100 column5 " data-column="column5">@item.Status</td>
+                                            <td class="column100 column6 " data-column="column6">@item.Facility</td>
+                                            <td class="column100 column7 " data-column="column7">@item.FLS</td>
+                                            <td class="column100 column8 " data-column="column8">@item.Sub_date</td>
+                                            <td class="column100 column9 " data-column="column9">@item.CreditAnalyst</td>
+                                            <td class="column100 column10 " data-column="column10">@item.CreditPriority</td>
+                                            <td class="column100 column11 " data-column="column11">@item.ExpDis</td>
+                                            <td class="column100 column12 " data-column="column12">@item.Remarks</td>
+
+                                        </tr>
+                                        no3++;
+
+                                    }
+                                }
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row3 gx-6 gx-xl-9 allcontainer" id="Under_Process">
+                <!--begin::Col-->
+                <div class="col-lg-12  d-flex justify-content-end align-items-center" @* style="position: absolute;right: 20px;top: 20px;" *@>
+
+                    <div class="col-auto">
+                        <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                            Amount in Cr.
+                        </a>
+
+                    </div>
+
+                </div>
+                <div class="table100 ver5 m-b-30">
+                    <table data-vertable="ver5">
+                        <thead>
+                            <tr class="row100 head">
+                                <th class="column100 " width="4%" data-column="column1">Sr. No</th>
+                                <th class="column100 " data-column="column2">Branch</th>
+                                <th class="column100 " data-column="column3">Name Of The Client </th>
+                                <th class="column100 " data-column="column4">New / Existing</th>
+                                <th class="column100 " data-column="column5">Status</th>
+                                <th class="column100 " data-column="column6">Facility</th>
+                                <th class="column100 " data-column="column7">FIU Limit Sanctioned / Recommended</th>
+                                <th class="column100 " data-column="column8">Date Submitted To Credit</th>
+                                <th class="column100 " data-column="column9">Credit Analyst</th>
+                                <th class="column100 " data-column="column10">Credit Priority For May</th>
+                                <th class="column100 " data-column="column11">Sanction Date</th>
+                                <th class="column100 " data-column="column12">Expected Disbursement In May</th>
+                                <th class="column100 " data-column="column13">Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int no4 = 1;
+
+                                if (Model != null)
+                                {
+                                    @foreach (var item in Model.BDSanction)
+                                    {
+
+                                        <tr class="row100">
+                                            <td class="column100 column1" data-column="column1">@no4</td>
+                                            <td class="column100 column2 tal" data-column="column2">@item.Branch</td>
+                                            <td class="column100 column3 " data-column="column3">@item.NameOfClient</td>
+                                            <td class="column100 column4 " data-column="column4">@item.NewExist</td>
+                                            <td class="column100 column5 " data-column="column5">@item.Status</td>
+                                            <td class="column100 column6 " data-column="column6">@item.Facility</td>
+                                            <td class="column100 column7 " data-column="column7">@item.FLS</td>
+                                            <td class="column100 column8 " data-column="column8">@item.Sub_date</td>
+                                            <td class="column100 column9 " data-column="column9">@item.CreditAnalyst</td>
+                                            <td class="column100 column10 " data-column="column10">@item.CreditPriority</td>
+                                            <td class="column100 column11 " data-column="column11">@item.SanDate</td>
+                                            <td class="column100 column12 " data-column="column12">@item.ExpDis</td>
+                                            <td class="column100 column13 " data-column="column13">@item.Remarks</td>
+
+
+
+                                        </tr>
+                                        no4++;
+
+                                    }
+                                }
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row3 gx-6 gx-xl-9  allcontainer" id="sanctioned">
+                <!--begin::Col-->
+                <div class="col-lg-12  d-flex justify-content-end align-items-center" @* style="position: absolute;right:20px;top: 20px;" *@>
+
+                    <div class="col-auto">
+                        <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                            Amount in Cr.
+                        </a>
+
+                    </div>
+
+                </div>
+                <div class="table100 ver1 m-b-30">
+                    <table data-vertable="ver1">
+                        <thead>
+                            <tr class="row100 head">
+                                <th class="column100 " width="4%" data-column="column1">Sr No</th>
+                                <th class="column100 " data-column="column2">Location</th>
+                                <th class="column100 " data-column="column3">Client</th>
+                                <th class="column100 " data-column="column4">Sanctioned Limit</th>
+                                <th class="column100 " data-column="column5">Facility</th>
+                                <th class="column100 " data-column="column6">Month</th>
+                                <th class="column100 " data-column="column7"> Activation Date (Operationalised) expected By</th>
+                                <th class="column100 " data-column="column8">Sanctioned on</th>
+                                <th class="column100 " data-column="column10">Updates</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int no5 = 1;
+
+                                //if (Model != null)
+                                //{
+                                //    @foreach (var item in Model.sanctioned)
+                                //    {
+
+                                //        <tr class="row100">
+                                //            <td class="column100 column1" data-column="column1">@no5</td>
+                                //            <td class="column100 column2 tal" data-column="column2">@item.Location</td>
+                                //            <td class="column100 column3 " data-column="column3">@item.Client</td>
+                                //            <td class="column100 column4 " data-column="column4">@item.Sanctioned_Limit</td>
+                                //            <td class="column100 column6 " data-column="column6">@item.Facility</td>
+                                //            <td class="column100 column7 " data-column="column7">@item.Month</td>
+                                //            <td class="column100 column8 " data-column="column8">@item.Activation_Date</td>
+                                //            <td class="column100 column9 " data-column="column9">@item.Sanctioned_on</td>
+                                //            <td class="column100 column11 " data-column="column11">@item.Updates</td>
+
+                                //        </tr>
+                                //        no5++;
+
+                                //    }
+                                //}
+                            }
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+            <div class="row3 gx-6 gx-xl-9  allcontainer" id="Disbursal_New">
+                <!--begin::Col-->
+                <div class="col-lg-12  d-flex justify-content-end align-items-center" @* style="position: absolute;right:20px;top: 20px;" *@>
+
+                    <div class="col-auto">
+                        <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                            Amount in Cr.
+                        </a>
+
+                    </div>
+
+                </div>
+                <div class="table100 ver2 m-b-30">
+                    <table data-vertable="ver2">
+                        <thead>
+                            <tr class="row100 head">
+                                <th class="column100 " width="4%" data-column="column1">Sr No</th>
+                                <th class="column100 " data-column="column2">Location</th>
+                                <th class="column100 " data-column="column3">Client</th>
+                                <th class="column100 " data-column="column4">Sanctioned Limit</th>
+                                <th class="column100 " data-column="column5">Sanctioned date</th>
+                                <th class="column100 " data-column="column6">Facility</th>
+                                <th class="column100 " data-column="column7">Disbursal Amount</th>
+                                <th class="column100 " data-column="column8">Expected By</th>
+                                <th class="column100 " data-column="column9">Remark</th>
+                                <th class="column100 " data-column="column10">Updates</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int no6 = 1;
+
+                                //if (Model != null)
+                                //{
+                                //    @foreach (var item in Model.disbursalnew)
+                                //    {
+
+                                //        <tr class="row100">
+                                //            <td class="column100 column1" data-column="column1">@no6</td>
+                                //            <td class="column100 column2 tal" data-column="column2">@item.Location</td>
+                                //            <td class="column100 column3 " data-column="column3">@item.Client</td>
+                                //            <td class="column100 column5 " data-column="column5">@item.Sanctioned_Limit</td>
+                                //            <td class="column100 column6 " data-column="column6">@item.Sanctioned_date</td>
+                                //            <td class="column100 column7 " data-column="column7">@item.Facility</td>
+                                //            <td class="column100 column8 " data-column="column8">@item.Disbursal_Amount</td>
+                                //            <td class="column100 column9 " data-column="column9">@item.Expected_By</td>
+                                //            <td class="column100 column10 " data-column="column10">@item.Remark</td>
+                                //            <td class="column100 column11 " data-column="column11">@item.Updates</td>
+
+                                //        </tr>
+                                //        no6++;
+
+                                //    }
+                                //}
+                            }
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        document.getElementById('Under_Process').style.display = 'none';
+        document.getElementById('Disbursal_New').style.display = 'none';
+        document.getElementById('sanctioned').style.display = 'none';
+        document.getElementById('NBO').style.display = 'none';
+        document.getElementById('FSA').style.display = 'none';
+
+        $('#Overview3').show();
+
+    });
+
+    function move3(id) {
+        $('.row3').hide();
+        document.getElementById(id).style.display = 'block';
+        $('.nav-link3').removeClass('active');
+        $('#Add3').hide();
+        $('#Nav' + id).addClass('active');
+    }
+    function search2() {
+        document.getElementById('Under_Process').style.display = 'none';
+        document.getElementById('Disbursal_New').style.display = 'none';
+        document.getElementById('Summary').style.display = 'block';
+    }
+
+</script>

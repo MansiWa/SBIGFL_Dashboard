@@ -1,0 +1,122 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization;
+@using Microsoft.Extensions.Localization
+@inject IViewLocalizer Localizer;
+@model IEnumerable<PrintSoftWeb.Models.AccessPrivilegeModel>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = " Master";
+}
+<head>
+    <script src="~/jsfiles/rolemaster/rolemaster.js"></script>
+</head>
+
+<div class="card shadow mb-4">
+    <div>
+        <button type="button" title="Back" class="btn btn-primary" data-dismiss="modal" onclick="GoBack()" style="margin-top:1%;margin-left:90%;"><i class="fa fa-angle-left" style="font-size:24px"></i></button>
+    </div>
+    <div class="form-group row text-end mt-5">
+        <label style="display:none" class="col-form-label col-md-2 mt-2">@Localizer["Role Id"] <span class="text-danger">*</span> </label>
+        <div style="display:none"  class="col-md-3 py-2">
+            <input id="r_id" class="form-control" placeholder="Enter role name" value="@ViewData["r_id"]" />
+        </div>
+        
+        <label class="col-form-label col-md-2 mt-2">@Localizer["Role Name"] <span class="text-danger">*</span> </label>
+        <div class="col-md-3 py-2">
+            <input id="r_rolename" class="form-control" readonly="@(ViewData["IsReadOnly"] != null ? (bool)ViewData["IsReadOnly"] : false)" placeholder="Enter role name" type="text" maxlength="10" onkeydown="return letterOnly(event)" value="@ViewData["r_rolename"]" />
+        </div>
+        <label class="col-form-label col-md-2 mt-2"> @Localizer["Description"] <span class="text-danger">*</span></label>
+        <div class="col-md-3 py-2">
+            <input id="r_description" class="form-control" placeholder="Enter description" type="text" maxlength="100" value="@ViewData["r_description"]" />
+        </div>
+
+    </div>
+
+    <div class="form-group row text-end">
+        <label class="col-form-label col-md-2 mt-2">Module <span class="text-danger">*</span> </label>
+        <div class="col-md-3 py-2">
+            <input id="r_module" class="form-control" placeholder="Enter module" maxlength="10" textmode="number" value="@ViewData["r_module"]" />
+        </div>
+     @*   <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 ">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="r_isactive" checked>
+                <label class="form-check-label " for="flexCheckChecked">
+                    
+                </label>
+                    
+            </div>
+        </div>*@
+        <div class="col-lg-6">
+            <div class="row mt-3 mt-md-1 mt-lg-1 ml-2 ml-lg-0 ml-md-0">
+                <div class="col-lg-4">
+                    <div class="d-flex justify-content-lg-end justify-content-md-end">
+                        <input class="form-check-input float-lg-end" type="checkbox" @(ViewData["r_isactive"]=="InActive"?"":"checked") id="r_isactive">
+                    </div>
+                </div>
+                <div class="col-lg-8 ml-1 ml-lg-0 ml-md-0 text-left">
+                    <label class="form-check-label" for="flexCheckChecked">
+                        @Localizer["Is Active"]
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th width="6%"></th>
+                        <th style="display:none">id</th>
+                        <th>@Localizer["Screen Name"]</th>
+                        <th width="7%" style="text-align:center">@Localizer["Add"]</th>
+                        <th width="7%" style="text-align:center">@Localizer["Update"]</th>
+                        <th width="7%" style="text-align:center">@Localizer["View"]</th>
+                        <th width="7%" style="text-align:center">@Localizer["Delete"]</th>
+                        <th width="7%" style="text-align:center">@Localizer["Workflow"]</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                    <tr>
+                        <td class="pl-4 text-center">
+                                <input class="form-check-input flexCheckDefault" type="checkbox" value="" id="flexCheckDefault">
+                        </td>
+                            <td style="display:none" id="a_menuid">
+                                @Html.DisplayFor(modelItem => item.a_menuid)
+                        </td>
+                            <td id="m_menuname">
+                            @Html.DisplayFor(modelItem => item.m_menuname)
+                        </td>
+
+                            <td class="pl-4 text-center"> <input class="form-check-input" type="checkbox" value="" id="a_addaccess" @(item.A_AddAccessChecked ? "checked" : "")></td>
+
+                        <td class="pl-4 text-center">
+                                <input class="form-check-input" type="checkbox" value="" id="a_editaccess" @(item.A_EditAccessChecked ? "checked" : "")>
+                        </td>
+                        <td class="pl-4 text-center">
+                                <input class="form-check-input" type="checkbox" value="" id="a_viewaccess" @(item.A_ViewAccessChecked ? "checked" : "")>
+                        </td>
+                        <td class="pl-4 text-center">
+                                <input class="form-check-input" type="checkbox" value="" id="a_deleteaccess" @(item.A_DeleteAccessChecked ? "checked" : "")>
+                        </td>
+                            <td class="pl-4 text-center">
+                                <input class="form-check-input" type="checkbox" value="" id="a_workflow" @(item.A_WorkflowChecked ? "checked" : "")>
+                            </td>
+                    </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-md-10 text-center m-5">
+            <button title="Save" type="submit" id="btnsubmit" value="Create" class="btn btn-primary" onclick="submitRole()">@Localizer["Submit"]</button>
+            <button type="button" title="Cancel" class="btn btn-secondary" data-dismiss="modal" onclick="GoBack()">@Localizer["Cancel"]</button>
+        </div>
+
+       
+    </div>
+</div>
+

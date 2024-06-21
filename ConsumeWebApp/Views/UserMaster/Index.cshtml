@@ -1,0 +1,301 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization;
+@using Microsoft.Extensions.Localization
+@inject IViewLocalizer Localizer;
+@model IEnumerable<PrintSoftWeb.Models.UserMasterModel>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = " User Master";
+}
+<head>
+    <script src="~/jsfiles/usermaster/usermasterjs.js"></script>
+</head>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <div class="row align-items-center">
+            <div class="col">
+                <h4 class="m-0 font-weight-bold text-primary">@Localizer["User Master"]</h4>
+            </div>
+            <div class="col-md-2 justify-content-lg-end justify-content-md-end justify-content-center mt-lg-0 mt-md-0 mt-3">
+
+                <input type="text"
+                       id="custom-search"
+                       class="form-control "
+                       placeholder=@Localizer["Search"] />
+            </div>
+            <div class="col-auto d-flex flex-wrap toggle">
+                <div class="form-check form-switch mt-lg-1 mt-md-1 mt-3 ml-2 active-toggle">
+                    <input class="form-check-input" type="checkbox" id="toggleStatus" checked onclick="performAction()">
+                    <label class="form-check-label" for="toggleStatus" data-on="On" data-off="Off"></label>
+                </div>
+                <button class="btn btn-md text-light bg-primary mt-3 mt-lg-0 mt-md-0 ml-2"
+                        type="button" title="Add User"
+                        data-bs-toggle="modal"
+                        data-bs-target="#createModal" onclick="return AddUserMaster()"
+                        style="display:@Context.Session.GetString("AddAccess")"
+                @* style="display:'@Context.Session.GetString("AddAccess")' == "1" ? "block" : "none"*@>
+                    <i class="fa fa-plus"></i>
+                </button>
+                <button class="btn btn-md text-light bg-success mt-3 mt-lg-0 mt-md-0 ml-2" title="Excel" type="button" onclick="return Excel()" data-bs-toggle="modal" data-bs-target="#addSubscription"><i class="fas fa-file-excel"></i></button>
+                <button class="btn btn-md text-light bg-danger mt-3 mt-lg-0 mt-md-0 ml-2" type="button" title="Pdf" data-bs-toggle="modal" onclick="return Pdf()" data-bs-target="#addSubscription"><i class="fas fa-file-pdf"></i></button>
+            </div>
+
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable1" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th width="6%">@Localizer["Sr.No"]</th>
+                        <th style="display:none">
+                            @Localizer[@Html.DisplayNameFor(model => model.UserId)]
+                        </th>
+                        <th style="display:none">
+                            @Localizer[@Html.DisplayNameFor(model =>model.um_id)]
+                        </th>
+                        <th style="display:none">
+                            @Localizer[@Html.DisplayNameFor(model =>model.um_staffid)]
+                        </th>
+                        <th>
+                            @Localizer[@Html.DisplayNameFor(model =>model.um_staffname)]
+                        </th>
+                        <th>
+                            @Localizer[ @Html.DisplayNameFor(model =>model.um_user_name)]
+                        </th>
+                        <th style="display:none">
+                            @Localizer[@Html.DisplayNameFor(model =>model.um_roleid)]
+                        </th>
+                        <th style="display:none">
+                            @Localizer[@Html.DisplayNameFor(model =>model.um_rolename)]
+                        </th>
+                        <th width="7%" class="no-filter">
+                            @Localizer[@Html.DisplayNameFor(model =>model.um_isactive)]
+                        </th>
+                        <th width="7%" class="no-filter">@Localizer["Action"]</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int itemNumber = 1;
+                    }
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @itemNumber
+                            </td>
+                            <td style="display:none">
+                                @Html.DisplayFor(modelItem => item.UserId)
+                            </td>
+                            <td style="display:none">
+                                @Html.DisplayFor(modelItem => item.um_id)
+                            </td>
+                            <th style="display:none">
+                                @Html.DisplayFor(modelItem => item.um_staffid)
+                            </th>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.um_staffname)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.um_user_name)
+                            </td>
+                            <td style="display:none">
+                                @Html.DisplayFor(modelItem => item.um_roleid)
+                            </td>
+                            <td style="display:none">
+                                @Html.DisplayFor(modelItem => item.um_rolename)
+                            </td>
+                            <td>
+                                <div class="form-check form-switch ml-auto active-toggle">
+                                    @if (item.um_isactive == "Active")
+                                    {
+                                        <input class="form-check-input ml-auto" type="checkbox" id="toggleSwitch" checked onclick="ToggleSwitch('@item.um_id','@item.um_staffid','@item.um_staffname','@item.um_user_name','@item.um_roleid','@item.um_rolename','0')">
+                                        <label class="form-check-label" for="toggleSwitch" data-on="On" data-off="Off"></label>
+                                    }
+                                    else
+                                    {
+                                        <input class="form-check-input ml-auto" type="checkbox" id="toggleSwitch" onclick="ToggleSwitch('@item.um_id','@item.um_staffid','@item.um_staffname','@item.um_user_name','@item.um_roleid','@item.um_rolename','1')">
+                                        <label class="form-check-label" for="toggleSwitch" data-on="On" data-off="Off"></label>
+                                    }
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-inline-flex">
+                                    <a class='editicon text-primary' title="Edit" onclick="editLinkClick('@item.um_id','@item.um_staffid','@item.um_staffname','@item.um_user_name','@item.um_roleid','@item.um_rolename','@item.um_isactive')" style="display:@Context.Session.GetString("EditAccess")"> <span class='fas fa-edit'></span></a>
+                                    <a href="@Url.Action("Delete", new { um_id = @item.um_id })" onclick="return confirm('Are you sure you want to delete?')" class='deleteicon text-danger' title="Delete" style="display:@Context.Session.GetString("DeleteAccess")"> <span class='fa fa-trash ml-2'></span></a>
+                                </div>
+                            </td>
+                        </tr>
+                        itemNumber++;
+                    }
+                </tbody>
+            </table>
+        </div>
+        <!-- End Griddata-->
+        <!-- start Pagination-->
+        <div class="row mt-3">
+            <div class="col-lg-5 col-md-5 col-12 ">
+                <div class="row ">
+                    <div class="col-lg-3 col-md-3 col-12 d-flex justify-content-lg-start justify-content-md-start justify-content-center ">
+                        <h6 class="mt-2"> @Localizer["Show"]</h6>&nbsp;&nbsp;
+                        <select name="table_id_length" id="table_length_select" aria-controls="table_id" class="form-select w-auto">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                        &nbsp;&nbsp;
+                        <h6 class="mt-2"> @Localizer["entries"]</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2"></div>
+            <div class="col-lg-5 col-md-5 col-12 mt-lg-0 mt-md-0 mt-3">
+                <nav aria-label="Page navigation example">
+                    <div id="table_id_length">
+
+                        <div id="custom-pagination" class=" d-flex text-center text-lg-end justify-content-end  text-end float-end">
+                            <ul class="pagination justify-content-lg-end justify-content-md-end justify-content-center">
+                                <li class="page-item disabled">
+                                    <button class="page-link" href="#" aria-label="Previous" data-page="0"> <span aria-hidden="true">&laquo;</span></button>
+                                </li>
+                                <li class="page-item active"><button class="page-link" href="#" data-page="1">1</button></li>
+
+                                <li class="page-item "><button class="page-link" href="#" data-page="2" aria-label="Next">  <span aria-hidden="true">&raquo;</span></button></li>
+
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <!-- end Pagination-->
+        <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title  text-dark fw-bold" style="display:none" id="AddModel">@Localizer["Add User Master"]</h5>
+                        <h5 class="modal-title text-dark fw-bold" style="display:none" id="EditModel">@Localizer["Edit User Master"]</h5>
+                        <button type="button" class="btn-close bg-primary text-white" data-bs-dismiss="modal" aria-label="Close" onclick="CancelData()"></button>
+                    </div>
+                    <div class="modal-body text-dark">
+                        <div class="form-group" style="display:none">
+                            <label class="control-label">Id</label>
+                            <input id="um_id" class="form-control" />
+                            <span class="text-danger"></span>
+                        </div>
+                        <div class="form-group" style="display:none">
+                            <label class="control-label ">@Localizer["Staff Id"]</label>
+                            <input id="um_staffid" class="form-control" value="@ViewBag.um_staffid" />
+                            <span class="text-danger"></span>
+                        </div>
+                        <div class="form-group" style="display:none">
+                            <label class="control-label ">@Localizer["Role Id"]</label>
+                            <input id="um_roleid" class="form-control" />
+                            <span class="text-danger"></span>
+                        </div> <div class="form-group" style="display:none">
+                            <label class="control-label ">@Localizer["Password"]</label>
+                            <input id="um_password" class="form-control" />
+                            <span class="text-danger"></span>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 ">
+                                <div class="form-group form-group-sm">
+
+                                    <label class="control-label fw-bold">
+                                        @Localizer["Staff Name"] <span class="text-danger">*</span>
+                                    </label>
+                                    <select class="form-select mt-2" id="um_staffname" asp-items="@(new SelectList(ViewBag.um_staffname,"um_staffid","um_staffname"))" placeholder="Select Employee" onchange="username();" required>
+                                        <option value="">-- Select --</option>
+                                    </select>
+
+                                    <input type="text"
+                                           id="um_staffname1"
+                                           name="um_user_name"
+                                           autoComplete="off"
+                                           class="form-control mt-2"
+                                           readonly style="display:none" />
+                                    <span id="message"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 ">
+                                <div class="form-group form-group-sm">
+                                    <label class="control-label fw-bold">
+                                        @Localizer["User Name"] <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text"
+                                           id="um_user_name"
+                                           name="um_user_name"
+                                           autoComplete="off"
+                                           class="form-control mt-2"
+                                           placeholder="@Localizer["Enter User Name"]" onblur="trimInput()" maxlength="100" />
+                                    <span id="message"></span>
+
+                                    <input type="text"
+                                           id="um_user_name1"
+                                           name="um_user_name"
+                                           autoComplete="off"
+                                           class="form-control mt-2"
+                                           readonly style="display:none" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 ">
+                                <div class="form-group form-group-sm">
+                                    <label class="control-label fw-bold">
+                                        @Localizer["Role"] <span class="text-danger">*</span>
+                                    </label>
+                                    <select class="form-select mt-2" id="um_rolename" asp-items="@(new SelectList(ViewBag.um_rolename,"Id","Value"))" placeholder="Select Role" required>
+                                        <option value="">-- Select --</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 d-flex align-items-center mt-4">
+                                <div class="form-check ">
+                                    <input class="form-check-input" type="checkbox" value="" id="um_isactive" checked>
+                                    <label class="form-check-label " for="um_isactive">
+                                        @Localizer["Is Active"]
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button title="Save" type="submit" id="btnsubmit" value="Create" class="btn btn-primary" onclick="submitUserMaster()">@Localizer["Submit"]</button>
+                        <button class="btn btn-danger" type="button" data-dismiss="modal" onclick="CancelData()">@Localizer["Cancel"]</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        //$('#dataTable').DataTable();
+        //$('.table_id_length').css("display", "none");
+        $('#createModal').modal({
+            backdrop: 'static', // Prevents closing on outside click
+            keyboard: false // Prevents closing with the escape key
+        });
+        const urlParams = new URLSearchParams(window.location.search);
+
+        const status = urlParams.get('status');
+        if (status === '0') {
+
+            $('#toggleStatus').prop('checked', false);
+        }
+
+    });
+    myFunction();
+    $('#table_length_select').change();
+</script>
+
+
+
+

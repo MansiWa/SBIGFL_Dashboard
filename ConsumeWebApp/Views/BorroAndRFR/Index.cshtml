@@ -1,0 +1,277 @@
+﻿@model IEnumerable<PrintSoftWeb.Models.BorroAndRFRModel>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "File Upload";
+
+}
+
+<head>
+    <link href="~/css/main.css" rel="stylesheet" />
+    <style type="text/css">
+        .table100 {
+            border: 0px !important;
+        }
+    </style>
+</head>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <div class="row">
+            <div class="col-lg-6">
+                <h4 class="m-0 font-weight-bold text-primary"> Borrowing and RFR Document </h4>
+            </div>
+
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row d-flex justify-content-end align-items-center">
+
+            <div class="col-lg-3">
+                <div class="row mt-3 mt-lg-0 mt-md-3 d-flex justify-content-end align-items-center">
+                    <div class="col-lg-3 pr-0">
+                        <label for="name" class="form-label fw-bold"> Date : </label>
+                    </div>
+                    <div class="col-lg-9 d-flex pl-0">
+                        <input type="date" class="form-control" id="rb_date" name="rbb_date" value="@DateTime.Now.ToString("yyyy-MM-dd")">
+                    </div>
+                </div>
+            </div>
+            <div class="col-auto d-flex flex-wrap toggle pl-0">
+
+                <button class="btn btn-md text-light bg-danger mt-3 mt-lg-0 mt-md-0 ml-2" type="submit" title="Search" onclick="return searchbtn()">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                    </button>
+               
+                @* <button class="btn btn-md text-light bg-danger mt-3 mt-lg-0 mt-md-0 ml-2" type="button" title="Search" asp-action="Index" asp-controller="BorroAndRFR" onclick="setRouteDate()">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </button> *@
+                <button class="btn btn-md text-light bg-primary mt-3 mt-lg-0 mt-md-0 ml-2" type="button" title="Upload File" data-bs-toggle="modal" onclick="return addmodel()">
+                    <i class="fa fa-plus"></i>
+                </button>
+                @*  <button class="btn btn-md text-light bg-success mt-3 mt-lg-0 mt-md-0 ml-2" type="button" title="Download Excel" onclick="Excel()">
+                <i class="fas fa-file-excel"></i>
+                </button> *@
+                @*                 <div class="btn-group">
+                *@                    <button class="btn btn-md text-light bg-success mt-3 mt-lg-0 mt-md-0 ml-2" type="button" title="Download Excel" data-bs-toggle="dropdown">
+                    <i class="fas fa-file-excel"></i>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" onclick="Excel('RFR')">RFR Document</a></li>
+                    <li><a class="dropdown-item" onclick="Excel('TIER_II_BOND')">TIER II BOND</a></li>
+                    <li><a class="dropdown-item" onclick="Excel('Commercial_Paper')">Commercial Paper</a></li>
+                    <li><a class="dropdown-item" onclick="Excel('Bank_Line_CC')">Bank Line (CC Drawals)</a></li>
+                    <li><a class="dropdown-item" onclick="Excel('Bank_Line_WCL')">Bank Line (WCL / STL Drawals)</a></li>
+                    <li><a class="dropdown-item" onclick="Excel('FOREX')">FOREX</a></li>
+                    <!-- Add more options as needed -->
+                </ul>
+                @*                 </div>
+                *@
+            </div>
+        </div>
+        <div class="table100 ver2 m-b-110">
+
+            <table class="table table-bordered" id="dataTable1" width="100%" cellspacing="0" data-vertable="ver2">
+                <thead>
+                    <tr class="row100 head">
+                        <th> Sr.No </th>
+                        <th class="d-none"></th>
+                        <th> Document Type </th>
+                        <th> File Name </th>
+                        <th> Date </th>
+                        <th> Count </th>
+                        <th style="display:none;"> Document Id </th>
+                        <th style="display:none;"> Table Name </th>
+                        <th> Action </th>
+                    </tr>
+                </thead>
+                <tbody id="htmlrpt">
+
+                    @{
+
+
+                        int no = 1;
+                    }
+                    @foreach (var item in Model)
+                    {
+
+                        <tr class="align-items-center row100">
+                            <td>
+                                @no
+                            </td>
+                            <td class="d-none"></td>
+                            <td> @Html.DisplayFor(modelItem => item.rb_type)</td>
+                            <td> @Html.DisplayFor(modelItem => item.rb_filename)</td>
+                            <td>@item.rb_date</td>
+                            <td> @Html.DisplayFor(modelItem => item.rb_count)</td>
+                            <td style='display:none;'>@Html.DisplayFor(modelItem => item.rb_docid)</td>
+                            <td style='display:none;'> @Html.DisplayFor(modelItem => item.rb_tablename)</td>
+                            <td>
+                                <a href="@Url.Action("Delete", new { rb_id = @item.rb_id,rb_date=@item.rb_date,rb_doctype=@item.rb_doctype,batchid=item.batchid })" onclick="return confirm('Are you sure you want to delete?')" class='deleteicon text-danger' title="Delete"> <span class='fa fa-trash ml-2'></span></a>
+                            </td>
+
+                        </tr>
+                        no++;
+
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- start Pagination-->
+        <div class="row mt-3">
+            <div class="col-lg-5 col-md-5 col-12 ">
+                <div class="row ">
+                    <div class="col-lg-3 col-md-3 col-12 d-flex justify-content-lg-start justify-content-md-start justify-content-center ">
+                        <h6 class="mt-2">Show</h6>&nbsp;&nbsp;
+                        <select name="table_id_length" id="table_length_select" aria-controls="table_id" class="form-select w-auto">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                        &nbsp;&nbsp;
+                        <h6 class="mt-2">entries</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2"></div>
+            <div class="col-lg-5 col-md-5 col-12 mt-lg-0 mt-md-0 mt-3">
+                <nav aria-label="Page navigation example">
+                    <div id="table_id_length">
+
+                        <div id="custom-pagination" class=" d-flex text-center text-lg-end justify-content-end  text-end float-end">
+                            <ul class="pagination justify-content-lg-end justify-content-md-end justify-content-center">
+                                <li class="page-item disabled">
+                                    <button class="page-link" href="#" aria-label="Previous" data-page="0"> <span aria-hidden="true">&laquo;</span></button>
+                                </li>
+                                <li class="page-item active"><button class="page-link" href="#" data-page="1">1</button></li>
+
+                                <li class="page-item "><button class="page-link" href="#" data-page="2" aria-label="Next">  <span aria-hidden="true">&raquo;</span></button></li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-dark" id="exampleModalLabel">File Upload</h5>
+                    <button type="button" class="btn-close bg-primary text-white" data-bs-dismiss="modal" aria-label="Close" onclick="Close()"></button>
+                </div>
+
+                <form asp-controller="BorroAndRFR" asp-action="Upload" method="post" enctype="multipart/form-data">
+
+                    <input type="hidden" id="date" name="date" />
+
+                    <div class="modal-body text-dark">
+                        <div class="form-group" style="display:none">
+                            <label class="control-label">Id</label>
+                            <input id="cc_id" class="form-control" />
+                            <span class="text-danger"></span>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6 col-sm-6 col-md-12 ">
+                                <label class="control-label fw-bold">Select File <span class="text-danger">*</span></label>
+                                <div class="form-group form-group-sm">
+                                    <input id="f_upload" class="form-control" required type="file" name="postedFile" />
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 col-md-12 ">
+                                <div class="row mt-3 mt-lg-0 mt-md-3">
+                                    <div class="col-lg-3">
+                                        <label for="category" class="form-label">Report Type:<span class="text-danger">*</span></label>
+                                    </div>
+                                    <div class="col-lg-7">
+                                        <select id="rb_doctype" name="rb_doctype" class="form-select" required placeholder="Select Type" aria-label="Default select example">
+                                            <option value="" selected>--Select--</option>
+                                            <option value="RFR">RFR Document</option>
+                                            <option value="TIER_II_BOND">TIER II BOND</option>
+                                            <option value="Commercial_Paper">Commercial Paper</option>
+                                            <option value="Bank_Line_CC">Bank Line (CC Drawals)</option>
+                                            <option value="Bank_Line_WCL">Bank Line (WCL / STL Drawals)</option>
+                                            <option value="FOREX">FOREX</option>
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button title="Save" type="submit" id="btnsubmit" value="Create" class="btn btn-primary" onclick="">Submit</button>
+                        <button type="button" title="Close" class="btn btn-danger" data-dismiss="modal" onclick="Close()">Close</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#createModal').modal({
+            backdrop: 'static', // Prevents closing on outside click
+            keyboard: false // Prevents closing with the escape key
+        });
+    });
+
+    function Close() {
+        window.location.reload();
+    }
+    function addmodel() {
+        $("#createModal").modal("show");
+        $('#date').val($('#rb_date').val());
+    } function Excel(type) {
+        if (type == "Borrow")
+            window.location.href = 'BorroAndRFR/Excel';
+        else if (type == "TIER_II_BOND")
+            window.location.href = 'BorroAndRFR/ExcelTIER_II_BOND';
+        else if (type == "Commercial_Paper")
+            window.location.href = 'BorroAndRFR/ExcelCommercial_Paper';
+        else if (type == "Bank_Line_CC")
+            window.location.href = 'BorroAndRFR/ExcelBank_Line_CC';
+        else if (type == "Bank_Line_WCL")
+            window.location.href = 'BorroAndRFR/ExcelBank_Line_WCL';
+        else if (type == "FOREX")
+            window.location.href = 'BorroAndRFR/ExcelFOREX';
+        else
+            window.location.href = 'BorroAndRFR/RFRExcel';
+    }
+    function searchbtn() {
+        var rb_date = $('#rb_date').val();
+        if (rb_date == '') {
+            alert("Please select date!");
+            return false;
+        }
+        var data = {
+            rb_date: $('#rb_date').val(),
+        };
+        $.ajax({
+            type: 'POST',
+            url: "BorroAndRFR/Search?rb_date=" + rb_date, // Use the form's action attribute
+            data: data, // Serialize the form data
+            success: function (response) {
+                var htmlrpt = '';
+                $('#htmlrpt').html(htmlrpt);
+                for (var i = 0; i < response.length; i++) {
+
+                    htmlrpt += '<tr class=" row100"><td class="column100 "><b>' + (i + 1) + '</b></td><td class="column100 ">' + response[i].rb_type + '</td><td class="column100 ">' + response[i].rb_filename + '</td><td class="column100 ">' + response[i].rb_date + '</td><td class="column100 ">' + response[i].rb_count + '</td><td class="column100 " style="display:none">' + response[i].rb_docid + '</td><td class="column100 " style="display:none">' + response[i].rb_tablename + '</td><td class="column100 "><a href="/BorroAndRFR/Delete?rb_id=' + response[i].rb_id + '&rb_date=' + response[i].rb_date + '&rb_doctype=' + response[i].rb_doctype + '&batchid=' + response[i].batchid + '" onclick="return confirm(\'Are you sure you want to delete?\')" class="deleteicon text-danger" title="Delete"><span class="fa fa-trash ml-2"></span></a></td></tr>';
+
+                }
+                $('#htmlrpt').html(htmlrpt);
+            },
+            error: function (xhr, status, error) {
+            }
+        });
+    }
+
+    myFunction();
+    $('#table_length_select').change();
+</script>

@@ -1,0 +1,799 @@
+﻿@model PrintSoftWeb.Models.DebtModel
+<head>
+    <link href="~/css/style.bundle.css" rel="stylesheet" />
+    <script src="~/js/chart.roundedbarcharts.js"></script>
+    <script src="~/js/chart.js"></script>
+    @* <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-3d"></script> *@
+    <link href="~/css/main.css" rel="stylesheet" />
+    <link href="~/css/util.css" rel="stylesheet" />
+    <script src="~/js/custom.js"></script>
+
+</head>
+
+<div id="kt_header" class="header" data-kt-sticky="true" data-kt-sticky-name="header" data-kt-sticky-offset="{default: '200px', lg: '300px'}">
+    <!--begin::Container-->
+    <div class="container-fluid d-flex align-items-center justify-content-between" id="kt_header_container">
+        <!--begin::Page title-->
+        <div class="page-title d-flex flex-column align-items-start justify-content-center flex-wrap me-lg-auto pb-5 pb-lg-0" data-kt-swapper="true" data-kt-swapper-mode="prepend" data-kt-swapper-parent="{default: '#kt_content_container', lg: '#kt_header_container'}">
+            <!--begin::Heading-->
+            <h1 class="text-black fw-bold my-0 fs-2 text-start">Debt Management Dashboard </h1>
+            <!--end::Heading-->
+        </div>
+
+    </div>
+</div>
+<div class="col-md-12 mt-3">
+
+    <div class="card mycard bcolor ">
+        <div class="card-body d-flex p-4">
+
+            <!--begin::Nav-->
+            <ul class="nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent listdesign fw-bold">
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link3 text-active-primary p-5 active" id="NavOverview" onclick="move('Overview')">Overview</a>
+                </li>
+                <!--end::Nav item-->
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link3 text-active-primary  p-5" id="NavSME_0" onclick="move('SME_0')">SMA0</a>
+                </li>
+                <!--end::Nav item-->
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link3 text-active-primary  p-5" id="NavSME_1" onclick="move('SME_1')">SMA1</a>
+                </li>
+                <!--end::Nav item-->
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link3 text-active-primary  p-5" id="NavSME_2" onclick="move('SME_2')">SMA2</a>
+                </li>
+                <!--end::Nav item-->
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link3 text-active-primary  p-5 " id="NavNPA" onclick="move('NPA')">NPA</a>
+                </li>
+                <!--end::Nav item-->
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link3 text-active-primary   p-5" id="NavAUCA" onclick="move('AUCA')">AUCA</a>
+                </li>
+                <!--end::Nav item-->
+               
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link3 text-active-primary  p-5" id="NavWeekly_SMA" onclick="move('Weekly_SMA')">Weekly SMA Comparision </a>
+                </li>
+                <!--end::Nav item-->
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link3 text-active-primary  p-5" id="NavBranch_wise_Overdue" onclick="move('Branch_wise_Overdue')">Branch wise Overdue Position</a>
+                </li>
+                <!--end::Nav item-->
+            </ul>
+            <!--end::Nav-->
+            <form asp-controller="DebtDashboard" asp-action="Find" method="get">
+                <div class=" d-flex align-items-center " style="position:absolute;top:16px;right:16px;">
+
+                    @{
+                        string dateValue = TempData["Date"] as string;
+                        DateTime parsedDate;
+                        if (DateTime.TryParse(dateValue, out parsedDate))
+                        {
+                            <input type="date" class="form-control" id="DebtDate" name="DebtDate" value="@parsedDate.ToString("yyyy-MM-dd")">
+                        }
+                        else
+                        {
+                            <input type="date" class="form-control" id="DebtDate" name="DebtDate" value="">
+                        }
+                    }
+
+                    <button class="btn btn-md text-white bg-success mt-3 mt-lg-0 mt-md-0 ml-2" title="Search"><i class="fa fa-search" aria-hidden="true"></i></button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <div class="row Add3 row3 pt-5" id="Overview">
+        <div class=" col">
+            <!--begin::Col-->
+            <!--begin::Wrapper-->
+            <div class="pt-5">
+                <!--begin::Chart-->
+
+                <div class="position-relative d-flex pt-5 flex-center mb-1" @* style="padding-top: 84px !important;padding-left: 72px !important;" *@>
+
+                    <div class="d-flex flex-wrap flex-center flex-md-column">
+                        <canvas id="myPieChart2" width="400" height="350"></canvas>
+                        <p class="pt-6 cirhead2">
+                            @{
+                                // Calculate the sum of values
+                                var sum = 0.0;
+                                foreach (var item in Model.debt)
+                                {
+                                    sum += Convert.ToDouble(item.Amount);
+                                }
+                            }
+                            @sum.ToString("0.00")
+                        </p>
+                    </div>
+
+                    <!-- JavaScript code to render the pie chart -->
+                    <script>
+                        // Data for the pie chart
+                        const pieChartData2 = [
+                        @foreach (var item in Model.debt)
+                        {
+                            <text>{ label: '@item.Product', value: @item.Amount }, </text>
+                        }
+                                                                                            ];
+
+                        // Extract labels and data from the data array
+                        const labels2 = pieChartData2.map(item => item.label);
+                        const data2 = pieChartData2.map(item => item.value);
+
+                        // Render the pie chart using Chart.js library
+                        const ctx2 = document.getElementById('myPieChart2').getContext('2d');
+                        const myPieChart2 = new Chart(ctx2, {
+                            type: 'doughnut',
+                            data: {
+                                labels: labels2,
+                                datasets: [{
+                                    data: data2,
+                                    backgroundColor: [
+                                        '#D76A66',//'rgba(0, 185, 255, 0.99)',   //  Blue
+                                        '#72B9f0',//'rgba(255, 108, 22, 0.99)', // Orange
+                                        '#744FE6',//'rgba(86, 217, 22, 1)',   //Green
+                                        '#E1A34D',//'rgba(255, 47, 92, 1)',   //red
+                                        '#883097f7',//' rgba(255, 209, 0, 0.96)',  // Yellow
+                                        '#6fC884'//'rgba(210, 118, 246, 0.96)'    // purple
+                                    ]
+
+                                }]
+                            },
+                            options: {
+                                plugins: {
+                                    chartJsPlugin3d: {
+                                        enabled: true,
+                                        alpha: 85,
+                                        beta: 50
+                                    },
+                                    legend: {
+                                        position: 'bottom',
+                                        align: 'center',
+                                        labels: {
+                                            color: 'black',
+                                            boxWidth: 40,
+                                            padding: 20
+                                        }
+                                    },
+                                    tooltip: {
+                                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                        displayColors: false
+                                    }
+                                },
+                                cutout: '60%',
+                                responsive: false,
+                                height: 350,
+                                width: 400,
+                                onClick: (event, elements) => {
+                                    if (elements && elements.length > 0) {
+                                        const index = elements[0].index;
+                                        const label = labels2[index];
+                                        if (label == 'SME-0') {
+                                            move('SME_0');
+                                        }
+                                        else if (label == 'SME-1') {
+                                            move('SME_1');
+                                        } else if (label == 'SME-2') {
+                                            move('SME_2');
+                                        }
+                                        else {
+                                            move(label);
+                                        }
+
+                                    }
+                                }
+                            }
+                        });
+
+                    </script>
+                </div>
+                <!--end::Chart-->
+                <!--begin::Labels-->
+                <!--end::Labels-->
+            </div>                <!--end::Wrapper-->
+
+        </div>
+        <div class="col">
+            <div class=" allcontainer pt-10 pr-5">
+                <!--begin::Col-->
+                <div class="col-lg-12  d-flex justify-content-end align-items-center" style="position: absolute;right: 12px;top: 10px;">
+
+                    <div class="col-auto">
+                        <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                            Amount in Cr.
+                        </a>
+
+                    </div>
+
+                </div>
+                <div class="table100 ver3 m-b-110">
+                    <table data-vertable="ver3">
+                        <thead>
+                            <tr class="row100 head">
+                                <th class="column100 " data-column="column1">Sr No</th>
+                                <th class="column100 " data-column="column2">Product</th>
+                                <th class="column100 " data-column="column3">NoOfAccount</th>
+                                <th class="column100 " data-column="column4">Amount</th>
+
+                            </tr>
+                        </thead>
+                        <tbody id="htmlrpt2">
+                            @{
+                                int srno = 1;
+                                @if (Model != null)
+                                {
+                                    foreach (var item in Model.debt)
+                                    {
+                                        <tr class="row100">
+                                            <td class="column100 column1 " data-column="column1 tal">@srno</td>
+                                            <td class="column100 column2 " data-column="column2 tar">@Html.DisplayFor(modelItem => item.Product)</td>
+                                            <td class="column100 column3 " data-column="column3 tar">@Html.DisplayFor(modelItem => item.NoOfAccount)</td>
+                                            <td class="column100 column4 " data-column="column4 tar">@Html.DisplayFor(modelItem => item.Amount)</td>
+                                        </tr>
+                                        srno++;
+                                    }
+
+                                }
+
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="Add3 row3 pt-10 pr-5 allcontainer" id="NPA">
+        <!--begin::Col-->
+        <div class="col-lg-12  d-flex justify-content-end align-items-center" style="position: absolute;right: 20px;top: 88px;">
+
+            <div class="col-auto">
+                <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                    Amount in Cr.
+                </a>
+
+            </div>
+
+        </div>
+        <div class="table100 ver6 m-b-110">
+            <table data-vertable="ver6">
+                <thead class="text-align-center">
+                    <tr class="row100 head">
+                        <th class="column100 " width="7%" data-column="column1">Sr No</th>
+                        <th class="column100 tal" data-column="column2">Client Name</th>
+                        <th class="column100 " data-column="column3">Region</th>
+                        <th class="column100 " data-column="column4">Principle NPA as at Jan 2024</th>
+                        <th class="column100 " data-column="column5">Date of NPA</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int no6 = 1;
+
+                        if (Model != null)
+                        {
+                            @foreach (var item in Model.npa)
+                            {
+
+                                <tr class="row100">
+                                    <td class="column100 column1 " data-column="column1">@no6</td>
+                                    <td class="column100 column2 tal" data-column="column2">@item.CLIENT_NAME</td>
+                                    <td class="column100 column3 " data-column="column3">@item.REGION</td>
+                                    <td class="column100 column4 " data-column="column4">@item.PRINCIPAL_NPA</td>
+                                    <td class="column100 column5 " data-column="column5">@String.Format("{0:dd/MM/yyyy}", item.DATE_NPA)</td>
+
+                                </tr>
+                                no6++;
+
+                            }
+                        }
+                    }
+
+                    <!-- Repeat the above row structure for other data entries -->
+                </tbody>
+            </table>
+        </div>    <!--end::Col-->
+    </div>
+    <div class="Add3 row3  pt-10 pr-5 allcontainer" id="AUCA">
+        <!--begin::Col-->
+        <div class="col-lg-12  d-flex justify-content-end align-items-center" style="position: absolute;right: 20px;top: 88px;">
+
+            <div class="col-auto">
+                <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                    Amount in Cr.
+                </a>
+
+            </div>
+
+        </div>
+        <div class="table100 ver5 m-b-110">
+            <table data-vertable="ver5">
+                <thead>
+                    <tr class="row100 head">
+                        <th class="column100 " width="7%" data-column="column1">Sr No</th>
+                        <th class="column100 tal" data-column="column2">DEC</th>
+                        <th class="column100 " data-column="column3">Region</th>
+                        <th class="column100 " data-column="column4">Principal WOA</th>
+                        <th class="column100 " data-column="column5">Date of NPA</th>
+                        <th class="column100 " data-column="column6">Date of WOA</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int no1 = 1;
+
+                        if (Model != null)
+                        {
+                            @foreach (var item in Model.woa)
+                            {
+
+                                <tr class="row100">
+                                    <td class="column100 column1 " data-column="column1">@no1</td>
+                                    <td class="column100 column2 tal" data-column="column2">@item.dec</td>
+                                    <td class="column100 column3 " data-column="column3">@item.REGION</td>
+                                    <td class="column100 column4 " data-column="column4">@item.PRINCIPAL_WOA</td>
+                                    <td class="column100 column5 " data-column="column5">@String.Format("{0:dd/MM/yyyy}", item.DATE_NPA)</td>
+                                    <td class="column100 column6 " data-column="column6">@String.Format("{0:dd/MM/yyyy}", item.DATE_WOA)</td>
+
+                                </tr>
+                                no1++;
+
+                            }
+                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="Add3 row3 pt-10 pr-5  allcontainer" id="SME_0">
+        <!--begin::Col-->
+        <div class="col-lg-12  d-flex justify-content-end align-items-center" style="position: absolute;right:20px;top: 88px;">
+
+            <div class="col-auto">
+                <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                    Amount in Cr.
+                </a>
+
+            </div>
+
+        </div>
+        <div class="table100 ver2 m-b-110">
+            <table data-vertable="ver2">
+                <thead>
+                    <tr class="row100 head">
+                        <th class="column100 " width="7%" data-column="column1">Sr No</th>
+                        <th class="column100 " data-column="column2">Client Name</th>
+                        <th class="column100 " data-column="column3">Business Type</th>
+@*                         <th class="column100 " data-column="column4">Subproduct Code PK</th>
+ *@                        <th class="column100 " data-column="column5">Overdue Bucket</th>
+                        <th class="column100 " data-column="column6">Branch Name</th>
+                        <th class="column100 " data-column="column7">Account Limit</th>
+                        <th class="column100 " data-column="column8">FIU Outstanding</th>
+                        <th class="column100 " data-column="column9">SL Outstanding</th>
+                        <th class="column100 " data-column="column10">SL Outstanding INR</th>
+                        <th class="column100 " data-column="column11">FIU Overdue</th>
+                        <th class="column100 " data-column="column12">FIU Overdue INR</th>
+                        <th class="column100 " data-column="column13">Pending Interest Amount</th>
+                        <th class="column100 " data-column="column14">Pending Interest Amount INR</th>
+                        <th class="column100 " data-column="column15">Pending Charges Amount</th>
+                        <th class="column100 " data-column="column16">Pending Charges Amount INR</th>
+                        <th class="column100 " data-column="column17">Interest Recovered Till Date</th>
+                        <th class="column100 " data-column="column18">Max Overdue Days</th>
+                        <th class="column100 " data-column="column19">Debtor Names wherein SL OS</th>
+                        <th class="column100 " data-column="column20">Recourse Days</th>
+                        <th class="column100 " data-column="column21">PAN No</th>
+                        <th class="column100 " data-column="column22">Principal Outstanding</th>
+                        <th class="column100 " data-column="column23">Principal Outstanding INR</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int no2 = 1;
+
+                        if (Model != null)
+                        {
+                            @foreach (var item in Model.sma)
+                            {
+
+                                <tr class="row100">
+                                    <td class="column100 column1 " data-column="column1">@no2</td>
+                                    <td class="column100" data-column="column2">@item.CLIENT_NAME</td>
+                                    <td class="column100" data-column="column3">@item.BUSINESS_TYPE</td>
+                                    <td class="column100" data-column="column5">@item.OVERDUE_BUCKET</td>
+                                    <td class="column100" data-column="column6">@item.REGION_NAME</td>
+                                    <td class="column100" data-column="column7">@item.ACCOUNT_LIMIT</td>
+                                    <td class="column100" data-column="column8">@item.FIU_OUTSTANDING</td>
+                                    <td class="column100" data-column="column9">@item.SL_OUTSTANDING</td>
+                                    <td class="column100" data-column="column10">@item.SL_OUTSTANDING_INR</td>
+                                    <td class="column100" data-column="column11">@item.FIU_OVERDUE</td>
+                                    <td class="column100" data-column="column12">@item.FIU_OVERDUE_INR</td>
+                                    <td class="column100" data-column="column13">@item.PENDING_INTEREST_AMT</td>
+                                    <td class="column100" data-column="column14">@item.PENDING_INTEREST_AMT_INR</td>
+                                    <td class="column100" data-column="column15">@item.PENDING_CHARGES_AMT</td>
+                                    <td class="column100" data-column="column16">@item.PENDING_CHARGES_AMT_INR</td>
+                                    <td class="column100" data-column="column17">@item.INTR_RECOVER_TILL_DT</td>
+                                    <td class="column100" data-column="column18">@item.MAX_OVERDUE_DAYS</td>
+                                    <td class="column100" data-column="column19">@item.DEBTOR_NAMES_WHEREIN_SL_OS</td>
+                                    <td class="column100" data-column="column20">@item.RECOURSE_DAYS</td>
+                                    <td class="column100" data-column="column21">@item.PAN_NO</td>
+                                    <td class="column100" data-column="column22">@item.PRINC_OUTSTANDING</td>
+                                    <td class="column100" data-column="column23">@item.PRINC_OUTSTANDING_INR</td>
+
+                                </tr>
+                                no2++;
+
+                            }
+                        }
+                    }
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+    <div class="Add3 row3 pt-10 pr-5 allcontainer" id="SME_1">
+        <!--begin::Col-->
+        <div class="col-lg-12  d-flex justify-content-end align-items-center" style="position: absolute;right: 20px;top: 88px;">
+
+            <div class="col-auto">
+                <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                    Amount in Cr.
+                </a>
+
+            </div>
+
+        </div>
+        <div class="table100 ver5 m-b-110">
+            <table data-vertable="ver5">
+                <thead>
+                    <tr class="row100 head">
+                        <th class="column100 " width="7%" data-column="column1">Sr No</th>
+                        <th class="column100 " data-column="column2">Client Name</th>
+                        <th class="column100 " data-column="column3">Business Type</th>
+                        @* <th class="column100 " data-column="column4">Subproduct Code PK</th> *@
+                        <th class="column100 " data-column="column5">Overdue Bucket</th>
+                        <th class="column100 " data-column="column6">Branch Name</th>
+                        <th class="column100 " data-column="column7">Account Limit</th>
+                        <th class="column100 " data-column="column8">FIU Outstanding</th>
+                        <th class="column100 " data-column="column9">SL Outstanding</th>
+                        <th class="column100 " data-column="column10">SL Outstanding INR</th>
+                        <th class="column100 " data-column="column11">FIU Overdue</th>
+                        <th class="column100 " data-column="column12">FIU Overdue INR</th>
+                        <th class="column100 " data-column="column13">Pending Interest Amount</th>
+                        <th class="column100 " data-column="column14">Pending Interest Amount INR</th>
+                        <th class="column100 " data-column="column15">Pending Charges Amount</th>
+                        <th class="column100 " data-column="column16">Pending Charges Amount INR</th>
+                        <th class="column100 " data-column="column17">Interest Recovered Till Date</th>
+                        <th class="column100 " data-column="column18">Max Overdue Days</th>
+                        <th class="column100 " data-column="column19">Debtor Names wherein SL OS</th>
+                        <th class="column100 " data-column="column20">Recourse Days</th>
+                        <th class="column100 " data-column="column21">PAN No</th>
+                        <th class="column100 " data-column="column22">Principal Outstanding</th>
+                        <th class="column100 " data-column="column23">Principal Outstanding INR</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int no3 = 1;
+
+                        if (Model != null)
+                        {
+                            @foreach (var item in Model.sma1)
+                            {
+
+                                <tr class="row100">
+                                    <td class="column100 column1 " data-column="column1">@no3</td>
+                                    <td class="column100" data-column="column2">@item.CLIENT_NAME</td>
+                                    <td class="column100" data-column="column3">@item.BUSINESS_TYPE</td>
+                                    <td class="column100" data-column="column5">@item.OVERDUE_BUCKET</td>
+                                    <td class="column100" data-column="column6">@item.REGION_NAME</td>
+                                    <td class="column100" data-column="column7">@item.ACCOUNT_LIMIT</td>
+                                    <td class="column100" data-column="column8">@item.FIU_OUTSTANDING</td>
+                                    <td class="column100" data-column="column9">@item.SL_OUTSTANDING</td>
+                                    <td class="column100" data-column="column10">@item.SL_OUTSTANDING_INR</td>
+                                    <td class="column100" data-column="column11">@item.FIU_OVERDUE</td>
+                                    <td class="column100" data-column="column12">@item.FIU_OVERDUE_INR</td>
+                                    <td class="column100" data-column="column13">@item.PENDING_INTEREST_AMT</td>
+                                    <td class="column100" data-column="column14">@item.PENDING_INTEREST_AMT_INR</td>
+                                    <td class="column100" data-column="column15">@item.PENDING_CHARGES_AMT</td>
+                                    <td class="column100" data-column="column16">@item.PENDING_CHARGES_AMT_INR</td>
+                                    <td class="column100" data-column="column17">@item.INTR_RECOVER_TILL_DT</td>
+                                    <td class="column100" data-column="column18">@item.MAX_OVERDUE_DAYS</td>
+                                    <td class="column100" data-column="column19">@item.DEBTOR_NAMES_WHEREIN_SL_OS</td>
+                                    <td class="column100" data-column="column20">@item.RECOURSE_DAYS</td>
+                                    <td class="column100" data-column="column21">@item.PAN_NO</td>
+                                    <td class="column100" data-column="column22">@item.PRINC_OUTSTANDING</td>
+                                    <td class="column100" data-column="column23">@item.PRINC_OUTSTANDING_INR</td>
+
+                                </tr>
+                                no3++;
+
+                            }
+                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="Add3 row3 pt-10 pr-5 allcontainer" id="SME_2">
+        <!--begin::Col-->
+        <div class="col-lg-12  d-flex justify-content-end align-items-center" style="position: absolute;right:20px;top: 88px;">
+
+            <div class="col-auto">
+                <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                    Amount in Cr.
+                </a>
+
+            </div>
+
+        </div>
+        <div class="table100 ver2 m-b-110">
+            <table data-vertable="ver2">
+                <thead>
+                    <tr class="row100 head">
+                        <th class="column100 " width="7%" data-column="column1">Sr No</th>
+                        <th class="column100 " data-column="column2">Client Name</th>
+                        <th class="column100 " data-column="column3">Business Type</th>
+                       @*  <th class="column100 " data-column="column4">Subproduct Code PK</th> *@
+                        <th class="column100 " data-column="column5">Overdue Bucket</th>
+                        <th class="column100 " data-column="column6">Branch Name</th>
+                        <th class="column100 " data-column="column7">Account Limit</th>
+                        <th class="column100 " data-column="column8">FIU Outstanding</th>
+                        <th class="column100 " data-column="column9">SL Outstanding</th>
+                        <th class="column100 " data-column="column10">SL Outstanding INR</th>
+                        <th class="column100 " data-column="column11">FIU Overdue</th>
+                        <th class="column100 " data-column="column12">FIU Overdue INR</th>
+                        <th class="column100 " data-column="column13">Pending Interest Amount</th>
+                        <th class="column100 " data-column="column14">Pending Interest Amount INR</th>
+                        <th class="column100 " data-column="column15">Pending Charges Amount</th>
+                        <th class="column100 " data-column="column16">Pending Charges Amount INR</th>
+                        <th class="column100 " data-column="column17">Interest Recovered Till Date</th>
+                        <th class="column100 " data-column="column18">Max Overdue Days</th>
+                        <th class="column100 " data-column="column19">Debtor Names wherein SL OS</th>
+                        <th class="column100 " data-column="column20">Recourse Days</th>
+                        <th class="column100 " data-column="column21">PAN No</th>
+                        <th class="column100 " data-column="column22">Principal Outstanding</th>
+                        <th class="column100 " data-column="column23">Principal Outstanding INR</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int no4 = 1;
+
+                        if (Model != null)
+                        {
+                            @foreach (var item in Model.sma2)
+                            {
+
+                                <tr class="row100">
+                                    <td class="column100 column1 " data-column="column1">@no4</td>
+                                    <td class="column100" data-column="column2">@item.CLIENT_NAME</td>
+                                    <td class="column100" data-column="column3">@item.BUSINESS_TYPE</td>
+                                    <td class="column100" data-column="column5">@item.OVERDUE_BUCKET</td>
+                                    <td class="column100" data-column="column6">@item.REGION_NAME</td>
+                                    <td class="column100" data-column="column7">@item.ACCOUNT_LIMIT</td>
+                                    <td class="column100" data-column="column8">@item.FIU_OUTSTANDING</td>
+                                    <td class="column100" data-column="column9">@item.SL_OUTSTANDING</td>
+                                    <td class="column100" data-column="column10">@item.SL_OUTSTANDING_INR</td>
+                                    <td class="column100" data-column="column11">@item.FIU_OVERDUE</td>
+                                    <td class="column100" data-column="column12">@item.FIU_OVERDUE_INR</td>
+                                    <td class="column100" data-column="column13">@item.PENDING_INTEREST_AMT</td>
+                                    <td class="column100" data-column="column14">@item.PENDING_INTEREST_AMT_INR</td>
+                                    <td class="column100" data-column="column15">@item.PENDING_CHARGES_AMT</td>
+                                    <td class="column100" data-column="column16">@item.PENDING_CHARGES_AMT_INR</td>
+                                    <td class="column100" data-column="column17">@item.INTR_RECOVER_TILL_DT</td>
+                                    <td class="column100" data-column="column18">@item.MAX_OVERDUE_DAYS</td>
+                                    <td class="column100" data-column="column19">@item.DEBTOR_NAMES_WHEREIN_SL_OS</td>
+                                    <td class="column100" data-column="column20">@item.RECOURSE_DAYS</td>
+                                    <td class="column100" data-column="column21">@item.PAN_NO</td>
+                                    <td class="column100" data-column="column22">@item.PRINC_OUTSTANDING</td>
+                                    <td class="column100" data-column="column23">@item.PRINC_OUTSTANDING_INR</td>
+
+                                </tr>
+                                no4++;
+
+                            }
+                        }
+                    }
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+    <div class="Add3 row3  pt-10 pr-5 allcontainer" id="Weekly_SMA">
+        <!--begin::Col-->
+        <div class="col-lg-12  d-flex justify-content-end align-items-center" style="position: absolute;right: 20px;top: 88px;">
+
+            <div class="col-auto">
+                <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                    Amount in Cr.
+                </a>
+
+            </div>
+
+        </div>
+        <div class="table100 ver3 m-b-110">
+            <table data-vertable="ver3">
+                <thead>
+                    <tr class="row100 head">
+                        <th class="column100 " rowspan="2" width="7%" data-column="column1">Sr No</th>
+                        @*  <th class="column100 tal" rowspan="2" data-column="column2">SMA</th> *@
+                        <th class="column100 " rowspan="2" data-column="column3">Overdue Bucket</th>
+
+                        @{
+                            // Get the date from TempData and convert it to a DateTime object
+                            string dateValue1 = TempData["Date"] as string;
+                            DateTime parsedDate1;
+                            DateTime date;
+                            DateTime lastWeekDate;
+                            if (DateTime.TryParse(dateValue1, out parsedDate1))
+                            {
+                                date = parsedDate1;
+                                lastWeekDate = parsedDate1.AddDays(-7);
+                                <th class="column100 " colspan="3" data-column="column4">Position as on @lastWeekDate.ToString("dd-MM-yyyy")</th>
+                                <th class="column100 " colspan="3" data-column="column5">Position as on @date.ToString("dd-MM-yyyy")</th>
+                            }
+                        }
+                       
+
+                    </tr>
+                    <tr class="row100 head">
+                        <th class="column100 " data-column="column4">No. Of A/c</th>
+                        <th class="column100 " data-column="column5">FIU Outstanding (Cr)</th>
+                        <th class="column100 " data-column="column6">FIU Overdue (Cr)</th>
+                        <th class="column100 " data-column="column7">No. Of A/c</th>
+                        <th class="column100 " data-column="column8">FIU Outstanding (Cr)</th>
+                        <th class="column100 " data-column="column9">FIU Overdue (Cr)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int no5 = 1;
+
+                        if (Model != null)
+                        {
+                            @foreach (var item in Model.WeeklySMA)
+                            {
+
+                                <tr class="row100">
+                                    <td class="column100 column1 " data-column="column1">@no5</td>
+                                    <td class="column100 column3 " data-column="column3">@item.OVERDUE_BUCKET</td>
+                                    <td class="column100 column4 " data-column="column4">@item.NoOfAccount1</td>
+                                    <td class="column100 column5 " data-column="column5">@item.FIU_OUTSTANDING1</td>
+                                    <td class="column100 column6 " data-column="column6">@item.FIU_OVERDUE1</td>
+                                    <td class="column100 column7 " data-column="column7">@item.NoOfAccount2</td>
+                                    <td class="column100 column8 " data-column="column8">@item.FIU_OUTSTANDING2</td>
+                                    <td class="column100 column9 " data-column="column9">@item.FIU_OVERDUE2</td>
+                                </tr>
+                                no5++;
+
+                            }
+                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="Add3 row3  pt-10 pr-5 allcontainer" id="Branch_wise_Overdue">
+        <!--begin::Col-->
+        <div class="col-lg-12  d-flex justify-content-end align-items-center" style="position: absolute;right: 20px;top: 88px;">
+
+            <div class="col-auto">
+                <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                    Amount in Cr.
+                </a>
+
+            </div>
+
+        </div>
+        <div class="table100 ver5 m-b-110">
+            <table data-vertable="ver5">
+                <thead>
+                    <tr class="row100 head">
+                        <th class="column100 " rowspan="2" width="7%" data-column="column1">Sr No</th>
+                        <th class="column100 tal" rowspan="2" data-column="column2">Region</th>
+                        <th class="column100 " colspan="3" data-column="column3">SMA0</th>
+                        <th class="column100 " colspan="3" data-column="column4">SMA1</th>
+                        <th class="column100 " colspan="3" data-column="column5">SMA2</th>
+                        <th class="column100 " rowspan="2" data-column="column6">Total No of A/c</th>
+                        <th class="column100 " rowspan="2" data-column="column7">Total FIU Outstanding (Cr)</th>
+                        <th class="column100 " rowspan="2" data-column="column8">Total FIU Overdue (Cr) </th>
+
+                    </tr>
+                    <tr class="row100 head">
+                        <th class="column100 " data-column="column4">No. Of A/c</th>
+                        <th class="column100 " data-column="column5">FIU Outstanding (Cr)</th>
+                        <th class="column100 " data-column="column6">FIU Overdue (Cr)</th>
+                        <th class="column100 " data-column="column7">No. Of A/c</th>
+                        <th class="column100 " data-column="column8">FIU Outstanding (Cr)</th>
+                        <th class="column100 " data-column="column9">FIU Overdue (Cr)</th>
+                        <th class="column100 " data-column="column10">No. Of A/c</th>
+                        <th class="column100 " data-column="column11">FIU Outstanding (Cr)</th>
+                        <th class="column100 " data-column="column12">FIU Overdue (Cr)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int no7 = 1;
+
+                        if (Model != null)
+                        {
+                            @foreach (var item in Model.Branch_DUE)
+                            {
+
+                                <tr class="row100">
+                                    <td class="column100 column1 " data-column="column1">@no7</td>
+                                    <td class="column100 column3 " data-column="column3">@item.REGION_NAME</td>
+                                    <td class="column100 column4 " data-column="column4">@item.NoOfAccount1</td>
+                                    <td class="column100 column5 " data-column="column5">@item.FIU_OUTSTANDING1</td>
+                                    <td class="column100 column6 " data-column="column6">@item.FIU_OVERDUE1</td>
+                                    <td class="column100 column7 " data-column="column7">@item.NoOfAccount2</td>
+                                    <td class="column100 column8 " data-column="column8">@item.FIU_OUTSTANDING2</td>
+                                    <td class="column100 column9 " data-column="column9">@item.FIU_OVERDUE2</td>
+                                    <td class="column100 column10 " data-column="column10">@item.NoOfAccount3</td>
+                                    <td class="column100 column11 " data-column="column11">@item.FIU_OUTSTANDING3</td>
+                                    <td class="column100 column12 " data-column="column12">@item.FIU_OVERDUE3</td>
+                                    <td class="column100 column13 " data-column="column13">@item.TotalNoOfAccounts</td>
+                                    <td class="column100 column14 " data-column="column14">@item.TotalFIU_OUTSTANDING</td>
+                                    <td class="column100 column15 " data-column="column15">@item.TotalFIU_OVERDUE</td>
+                                </tr>
+                                no7++;
+
+                            }
+                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        document.getElementById('NPA').style.display = 'none';
+        document.getElementById('AUCA').style.display = 'none';
+        document.getElementById('SME_0').style.display = 'none';
+        document.getElementById('SME_1').style.display = 'none';
+        document.getElementById('SME_2').style.display = 'none';
+        document.getElementById('Weekly_SMA').style.display = 'none';
+        document.getElementById('Branch_wise_Overdue').style.display = 'none';
+        //$('#Overview3').show();
+
+    });
+
+    function move(id) {
+        $('.row3').hide();
+        document.getElementById(id).style.display = 'block';
+        $('.nav-link3').removeClass('active');
+        $('#Add3').hide();
+        $('#Nav' + id).addClass('active');
+
+        if (id == 'Overview') {
+            window.location.reload();
+        }
+    }
+    function search2() {
+        document.getElementById('Under_Process').style.display = 'none';
+        document.getElementById('Disbursal_New').style.display = 'none';
+        document.getElementById('Summary').style.display = 'block';
+    }
+
+</script>

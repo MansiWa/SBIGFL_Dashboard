@@ -1,0 +1,237 @@
+﻿@model IEnumerable<PrintSoftWeb.Models.AssetsLiabilities>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "File Upload";
+
+}
+<head>
+    <link href="~/css/main.css" rel="stylesheet" />
+    <style type="text/css">
+        .table100 {
+            border: 0px !important;
+        }
+    </style>
+</head>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <div class="row">
+            <div class="col-lg-6">
+                <h4 class="m-0 font-weight-bold text-primary"> File Upload </h4>
+            </div>
+
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row d-flex justify-content-end align-items-center">
+            <div class="col-lg-3 ">
+                <div class="row mt-3 mt-lg-0 mt-md-3 d-flex justify-content-end align-items-center">
+                    <div class="col-lg-3">
+                        <label for="name" class="form-label fw-bold"> Date : </label>
+                    </div>
+                    <div class="col-lg-8 d-flex">
+                        <input type="date" class="form-control" id="al_date" name="name">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-auto d-flex flex-wrap toggle pr-5">
+                <button class="btn btn-md text-light bg-danger mt-3 mt-lg-0 mt-md-0 ml-2" type="button" title="Search" onclick="return searchbtn()">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </button>
+            </div>
+            @*  <div class="table-responsive mt-3"> *@
+            <div class="table100 ver2 m-b-110">
+
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0" data-vertable="ver2">
+                    <thead>
+                        <tr class="row100 head">
+                            <th width="7%"> Sr.No </th>
+                            <th> Document Type </th>
+                            <th> File Name </th>
+                            <th> Date </th>
+                            <th> Count </th>
+                            <th style="display:none;"> Document Id </th>
+                            <th style="display:none;"> Table Name </th>
+                            <th width="7%"> Action </th>
+                        </tr>
+                    </thead>
+                    <tbody id="htmlrpt">
+                        <tr>
+                        </tr>
+                        @{
+                            if (Model != null)
+                            {
+                                @foreach (var item in Model)
+                                {
+                                    int no = 1;
+                                    <tr class="row100">
+                                        <td>@Html.DisplayFor(modelItem => no)</td>
+                                        <td> @Html.DisplayFor(modelItem => item.al_doctype)</td>
+                                        <td> @Html.DisplayFor(modelItem => item.al_filename)</td>
+                                        <td> @Html.DisplayFor(modelItem => item.al_date)</td>
+                                        <td> @Html.DisplayFor(modelItem => item.al_count)</td>
+                                        <td id="doc" style='display:none;'>@Html.DisplayFor(modelItem => item.d_id)</td>
+                                        <td style='display:none;'> @Html.DisplayFor(modelItem => item.d_tablename)</td>
+                                        <td>
+
+                                            @if (item.al_filename == "" || item.al_filename == null)
+                                            {
+                                                <i class='fa fa-plus ml-3' id="add" title="Add" onclick="addmodel('@item.d_id')"></i>
+                                                <i class='fa fa-arrow-down ml-3' id="excel" title="Excel" onclick="excel();"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="fa fa-trash ml-2 text-danger click" onclick="delete12('@item.batchid','@item.al_id');"></i>
+                                            }
+                                        </td>
+
+                                    </tr>
+                                    no++;
+                                }
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-md" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-dark" id="exampleModalLabel">File Upload</h5>
+                        <button type="button" class="btn-close bg-primary text-white" data-bs-dismiss="modal" aria-label="Close" onclick="CancelData()"></button>
+                    </div>
+
+                    <form asp-controller="AssetsLiabilities" asp-action="Upload" method="post" enctype="multipart/form-data">
+
+                        <input type="hidden" id="date" name="date" />
+                        <input type="hidden" id="docid" name="docid" />
+
+                        <div class="modal-body text-dark">
+                            <div class="form-group" style="display:none">
+                                <label class="control-label">Id</label>
+                                <input id="cc_id" class="form-control" />
+                                <span class="text-danger"></span>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6 col-sm-6 col-md-12 ">
+                                    <label class="control-label fw-bold">Select File <span class="text-danger">*</span></label>
+                                    <div class="form-group form-group-sm">
+                                        <input id="al_upload" class="form-control" type="file" name="postedFile" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button title="Save" type="submit" id="btnsubmit" value="Create" class="btn btn-primary" onclick="">Submit</button>
+                                <button type="button" title="Close" class="btn btn-danger" data-dismiss="modal" onclick="CancelData()">Cancel</button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var date = new Date();
+        var formattedDate = formatDate(date);
+        $('#al_date').val(formattedDate);
+        $('#createModal').modal({
+            backdrop: 'static', // Prevents closing on outside click
+            keyboard: false // Prevents closing with the escape key
+        });
+    });
+
+    function formatDate(date) {
+        var year = date.getFullYear();
+        var month = ('0' + (date.getMonth() + 1)).slice(-2);
+        var day = ('0' + date.getDate()).slice(-2);
+        return year + '-' + month + '-' + day;
+    }
+
+    function addmodel(d_id) {
+        var date = $('#al_date').val();
+        if (date == '') {
+            alert("Please select date!");
+            return false;
+        }
+        $("#createModal").modal("show");
+        $('#date').val($('#al_date').val());
+        $('#docid').val(d_id);
+    }
+    function searchbtn() {
+        var al_date = $('#al_date').val();
+        if (al_date == '') {
+            alert("Please select date!");
+            return false;
+        }
+        var data = {
+            al_date: $('#al_date').val(),
+        };
+        $.ajax({
+            type: 'POST',
+            url: "AssetsLiabilities/Search?al_date=" + al_date, // Use the form's action attribute
+            data: data, // Serialize the form data
+            success: function (response) {
+                var htmlrpt = '';
+                $('#htmlrpt').html(htmlrpt);
+                for (var i = 0; i < response.length; i++) {
+
+                    if (response[i].al_filename == null || response[i].al_filename == '') {
+
+                        htmlrpt += '<tr class=" row100"><td class="column100"><b>' + 1 + '</b></td><td class="column100 ">' + response[i].al_doctype + '</td><td class="column100 ">' + response[i].al_filename + '</td><td class="column100 ">' + response[i].al_date + '</td><td class="column100 ">' + response[i].al_count + '</td><td class="column100 " style="display:none">' + response[i].al_docid + '</td><td class="column100 " style="display:none">' + response[i].al_tablename + '</td><td class="column100 "><i class="fa fa-plus" onclick="addmodel()"></i><i class="fa fa-arrow-down ml-3" onclick="excel();"></i></td></tr>';
+                    }
+                    else {
+                        htmlrpt += '<tr class=" row100"><td class="column100 "><b>' + 1 + '</b></td><td class="column100 ">' + response[i].al_doctype + '</td><td class="column100 ">' + response[i].al_filename + '</td><td class="column100 ">' + response[i].al_date + '</td><td class="column100 ">' + response[i].al_count + '</td><td class="column100 " style="display:none">' + response[i].al_docid + '</td><td class="column100 " style="display:none">' + response[i].al_tablename + '</td><td class="column100 "><i class="fa fa-trash ml-2 text-danger click" onclick="delete12(\'' + response[i].batchid + '\', \'' + response[i].al_id + '\');"></i></td></tr>';
+
+                    }
+
+
+                }
+                $('#htmlrpt').html(htmlrpt);
+            },
+            error: function (xhr, status, error) {
+            }
+        });
+    }
+    function edit() {
+        var al_date = $('#al_date').val();
+        window.location.href = 'AssetsLiabilities/Edit?al_date=' + al_date;
+    }
+    // function delete12() {
+    //     var al_date = $('#al_date').val();
+    //     window.location.href = 'AssetsLiabilities/Delete?al_date=' + al_date;
+    // }
+    function delete12(batchid,al_id) {
+        if (confirm('Are you sure you want to delete?')) {
+            var data = {
+                al_date: $('#al_date').val(),
+                batchid: batchid,
+                al_id: al_id,
+            };
+            $.ajax({
+                type: 'POST',
+                url: "AssetsLiabilities/Delete", // Use the form's action attribute
+                data: data, // Serialize the form data
+                success: function (response) {
+                    window.location.reload();
+                },
+                error: function (xhr, status, error) {
+                }
+            });
+        }
+        else {
+            return false;
+        }
+    }
+    function excel() {
+        window.location.href = 'AssetsLiabilities/Excel'
+    }
+
+</script>

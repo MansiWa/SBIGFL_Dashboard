@@ -1,0 +1,617 @@
+﻿@using System.Globalization;
+@model PrintSoftWeb.Models.CustomerModel
+
+<head>
+    <link href="~/css/style.bundle.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-3d"></script>
+    <link href="~/css/main.css" rel="stylesheet" />
+    <link href="~/css/util.css" rel="stylesheet" />
+    <script src="~/js/custom.js"></script>
+
+</head>
+<div id="kt_header" class="header" data-kt-sticky="true" data-kt-sticky-name="header" data-kt-sticky-offset="{default: '200px', lg: '300px'}">
+    <!--begin::Container-->
+    <div class="container-fluid d-flex align-items-center justify-content-between" id="kt_header_container">
+        <!--begin::Page title-->
+        <div class="page-title d-flex flex-column align-items-start justify-content-center flex-wrap me-lg-auto pb-5 pb-lg-0" data-kt-swapper="true" data-kt-swapper-mode="prepend" data-kt-swapper-parent="{default: '#kt_content_container', lg: '#kt_header_container'}">
+            <!--begin::Heading-->
+            <h1 class="text-black fw-bold my-0 fs-2 text-start">Client Service Dashboard</h1>
+            <!--end::Heading-->
+        </div>
+        <!--end::Page title-->
+        <!--begin::Logo
+        <div class="logo ms-auto">
+            <p class="logo-link">
+                <img src="~/images/sbilogo.png" alt="Logo" style="border-radius:7%" height="65px" width="120px" class="logo-img">
+            </p>
+        </div>
+        end::Logo-->
+    </div>
+</div>
+<div class="d-flex justify-content-md-end card-header pr-3">
+    <div class="row align-items-center">
+        <div class="col-auto d-flex flex-wrap toggle">
+            <button class="btn btn-md text-light bg-warning mt-3 mt-lg-0 mt-md-0 ml-2"
+                    type="button" title="Email" onclick="email();">
+                <i class="fas fa-mail-bulk"></i>
+            </button>
+            <form asp-controller="CustomerDashboard" asp-action="ExportToExcel" method="get">
+                <input type="hidden" name="modelJson" id="modelJson" value="@Html.Raw(Json.Serialize(Model).ToString().Replace("\"", "&quot;"))" />
+                <button class="btn btn-md text-light bg-success mt-3 mt-lg-0 mt-md-0 ml-2"
+                        title="Excel">
+                    <i class="fas fa-file-excel"></i>
+                </button>
+            </form>
+            <form asp-controller="CustomerDashboard" asp-action="Pdf" method="get">
+                <div>
+                    <input type="hidden" name="modelJson1" id="modelJson1" value="@Html.Raw(Json.Serialize(Model).ToString().Replace("\"", "&quot;"))" />
+
+                    <button class="btn btn-md text-light bg-danger mt-3 mt-lg-0 mt-md-0 ml-2"
+                            title="Pdf">
+                        <i class="fas fa-file-pdf"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+<div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title text-dark" id="exampleModalLabel">EmailId</h5>
+
+                <button type="button" class="btn-close bg-primary text-white" data-bs-dismiss="modal" aria-label="Close" onclick="CancelData()"></button>
+            </div>
+            <form asp-controller="CustomerDashboard" asp-action="Email" method="get">
+
+                <div class="modal-body text-dark">
+
+                    <div class="row mt-2">
+                        <input type="hidden" name="modelJson2" id="modelJson2" value="@Html.Raw(Json.Serialize(Model).ToString().Replace("\"", "&quot;"))" />
+
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
+                            <div class="form-group form-group-sm">
+                                <label class="control-label fw-bold">Email <span class="text-danger">*</span></label>
+                                <select class="form-select" name="EmailId" id="EmailId" asp-items="@(new SelectList(ViewBag.EmailId,"Key","Value"))" required><option>-- Select Email--</option></select>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button title="Save" id="btnsubmit" value="Create" class="btn btn-primary"> Submit</button>
+                    <button type="button" title="Close" class="btn btn-secondary" data-dismiss="modal" onclick="CancelData()"> Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<div class="col-md-12 mt-3">
+
+    @* business *@
+    <div class="card mycard bcolor ">
+        <div class="card-body d-flex p-4">
+
+            <!--begin::Nav-->
+            <ul class="nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent listdesign fw-bold">
+                <!--begin::Nav item-->
+                @* <li class="nav-item">
+                <a class="nav-link nav-link3 text-active-primary py-5 active" id="NavOverview3" onclick="move3('Overview3')">Overview</a>
+                </li> *@
+                <!--end::Nav item-->
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link3 text-active-primary  p-5 active" id="NavSummary" onclick="move3('Summary')">Snapshot of FIU and Turnover</a>
+                </li>
+                <!--end::Nav item-->
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link3 text-active-primary  p-5" id="NavDisbursal_New" onclick="move3('Disbursal_New')">Branchwise FIU (DF,EF and RF)</a>
+                </li>
+                <!--end::Nav item-->
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link3 text-active-primary   p-5" id="NavUnder_Process" onclick="move3('Under_Process')">LC - Region wise FIU Outstanding</a>
+                </li>
+                <!--end::Nav item-->
+                
+            </ul>
+            <!--end::Nav-->
+            <form asp-controller="CustomerDashboard" asp-action="Find" method="get">
+                <div class=" d-flex align-items-center " style="position:absolute;top:16px;right:16px;">
+
+                    @{
+                        // Parse the date string into a DateTime object
+                        DateTime dateValue;
+                        bool parseSuccess = DateTime.TryParseExact(
+                        (string)TempData["Date"],    // The string to parse
+                        "dd-MMM-yy",                  // The format of the input string
+                        CultureInfo.InvariantCulture, // Use the invariant culture for formatting
+                        DateTimeStyles.None,          // No additional styles needed
+                        out dateValue                 // Variable to store the parsed date
+                        );
+                    }
+
+                    <input type="date" class="form-control" id="CustDate" name="CustDate" value="@((parseSuccess ? dateValue.ToString("yyyy-MM-dd") : string.Empty))">
+
+                    <button class="btn btn-md text-white bg-success mt-3 mt-lg-0 mt-md-0 ml-2" title="Search"><i class="fa fa-search" aria-hidden="true"></i></button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+    <!--end::Navbar-->
+    <!--begin::Row-->
+    <div class="fw-bold mt-3" style="height:auto">
+
+        <div class=" gx-6 gx-xl-9 p-2 d-flex list-group-horizontal" style="height:auto" id="Overview3">
+            <!--begin::Col-->
+            <div class="col-md-4 p-0 d-none">
+                <!--begin::Summary-->
+                <div class="card card-flush ">
+                    <!--begin::Card header-->
+                    <!--end::Card header-->
+                    <!--begin::Card body-->
+                    <div class="card-body p-0 pt-0">
+                        <!--begin::Wrapper-->
+                        <div class="">
+                            <!--begin::Chart-->
+                            <div class="col-lg-12  d-flex justify-content-end align-items-center">
+                                <div class="col-auto">
+                                    <div class=" d-flex mt-3 mt-lg-0 mt-md-3">
+                                        <div class="col-lg-3 d-flex align-items-center p-0" style="width:20% !important">
+                                            <label for="name" class="form-label fw-bold p-0"> Date : </label>
+                                        </div>
+                                        <div class="col-lg-8 d-flex p-0">
+                                            <input type="date" class="form-control" id="date" name="name">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-auto p-0">
+                                    <button class="btn btn-md text-white bg-success mt-3 mt-lg-0 mt-md-0 ml-0" type="button" title="Search" onclick="search3()">
+                                        <i class="fa fa-search" aria-hidden="true"></i>
+                                    </button>
+
+                                </div>
+
+                            </div>
+                            <div class="position-relative d-flex flex-center pt-5 mb-1">
+
+                                <div class="d-flex flex-wrap flex-center flex-md-column">
+                                    <canvas id="myPieChart3" width="550" height="370"></canvas>
+                                    <p class="pt-6 cirhead">Business</p>
+                                </div>
+                                <div class="legend-container d-none">
+                                    <ul class="legend-list">
+                                        <li class="legend-item"><span class="color-box" style="background-color: #744FE6;"></span><span>Summary</span></li>
+                                        <li class="legend-item"><span class="color-box" style="background-color: #E1A34D;"></span><span>Under_Process</span></li>
+                                        <li class="legend-item"><span class="color-box" style="background-color: #72B9f0;"></span><span>Disbursal_New</span></li>
+                                    </ul>
+
+                                </div>
+                                <!-- JavaScript code to render the pie chart -->
+                                <script>
+                                    // Data for the pie chart
+                                    const pieChartData3 = [
+                                        { label: 'Summary', value: 9.25 },
+                                        { label: 'Under_Process', value: 118 },
+                                        { label: 'Disbursal_New', value: 9.25 },
+
+                                    ];
+
+                                    // Extract labels and data from the data array
+                                    const labels3 = pieChartData3.map(item => item.label);
+                                    const data3 = pieChartData3.map(item => item.value);
+
+                                    // Render the pie chart using Chart.js library
+                                    const ctx3 = document.getElementById('myPieChart3').getContext('2d');
+                                    const myPieChart3 = new Chart(ctx3, {
+                                        type: 'doughnut',
+                                        data: {
+                                            labels: labels3,
+                                            datasets: [{
+                                                data: data3,
+                                                backgroundColor: [
+                                                    '#744FE6',//'rgba(0, 185, 255, 0.99)',   //  Blue
+                                                    '#E1A34D',//'rgba(255, 108, 22, 0.99)', // Orange
+                                                    '#72B9f0'//'rgba(86, 217, 22, 1)',   // Green
+                                                ]
+
+                                            }]
+                                        },
+                                        options: {
+                                            // cutoutPercentage: 70,
+                                            plugins: {
+                                                chartJsPlugin3d: {
+                                                    enabled: true,
+                                                    alpha: 85,
+                                                    beta: 50
+                                                },
+                                                legend: {
+                                                    display: false // Hide the legend
+                                                },
+                                                tooltip: {
+                                                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                                    displayColors: false
+                                                }
+                                            },
+                                            cutout: '50%',
+                                            responsive: false,
+                                            height: 400,
+                                            width: 550,
+                                            onClick: (event, elements) => {
+                                                if (elements && elements.length > 0) {
+                                                    const index = elements[0].index;
+                                                    const label = labels3[index];
+                                                    move3(label);
+                                                }
+                                            }
+                                        }
+                                    });
+
+                                </script>
+                            </div>
+                            <!--end::Chart-->
+                            <!--begin::Labels-->
+                            <!--end::Labels-->
+                        </div>                <!--end::Wrapper-->
+
+                    </div>
+                    <!--end::Card body-->
+                </div>
+                <!--end::Summary-->
+                <div class="ViewContent">
+                </div>
+            </div>
+            <!--end::Col-->
+
+            <div class="Add3 row3 gx-6 gx-xl-9 allcontainer" id="Summary">
+                <!--begin::Col-->
+                <div class="col-lg-12  d-flex justify-content-end align-items-center" @* style="position: absolute;right: 20px;top: 20px;" *@>
+
+                    <div class="col-auto">
+                        <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                            Amount in Cr.
+                        </a>
+
+                    </div>
+
+                </div>
+                <div class="table100 ver6 m-b-110">
+                    <table data-vertable="ver6">
+                        <thead class="text-align-center">
+                            <tr class="row100 head">
+                                <th class="column100 " width="7%" data-column="column1">Sr No</th>
+                                <th class="column100 " data-column="column2">Particulars</th>
+                                <th class="column100 " data-column="column3">@TempData["LastMonthandyear"] </th>
+                                <th class="column100 " data-column="column3">@TempData["LastMonth"] </th>
+                                
+                                @if (DateTime.TryParse(@TempData["Date"].ToString(), out DateTime date4) && date4.Month == 4)
+                                {
+                                    <!-- Conditionally hide this element if month is April -->
+                                    // <td class="column100 column5 " data-column="column5">@item.col_3</td>
+                                }
+                                else
+                                {
+                                    <!-- Otherwise, show this element -->
+                                    <th class="column100 " data-column="column6">@TempData["PreviousMonth"]</th>
+                                }
+                                <th class="column100 " data-column="column5">@TempData["Date1"]</th>
+                                <th class="column100 " data-column="column6">@TempData["Date"]</th>
+                                
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int no6 = 1;
+
+                                if (Model != null)
+                                {
+                                    @foreach (var item in Model.FIU_Turnover)
+                                    {
+
+                                        <tr class="row100">
+                                            <td class="column100 column1" data-column="column1">@no6</td>
+                                            <td class="column100 column2" data-column="column2">@item.Particulars</td>
+                                            <td class="column100 column3" data-column="column3">@Math.Round(Convert.ToDecimal(item.col_5))</td>
+                                            <td class="column100 column3" data-column="column3">@Math.Round(Convert.ToDecimal(item.col_1))</td>
+                                            @if (DateTime.TryParse(@TempData["Date"].ToString(), out DateTime date3) && date3.Month == 4)
+                                            {
+                                                <!-- Conditionally hide this element if month is April -->
+                                                // <td class="column100 column5" data-column="column5">@item.col_3</td>
+                                            }
+                                            else
+                                            {
+                                                <!-- Otherwise, show this element -->
+                                                <td class="column100 column5" data-column="column5">@Math.Round(Convert.ToDecimal(item.col_2))</td>
+                                            }
+                                            <td class="column100 column5" data-column="column5">@Math.Round(Convert.ToDecimal(item.col_3))</td>
+                                            <td class="column100 column6" data-column="column6">@Math.Round(Convert.ToDecimal(item.col_4))</td>
+
+                                        </tr>
+                                        no6++;
+
+                                    }
+                                }
+                            }
+
+                            <!-- Repeat the above row structure for other data entries -->
+                        </tbody>
+                    </table>
+                </div>    <!--end::Col-->
+            </div>
+            <div class="row3 gx-6 gx-xl-9 allcontainer" id="Under_Process">
+                <!--begin::Col-->
+                <div class="col-lg-12  d-flex justify-content-end align-items-center"@*  style="position: absolute;right: 20px;top: 20px;" *@>
+
+                    <div class="col-auto">
+                        <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                            Amount in Cr.
+                        </a>
+
+                    </div>
+
+                </div>
+                <div class="table100 ver5 m-b-110">
+                    <table data-vertable="ver5">
+                        <thead>
+                            <tr class="row100 head">
+                                <th class="column100 " width="7%" data-column="column1">Sr No</th>
+                                <th class="column100 " data-column="column2">BRANCH</th>
+                                <th class="column100 " data-column="column3">@TempData["LastMonthandyear"] </th>
+                                <th class="column100 " data-column="column3">@TempData["LastMonth"] </th>
+                                @if (DateTime.TryParse(@TempData["Date"].ToString(), out DateTime date) && date.Month == 4)
+                                {
+                                    <!-- Conditionally hide this element if month is April -->
+                                    @* <th class="column100" data-column="column4" style="display:none;">@TempData["PreviousMonth"]</th> *@
+                                }
+                                else
+                                {
+                                    <!-- Otherwise, show this element -->
+                                    <th class="column100" data-column="column4">@TempData["PreviousMonth"]</th>
+                                }
+                                <th class="column100 " data-column="column5">@TempData["Date1"]</th>
+                                <th class="column100 " data-column="column6">@TempData["Date"]</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                var itemCount1 = Model.FIU_Outstanding.Count();
+                                var no1 = 1;
+                                var index1 = 0;
+                                double col1 = 0;
+                                double col2 = 0;
+                                double col3 = 0;
+                                double col4 = 0;
+                                double LastYearMarch = 0;
+
+                                if (Model != null)
+                                {
+                                    @foreach (var item in Model.FIU_Outstanding)
+                                    {
+                                        var isLastRow1 = (index1 == itemCount1 - 1);
+                                        <tr class="row100">
+                                            @if (!isLastRow1)
+                                            {
+                                                <td class="column100 column1 " data-column="column1">@no1</td>
+                                            }
+                                            else
+                                            {
+                                                <td class="column100 column1 " data-column="column1"></td>
+                                            }
+                                            <td class="column100 column2 " data-column="column2">@item.Particulars</td>
+                                            <td class="column100 column3 " data-column="column3">
+                                                @{
+                                                    decimal lastYearMarch = 0;
+                                                    if (@item.LastYearMarch != null)
+                                                    {
+                                                        if (decimal.TryParse(@item.LastYearMarch, out decimal parsedValue))
+                                                        {
+                                                            lastYearMarch = parsedValue;
+                                                        }
+                                                    }
+                                                    @Math.Round(lastYearMarch)
+                                                }
+                                            </td>
+                                            @*<td class="column100 column3 " data-column="column3">@Math.Round(Convert.ToDecimal(@item.LastYearMarch))</td>*@
+                                            <td class="column100 column3 " data-column="column3">@Math.Round(Convert.ToDecimal(@item.col_1))</td>
+                                            @if (DateTime.TryParse(@TempData["Date"].ToString(), out DateTime date1) && date1.Month == 4)
+                                            {
+                                                <!-- Conditionally hide this element if month is April -->
+                                                // <td class="column100 column5 " data-column="column5">@item.col_3</td>
+                                            }
+                                            else
+                                            {
+                                                <!-- Otherwise, show this element -->
+                                                <td class="column100 column5 " data-column="column5">@Math.Round(Convert.ToDecimal(@item.col_2))</td>
+                                            }
+                                            <td class="column100 column5 " data-column="column5">@Math.Round(Convert.ToDecimal(@item.col_3))</td>
+
+                                            <td class="column100 column6 " data-column="column6">@Math.Round(Convert.ToDecimal(@item.col_4))</td>
+
+                                        </tr>
+                                        no1++;
+                                        index1++;
+                                      //  LastYearMarch = LastYearMarch +Math.Round(double.Parse(@item.LastYearMarch),0);
+                                        // if (@item.LastYearMarch != null)
+                                        // {
+                                        //     double parsedValue;
+                                        //     if (double.TryParse(@item.LastYearMarch, out parsedValue))
+                                        //     {
+                                        //         LastYearMarch += Math.Round(parsedValue, 0);
+                                        //     }
+
+                                        // }
+                                        // col1 = col1 + Math.Round(double.Parse(@item.col_1),0);
+                                        // col2 = col2 + Math.Round(double.Parse(@item.col_2),0);
+                                        // col3 = col3 + Math.Round(double.Parse(@item.col_3),0);
+                                        // col4 = col4 + Math.Round(double.Parse(@item.col_4),0);
+
+                                    }
+                                    // <tr class="row100">
+                                    //     <td class="column100 column1 " data-column="column1"></td>
+                                    //     <td class="column100 column2 " data-column="column2">Grand Total</td>
+                                    //     <td class="column100 column3 " data-column="column3">@LastYearMarch.ToString("0")</td>
+                                    //     <td class="column100 column3 " data-column="column3">@col1.ToString("0")</td>
+                                    //     @if (DateTime.TryParse(@TempData["Date"].ToString(), out DateTime date2) && date2.Month == 4)
+                                    //     {
+                                    //         <!-- Conditionally hide this element if month is April -->
+                                    //         // <td class="column100 column5 " data-column="column5">@item.col_3</td>
+                                    //     }
+                                    //     else
+                                    //     {
+                                    //         <!-- Otherwise, show this element -->
+                                    //         <td class="column100 column5 " data-column="column5">@col2.ToString("0")</td>
+                                    //     }
+                                    //     <td class="column100 column5 " data-column="column5">@col3.ToString("0")</td>
+                                    //     <td class="column100 column6 " data-column="column6">@col4.ToString("0")</td>
+
+                                    // </tr>
+                                }
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row3 gx-6 gx-xl-9  allcontainer" id="Disbursal_New">
+                <!--begin::Col-->
+                <div class="col-lg-12  d-flex justify-content-end align-items-center" >
+
+                    <div class="col-auto">
+                        <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                            Amount in Cr.
+                        </a>
+
+                    </div>
+
+                </div>
+                <div class="table100 ver2 m-b-110">
+                    <table data-vertable="ver2">
+                        <thead>
+                            <tr class="row100 head">
+                                <th class="column100 " width="7%" data-column="column1">Sr No</th>
+                                <th class="column100 " data-column="column2">Branch</th>
+                                <th class="column100 " data-column="column3">@TempData["LastMonthandyear"] </th>
+                                <th class="column100 " data-column="column3">@TempData["LastMonth"] </th>
+                                <th class="column100 " data-column="column4">@TempData["Date"]</th>
+                                <th class="column100 " data-column="column5">YOD %</th>
+                                <th class="column100 " data-column="column6">Sep 2024</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                var itemCount = Model.Branchwise_FIU.Count();
+                                var no2 = 1;
+                                var index = 0;
+                                double col1sum = 0;
+                                double col2sum = 0;
+                                double col4sum = 0;
+                                double col_5 = 0;
+                                if (Model != null)
+                                {
+                                   
+                                    @foreach (var item in Model.Branchwise_FIU)
+                                    {
+                                            var isLastRow = (index == itemCount - 1);
+                                        <tr class="row100">
+                                            @if (!isLastRow)
+                                            {
+                                                <td class="column100 column1 " data-column="column1">@no2</td>
+                                            }
+                                            else
+                                            {
+                                                <td class="column100 column1 " data-column="column1"></td>
+                                            }
+                                            <td class="column100 column2 " data-column="column2">@item.Particulars</td>
+                                            <td class="column100 column3 " data-column="column3">@Math.Round(Convert.ToDecimal(@item.col_5))</td>
+                                            <td class="column100 column3 " data-column="column3">@Math.Round(Convert.ToDecimal(@item.col_1))</td>
+                                            <td class="column100 column4 " data-column="column4">@Math.Round(Convert.ToDecimal(@item.col_2))</td>
+                                            @if (!isLastRow)
+                                            {
+                                                <td class="column100 column5 @((double.Parse(item.col_3) < 0.00) ? "red-background" : (double.Parse(item.col_3) > 35.00)? "green-background" :"yellow-background")" data-column="column5">@item.col_3</td>
+                                            }
+                                            else
+                                            {
+                                                <td class="column100 column5" data-column="column5"></td>
+                                            }
+                                            <td class="column100 column6 " data-column="column6">@item.col_4</td>
+
+                                        </tr>
+                                        index++;
+                                        no2++;
+                                        // col_5 = col_5 + Math.Round(double.Parse(@item.col_5), 0);
+                                        // col1sum = col1sum + Math.Round(double.Parse(@item.col_1), 0);
+                                        // col2sum = col2sum + Math.Round(double.Parse(@item.col_2), 0);
+                                        // col4sum = col4sum + Math.Round(double.Parse(@item.col_4),0);
+                                    }
+                                    // <tr class="row100">
+                                    //     <td class="column100 column1 " data-column="column1"></td>
+                                    //     <td class="column100 column2 " data-column="column2">Grand Total</td>
+                                    //     <td class="column100 column3 " data-column="column3">@col_5.ToString("0")</td>
+                                    //     <td class="column100 column3 " data-column="column3">@col1sum.ToString("0")</td>
+                                    //     <td class="column100 column4 " data-column="column4">@col2sum.ToString("0")</td>
+                                    //     <td class="column100 column5  " data-column="column5"></td>
+                                    //     <td class="column100 column6 " data-column="column6">@col4sum.ToString("0")</td>
+
+                                    // </tr>
+                                }
+                            }
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        document.getElementById('Under_Process').style.display = 'none';
+        document.getElementById('Disbursal_New').style.display = 'none';
+
+        //$('#Overview3').show();
+
+    });
+
+    function move3(id) {
+        $('.row3').hide();
+        document.getElementById(id).style.display = 'block';
+        $('.nav-link3').removeClass('active');
+        $('#Add3').hide();
+        $('#Nav' + id).addClass('active');
+    }
+    function search2() {
+        document.getElementById('Under_Process').style.display = 'none';
+        document.getElementById('Disbursal_New').style.display = 'none';
+        document.getElementById('Summary').style.display = 'block';
+    }
+    function email() {
+        $("#createModal").modal("show");
+    }
+    function CancelData() {
+        $("#createModal").modal("hide");
+    }
+</script>
+<style>
+    .red-background {
+        background-color: #fb0e0eeb;
+    }
+
+    .green-background {
+        background-color: #09b70987;
+    }
+
+    .yellow-background {
+        background-color: #fbc502;
+    }
+</style>

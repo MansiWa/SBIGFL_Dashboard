@@ -1,0 +1,863 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization;
+@using Microsoft.Extensions.Localization
+@inject IViewLocalizer Localizer;
+@using System.Globalization;
+@* @model Tuple<IEnumerable<PrintSoftWeb.Models.CreditRatingModel>,IEnumerable<PrintSoftWeb.Models.CreditRatingModel>, IEnumerable<PrintSoftWeb.Models.CostOfBorrowingModel>, IEnumerable<PrintSoftWeb.Models.TBillModel>, IEnumerable<BorroAndRFRModel>, IEnumerable<BorroAndRFRModel>>
+ *@
+@model PrintSoftWeb.Models.DashboardC
+
+<head>
+    <link href="~/css/style.bundle.css" rel="stylesheet" />
+    <link href="~/css/main.css" rel="stylesheet" />
+    <link href="~/css/util.css" rel="stylesheet" />
+    <script src="~/js/custom.js"></script>
+    <!-- Add this in the head section of your HTML file -->
+    @*     <script src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/canvasjs.min.js"></script>
+    *@
+   @*  <script type="text/javascript" src="https://cdn.canvasjs.com/canvasjs.min.js"></script> *@
+    <script src="~/js1/canvasjs.min.js"></script>
+    <style>
+        .legend-item {
+            margin-bottom: 0px;
+            padding: 5px;
+            color: black;
+        }
+
+        .legend-list {
+            position: absolute;
+            list-style-type: none;
+            top: 6%;
+            /*left: 94%;*/
+            padding: 0;
+            font-size: 11px;
+        }
+
+        .color-box {
+            display: inline-block;
+            width: 16px;
+            height: 15px;
+            margin-right: 5px;
+            vertical-align: middle;
+            border-radius: 2px;
+        }
+
+        #posit {
+           /*  width: 115px;
+            position: absolute;
+            top: 47%;
+            right: 25%; */
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        #posit2 {
+
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+
+        /* Dropdown container */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Dropdown button */
+        .dropbtn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Dropdown content (hidden by default) */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        /* Show the dropdown content when the dropdown button is clicked */
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Checkbox styling */
+        .dropdown-content label {
+            display: block;
+            padding: 5px 10px;
+        }
+
+        .dropdown-content input[type="checkbox"] {
+            display: inline-block;
+            width: auto;
+            height: auto;
+            margin-right: 5px;
+        }
+
+    </style>
+</head>
+@{
+    List<PrintSoftWeb.Models.companydata> menuList = new List<PrintSoftWeb.Models.companydata>();
+    List<PrintSoftWeb.Models.companydata> turnList = new List<PrintSoftWeb.Models.companydata>();
+    menuList = @Model.fiu.ToList();
+    turnList = @Model.turnover.ToList();
+
+}
+<script>
+    $(window).on('unload', function () {
+        setTimeout(function () {
+            $(window).scrollTop(0);
+        }, 100);
+
+    });
+    $(window).on('beforeunload', function () {
+        window.location.href = '/dashboard';
+    });
+    $(document).ready(function () {
+        // Event listener for "Select All" checkbox in Client NPA dropdown
+        $("#client_npa_dropdown input[value='all']").change(function () {
+            var checkboxes = $("#client_npa_dropdown input[type='checkbox']:not([value='all'])");
+            checkboxes.prop("checked", this.checked);
+        });
+        $("#client_npa_dropdown input[type='checkbox']:not([value='all'])").change(function () {
+            if (!$(this).is(":checked")) {
+                // If any individual checkbox is unchecked, uncheck the "Select All" checkbox
+                $("#client_npa_dropdown input[value='all']").prop("checked", false);
+            }
+        });
+        // Event listener for "Select All" checkbox in Product dropdown
+        $("#product_dropdown input[value='all']").change(function () {
+            var checkboxes = $("#product_dropdown input[type='checkbox']:not([value='all'])");
+            checkboxes.prop("checked", this.checked);
+        });
+        $("#product_dropdown input[type='checkbox']:not([value='all'])").change(function () {
+            if (!$(this).is(":checked")) {
+                // If any individual checkbox is unchecked, uncheck the "Select All" checkbox
+                $("#product_dropdown input[value='all']").prop("checked", false);
+            }
+        });
+        $("#client_npa_dropdown1 input[value='all']").change(function () {
+            var checkboxes = $("#client_npa_dropdown1 input[type='checkbox']:not([value='all'])");
+            checkboxes.prop("checked", this.checked);
+        });
+        $("#client_npa_dropdown1 input[type='checkbox']:not([value='all'])").change(function () {
+            if (!$(this).is(":checked")) {
+                // If any individual checkbox is unchecked, uncheck the "Select All" checkbox
+                $("#client_npa_dropdown1 input[value='all']").prop("checked", false);
+            }
+        });
+        // Event listener for "Select All" checkbox in Product dropdown
+        $("#product_dropdown1 input[value='all']").change(function () {
+            var checkboxes = $("#product_dropdown1 input[type='checkbox']:not([value='all'])");
+            checkboxes.prop("checked", this.checked);
+        });
+        $("#product_dropdown1 input[type='checkbox']:not([value='all'])").change(function () {
+            if (!$(this).is(":checked")) {
+                // If any individual checkbox is unchecked, uncheck the "Select All" checkbox
+                $("#product_dropdown1 input[value='all']").prop("checked", false);
+            }
+        });
+    });
+</script>
+
+
+<div id="kt_header" class="header" data-kt-sticky="true" data-kt-sticky-name="header" data-kt-sticky-offset="{default: '200px', lg: '300px'}">
+    <!--begin::Container-->
+    <div class="container-fluid d-flex align-items-center justify-content-between" id="kt_header_container">
+        <!--begin::Page title-->
+        <div class="page-title d-flex flex-column align-items-start justify-content-center flex-wrap me-lg-auto pb-5 pb-lg-0" data-kt-swapper="true" data-kt-swapper-mode="prepend" data-kt-swapper-parent="{default: '#kt_content_container', lg: '#kt_header_container'}">
+            <!--begin::Heading-->
+            <h1 class="text-black fw-bold my-0 fs-2 text-start">Dashboard-SBI Global Factors </h1>
+            <!--end::Heading-->
+        </div>
+        <!--end::Page title-->
+        <!--begin::Logo-->
+        @*   <div class="logo ms-auto">
+        <p class="logo-link">
+        <img src="~/images/sbilogo.png" alt="Logo" style="border-radius:7%" height="65px" width="120px" class="logo-img">
+        </p>
+        </div> *@
+        <!--end::Logo-->
+    </div>
+</div>
+<div class="text-end" style="font-size: 24px;background-color: white;">
+    @TempData["Date"]
+</div>
+<div class="col-md-12  mb-3">
+    @* <div id="chartContainer" style="height: 370px; width: 100%;"></div> *@
+    <div class="row">
+        <div class="col-lg-4 col-12 px-1 mt-2">
+            <div style="margin-right: 10px;">
+                <span style="height: 13px;width:100px;background-color: white;position: absolute;bottom: 0;z-index: 10;right: 10px;"></span>
+                <div class="mx-1" id="fiuChartContainer" style="height: 500px; width: 100%;"></div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-12 px-1 mt-2">
+            <div style="margin-right: 10px; margin-left: -5px;">
+                <span style="height: 13px;width:100px;background-color: white;position: absolute;bottom: 0;z-index: 10;right: 10px;"></span>
+                <div class="mx-1" id="turnoverChartContainer" style="height: 500px; width: 100%;"></div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-12 px-1 mt-2">
+            <div style="margin-left: -5px;">
+                <span style="height: 13px;width:100px;background-color: white;position: absolute;bottom: 0;z-index: 10;right: 0;"></span>
+                <div class="mr-2 mx-1" id="patChartContainer" style="height: 500px; width: 100%;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    // Initialize arrays to store data for turnover, FIU, and PAT
+
+    const turnoverData = [
+    @foreach (var item in Model.growth)
+    {
+        <text>{ label: '@item.g_particulars', y: @item.g_turnover.Replace(",", "") }, </text>
+    }];
+    const fiuData = [
+    @foreach (var item in Model.growth)
+    {
+        <text>{ label: '@item.g_particulars', y: @item.g_fiu.Replace(",", "") }, </text>
+    }];
+    const patData = [
+    @foreach (var item in Model.growth)
+    {
+        <text>{ label: '@item.g_particulars', y: @item.g_pat.Replace(",", "") }, </text>
+    }];
+    // Iterate over the data array and extract values for each category
+
+    // Render bar charts for turnover
+    var turnoverChart = new CanvasJS.Chart("turnoverChartContainer", {
+        animationEnabled: true,
+        theme: "light2",
+        title: {
+            text: "Company Growth-Turnover",
+            fontSize: 15,
+            margin: 25
+        },
+        axisY: {
+            title: "Amount in Cr.",
+            titleFontWeight: "bold",
+            titleFontSize: 15,
+            minimum: 4000,
+            margin: 20,
+            gridDashType: "dash",
+            gridColor: "#d5dde58f",
+            labelFontSize: 10
+        },
+        axisX: {
+            title: "Year",
+            titleFontWeight: "bold",
+            titleFontSize: 15,
+            margin: 10,
+
+            labelFontSize: 10
+        },
+        dataPointWidth: 40,
+        data: [{
+            type: "column",
+            color: "rgb(92, 229, 128)",
+            indexLabel: "{y}",
+            indexLabelPlacement: "outside",
+            indexLabelOrientation: "horizontal",
+            indexLabelFontColor: "black",
+            indexLabelFontSize: 15,
+            dataPoints: turnoverData,
+        }]
+    });
+    turnoverChart.render();
+
+    // Render bar charts for FIU
+    var fiuChart = new CanvasJS.Chart("fiuChartContainer", {
+        animationEnabled: true,
+        theme: "light2",
+        title: {
+            text: "Company Growth-FIU",
+            fontSize: 15,
+            margin: 25
+        },
+        axisY: {
+            title: "Amount in Cr.",
+            titleFontWeight: "bold",
+            titleFontSize: 15,
+            minimum: 1000,
+            margin: 20,
+            gridDashType: "dash",
+            gridColor: "#d5dde58f",
+            labelFontSize: 10
+        },
+        axisX: {
+            title: "Year",
+            titleFontWeight: "bold",
+            titleFontSize: 15,
+            margin: 10,
+            labelFontSize: 10
+        },
+        dataPointWidth: 40,
+        data: [{
+            type: "column",
+            color: "rgb(104, 183, 254)",
+            indexLabel: "{y}",
+            indexLabelPlacement: "outside",
+            indexLabelOrientation: "horizontal",
+            indexLabelFontColor: "black",
+            indexLabelFontSize: 15,
+            dataPoints: fiuData
+        }]
+    });
+    fiuChart.render();
+
+    // Render bar charts for PAT
+    var patChart = new CanvasJS.Chart("patChartContainer", {
+        animationEnabled: true,
+        theme: "light2",
+        title: {
+            text: "Company Growth-PAT",
+            fontSize: 15,
+            margin: 25
+        },
+        axisY: {
+            title: "Amount in Cr.",
+            titleFontWeight: "bold",
+            titleFontSize: 15,
+            minimum: 0,
+            maximum: 50,
+            margin: 20,
+            gridDashType: "dash",
+            gridColor: "#d5dde58f",
+            labelFontSize: 10
+        },
+        axisX: {
+            title: "Year",
+            titleFontWeight: "bold",
+            titleFontSize: 15,
+            margin: 10,
+            labelFontSize: 10
+        },
+        dataPointWidth: 40,
+        data: [{
+            type: "column",
+            color: "rgb(237 134 143)",
+            indexLabel: "{y}",
+            indexLabelPlacement: "outside",
+            indexLabelOrientation: "horizontal",
+            indexLabelFontColor: "black",
+            indexLabelFontSize: 15,
+            dataPoints: patData
+        }]
+    });
+    patChart.render();
+</script>
+
+
+@*    <iframe class="card mycard pb-5 hiwd" title="PAT_FIU_Turnover 260224 V1" src="https://app.powerbi.com/view?r=eyJrIjoiMDJlNjZmOGQtYjdlZC00NThlLWIwOTUtZTdiN2I2MWFhZTdmIiwidCI6IjRlMTYwZDg4LTBjMzMtNGNiNy04YjJiLWJlMjcyNTZhNDY5NSJ9" frameborder="0" allowFullScreen="true" style="padding:33px 34px 37px 36px;"></iframe>
+ </div> *@
+<div class="col-md-12">
+    @*     <form id="findForm" method="get">
+    *@    <form asp-action="Find" asp-controller="Dashboard" method="POST">
+        <div class=" d-flex align-items-center justify-content-center" @* style="position:absolute;top:16px;right:16px;" *@>
+            <div>
+                @*             <label for="date">Date</label>
+                *@            @{
+                    <input type="text" class="form-control d-none" id="turnDate" name="turnDate" value="@TempData["turnDate"]">
+
+                    string dateValue = TempData["fiuDate"] as string;
+                    DateTime parsedDate;
+                    if (DateTime.TryParse(dateValue, out parsedDate))
+                    {
+                        <input type="date" class="form-control" id="fiuDate" name="fiuDate" value="@parsedDate.ToString("yyyy-MM-dd")">
+                    }
+                    else
+                    {
+                        <input type="date" class="form-control" id="fiuDate" name="fiuDate" value="">
+                    }
+                }
+
+            </div>
+            <div>
+                @* <label for="client_npa">Client NPA:</label>  *@
+                <div class="dropdown">
+                    <span class="dropbtn">Client NPA</span>
+                    <div class="dropdown-content" id="client_npa_dropdown">
+                        <label><input type="checkbox" name="clientNpa" value="all" @((ViewBag.SelectedClientNpa != null && ViewBag.SelectedClientNpa.Contains("all")) ? "checked" : "")>Select All</label>
+                        <label><input type="checkbox" name="clientNpa" value="0" @((ViewBag.SelectedClientNpa != null && ViewBag.SelectedClientNpa.Contains("0")) ? "checked" : "")>0</label>
+                        <label><input type="checkbox" name="clientNpa" value="1" @((ViewBag.SelectedClientNpa != null && ViewBag.SelectedClientNpa.Contains("1")) ? "checked" : "")>1</label>
+
+                    </div>
+                </div>
+            </div>
+            <div>
+                @*  <label for="product">Product:</label> *@
+                <div class="dropdown">
+                    <span class="dropbtn">Product</span>
+                    <div class="dropdown-content" id="product_dropdown">
+                        <label><input type="checkbox" name="product" value="all" @(ViewBag.SelectedProduct != null && ViewBag.SelectedProduct.Contains("all") ? "checked" : "")>Select All</label>
+                        <label><input type="checkbox" name="product" value="RF" @(ViewBag.SelectedProduct != null && ViewBag.SelectedProduct.Contains("RF") ? "checked" : "")>RF</label>
+                        <label><input type="checkbox" name="product" value="DF" @(ViewBag.SelectedProduct != null && ViewBag.SelectedProduct.Contains("DF") ? "checked" : "")>DF</label>
+                        <label><input type="checkbox" name="product" value="EF" @(ViewBag.SelectedProduct != null && ViewBag.SelectedProduct.Contains("EF") ? "checked" : "")>EF</label>
+                        <label><input type="checkbox" name="product" value="LCDM" @(ViewBag.SelectedProduct != null && ViewBag.SelectedProduct.Contains("LCDM") ? "checked" : "")>LCDM</label>
+                        <label><input type="checkbox" name="product" value="Treds" @(ViewBag.SelectedProduct != null && ViewBag.SelectedProduct.Contains("Treds") ? "checked" : "")>Treds</label>
+                        <label><input type="checkbox" name="product" value="Gold Pool" @(ViewBag.SelectedProduct != null && ViewBag.SelectedProduct.Contains("Gold Pool") ? "checked" : "")>Gold Pool</label>
+                    </div>
+
+                </div>
+            </div>
+            <button class="btn btn-md text-white bg-success mt-3 mt-lg-0 mt-md-0 ml-2" type="submit" title="Search"><i class="fa fa-search" aria-hidden="true"></i></button>
+        </div>
+    </form>
+
+    <div class="col mb-3">
+
+        <div class="row">
+            <div class="col-lg-6 col-12 p-2 mb-3">
+                <div style="background-color:white">
+                    <div>
+                        <span style="height: 13px;width:100px;background-color: white;position: absolute;bottom: 7px;z-index: 10;right: 7px;"></span>
+                        <div id="barChartContainer" class="" style="height: 507px; width: 100%;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-12">
+                <div class="row" style="background-color:white">
+                    <div class="col-lg-10 col-10 p-2">
+                        <div style="background-color:white; position: relative;">
+                            <!-- Add position: relative -->
+                            <div>
+                                <span style="height: 13px;width:100px;background-color: white;position: absolute;bottom: -4px;z-index: 10;right: 0;"></span>
+                                <div id="doughnutChartContainer" class="p-2" style="height: 507px; width: 100%;"></div>
+                                <div id="posit"  class="pt-6 posit" style="position: absolute; top: 55%; left: 50%; transform: translate(-55%, -56%);">
+                                    <!-- Center position -->
+                                    @{
+                                        // Calculate the sum of values
+                                        var sum = 0.0;
+                                        foreach (var item in menuList)
+                                        {
+                                            sum += Convert.ToDouble(item.FIU_IN_CR);
+                                        }
+                                    }
+                                    @sum.ToString("0.00")
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-2" style="background-color:white">
+                        <ul class="legend-list">
+                            <li style="font-size:15px;font-weight:bold"><span>Branch</span></li>
+                            <li class="legend-item"><span class="color-box" style="background-color: #ed90cb;"></span><span>NDH</span></li>
+                            <li class="legend-item"><span class="color-box" style="background-color: #ae95df;"></span><span>CHN</span></li>
+                            <li class="legend-item"><span class="color-box" style="background-color: #f2e08c;"></span><span>KOL</span></li>
+                            <li class="legend-item"><span class="color-box" style="background-color: #fc6b78;"></span><span>MUM</span></li>
+                            <li class="legend-item"><span class="color-box" style="background-color: #d3668d;"></span><span>BLR</span></li>
+                            <li class="legend-item"><span class="color-box" style="background-color: #0bb8ab;"></span><span>HYD</span></li>
+                            <li class="legend-item"><span class="color-box" style="background-color: #ecaa40;"></span><span>LUD</span></li>
+                            <li class="legend-item"><span class="color-box" style="background-color: #f27a46;"></span><span>JAI</span></li>
+                            <li class="legend-item"><span class="color-box" style="background-color: #a1be0d;"></span><span>PUN</span></li>
+                            <li class="legend-item"><span class="color-box" style="background-color: #dda891;"></span><span>CMB</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <script>
+            var data = [
+            @foreach (var item in menuList)
+            {
+                <text>{ label: '@item.Client_Area_New', y: @item.FIU_IN_CR.Replace(",", "") }, </text>
+            }];
+
+            // Prepare data for bar chart
+            var barData = data.map(entry => ({ label: entry.label, y: parseFloat(entry.y) }));
+            barData.sort((a, b) => b.y - a.y);
+            // Prepare data for doughnut chart
+            var doughnutData = data.map(entry => ({ label: entry.label, y: parseFloat(entry.y) }));
+
+            // Create bar chart
+            var barChart = new CanvasJS.Chart("barChartContainer", {
+                animationEnabled: true,
+                theme: "light2",
+                title: {
+                    text: "Branchwise FIU",
+                    fontSize: 15,
+                    margin: 25
+                },
+                axisX: {
+                    title: "Branch",
+                    titleFontWeight: "bold",
+                    titleFontSize: 15,
+                    margin: 10,
+                    labelFontSize: 10
+                },
+                axisY: {
+                    title: "Amount in Cr.",
+                    titleFontWeight: "bold",
+                    titleFontSize: 15,
+                    minimum: 0,
+                    //maximum: 500,
+                    margin: 20,
+                    gridDashType: "dash",
+                    gridColor: "#d5dde58f",
+                    labelFontSize: 10
+                },
+                dataPointWidth: 40,
+
+                data: [{
+                    type: "column",
+                    color: "#46b259",
+                    indexLabel: "{y}",
+                    indexLabelPlacement: "outside",
+                    indexLabelOrientation: "horizontal",
+                    indexLabelFontColor: "black",
+                    indexLabelFontSize: 15,
+                    dataPoints: barData
+                }]
+            });
+            barChart.render();
+            var totalValue = doughnutData.reduce((sum, dataPoint) => sum + dataPoint.y, 0);
+            doughnutData.sort((a, b) => b.y - a.y);
+            // Create doughnut chart
+            var doughnutChart = new CanvasJS.Chart("doughnutChartContainer", {
+                animationEnabled: true,
+                theme: "light2",
+                title: {
+                    text: "Branchwise FIU",
+                    fontSize: 15,
+                    margin: 25
+                },
+                legend: {
+                    enabled: false
+                    // verticalAlign: "center", // Set the vertical alignment
+                    // horizontalAlign: "right", // Set the horizontal alignment
+                    // itemWrap: 50,
+                    // markerMargin: 5, // Adjust marker margin to decrease space between legend and chart
+                    // padding: 10, // Adjust padding to decrease space between legend items
+                    // fontSize: 12
+                },
+
+                data: [{
+                    type: "doughnut",
+                    showInLegend: false,
+                    //legendText: "{label}",
+                    innerRadius: "40%",
+                    indexLabel: "{percentage}%",
+                    dataPoints: doughnutData.map((dataPoint, index) => ({
+                        label: dataPoint.label,
+                        y: dataPoint.y,
+                        percentage: ((dataPoint.y / totalValue) * 100).toFixed(2), // Calculate percentage based on crores
+                        color: getColorByIndex(index)
+                    }))
+                }],
+                center: {
+                    text: totalValue, // Display the total value in the center
+                    verticalAlign: "center", // Center the text vertically
+                    horizontalAlign: "center", // Center the text horizontally
+                    fontSize: 10 // Adjust the font size of the center text
+                }
+            });
+            doughnutChart.render();
+            function getColorByIndex(index) {
+                var colors = ["#ed90cb", "#ae95df", "#f2e08c", "#fc6b78", "#d3668d", "#0bb8ab", "#ecaa40", "#f27a46", "#a1be0d", "#dda891"]; // Add more colors as needed
+                return colors[index % colors.length]; // Loop through colors array
+            }
+        </script>
+        @*     <iframe class="card mycard pb-5 hiwd" title="FIU" src="https://app.powerbi.com/view?r=eyJrIjoiYTY4MzBiZWYtMmVkZS00ZjAyLWIxNmEtOWNlZjNmY2E5YzM0IiwidCI6IjRlMTYwZDg4LTBjMzMtNGNiNy04YjJiLWJlMjcyNTZhNDY5NSJ9" frameborder="0" allowFullScreen="true" style="padding:33px 34px 37px 36px;"></iframe>
+        *@
+    </div>
+</div>
+<div class="col-md-12">
+    @*     <form id="findForm" method="get">
+    *@    <form asp-action="Find" asp-controller="Dashboard" method="POST">
+        <div class=" d-flex align-items-center justify-content-center" @* style="position:absolute;top:16px;right:16px;" *@>
+            <div>
+                @*             <label for="date">Date</label>
+                *@            @{
+                    string dateV = TempData["turnDate"] as string;
+                    DateTime parsedD;
+                    if (DateTime.TryParse(dateV, out parsedD))
+                    {
+                        <input type="date" class="form-control" id="turnDate" name="turnDate" value="@parsedD.ToString("yyyy-MM-dd")">
+                    }
+                    else
+                    {
+                        <input type="date" class="form-control" id="turnDate" name="turnDate" value="">
+                    }
+                }
+                <input type="text" class="form-control d-none" id="fiuDate" name="fiuDate" value="@TempData["fiuDate"]">
+            </div>
+            <div>
+                @* <label for="client_npa">Client NPA:</label>  *@
+                <div class="dropdown">
+                    <span class="dropbtn">Client NPA</span>
+                    <div class="dropdown-content" id="client_npa_dropdown1">
+                        <label><input type="checkbox" name="clientNpa1" value="all" @((ViewBag.SelectedClientNpa1 != null && ViewBag.SelectedClientNpa1.Contains("all")) ? "checked" : "")>Select All</label>
+                        <label><input type="checkbox" name="clientNpa1" value="0" @((ViewBag.SelectedClientNpa1 != null && ViewBag.SelectedClientNpa1.Contains("0")) ? "checked" : "")>0</label>
+                        <label><input type="checkbox" name="clientNpa1" value="1" @((ViewBag.SelectedClientNpa1 != null && ViewBag.SelectedClientNpa1.Contains("1")) ? "checked" : "")>1</label>
+
+                    </div>
+                </div>
+            </div>
+            <div>
+                @*  <label for="product">Product:</label> *@
+                <div class="dropdown">
+                    <span class="dropbtn">Product</span>
+                    <div class="dropdown-content" id="product_dropdown1">
+                        <label><input type="checkbox" name="product1" value="all" @(ViewBag.SelectedProduct1 != null && ViewBag.SelectedProduct1.Contains("all") ? "checked" : "")>Select All</label>
+                        <label><input type="checkbox" name="product1" value="RF" @(ViewBag.SelectedProduct1 != null && ViewBag.SelectedProduct1.Contains("RF") ? "checked" : "")>RF</label>
+                        <label><input type="checkbox" name="product1" value="DF" @(ViewBag.SelectedProduct1 != null && ViewBag.SelectedProduct1.Contains("DF") ? "checked" : "")>DF</label>
+                        <label><input type="checkbox" name="product1" value="EF" @(ViewBag.SelectedProduct1 != null && ViewBag.SelectedProduct1.Contains("EF") ? "checked" : "")>EF</label>
+                        <label><input type="checkbox" name="product1" value="LCDM" @(ViewBag.SelectedProduct1 != null && ViewBag.SelectedProduct1.Contains("LCDM") ? "checked" : "")>LCDM</label>
+                        <label><input type="checkbox" name="product1" value="Treds" @(ViewBag.SelectedProduct1 != null && ViewBag.SelectedProduct1.Contains("Treds") ? "checked" : "")>Treds</label>
+                        <label><input type="checkbox" name="product1" value="Gold Pool" @(ViewBag.SelectedProduct1 != null && ViewBag.SelectedProduct1.Contains("Gold Pool") ? "checked" : "")>Gold Pool</label>
+                    </div>
+
+                </div>
+            </div>
+            <button class="btn btn-md text-white bg-success mt-3 mt-lg-0 mt-md-0 ml-2" type="submit" title="Search"><i class="fa fa-search" aria-hidden="true"></i></button>
+        </div>
+    </form>
+
+    <div class="col">
+
+        <div class="row">
+            <div class="col-lg-6 col-12 p-2 mb-3">
+                <div style="background-color:white">
+                    <div>
+                        <span style="height: 13px;width:100px;background-color: white;position: absolute;bottom: 7px;z-index: 10;right: 7px;"></span>
+                        <div id="barContainer" class="" style="height: 507px; width: 100%;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-12">
+                <div class="row" style="background-color:white">
+                    <div class="col-lg-10 col-10 p-2" >
+                        <div style="background-color:white; position: relative;">
+                            <span style="height: 13px;width:100px;background-color: white;position: absolute;bottom: -4px;z-index: 10;right: 0;"></span>
+                            <div id="doughnutContainer" class="p-2" style="height: 507px; width: 100%;"></div>
+                            <div id="posit2" class="pt-6 posit2" style="position: absolute; top: 55%; left: 50%; transform: translate(-61%, -56%);">
+                                @{
+                                    // Calculate the sum of values
+                                    var sum1 = 0.0;
+                                    foreach (var item in turnList)
+                                    {
+                                        sum1 += Convert.ToDouble(item.FIU_IN_CR);
+                                    }
+                                }
+                                @sum1.ToString("0.00")
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-lg-2 col-2" style="background-color:white">
+                        <ul class="legend-list">
+                            <li style="font-size:15px;font-weight:bold"><span>Branch</span></li>
+                            <li class="legend-item"><span class="color-box" style="background-color: #ed90cb;"></span><span>NDH</span></li>
+                            <li class="legend-item"><span class="color-box" style="background-color: #ae95df;"></span><span>CHN</span></li>
+                            <li class="legend-item"><span class="color-box" style="background-color: #f2e08c;"></span><span>KOL</span></li>
+                            <li class="legend-item"><span class="color-box" style="background-color: #fc6b78;"></span><span>MUM</span></li>
+                            <li class="legend-item"><span class="color-box" style="background-color: #d3668d;"></span><span>BLR</span></li>
+                            <li class="legend-item"><span class="color-box" style="background-color: #0bb8ab;"></span><span>HYD</span></li>
+                            <li class="legend-item"><span class="color-box" style="background-color: #ecaa40;"></span><span>LUD</span></li>
+                            <li class="legend-item"><span class="color-box" style="background-color: #f27a46;"></span><span>JAI</span></li>
+                            <li class="legend-item"><span class="color-box" style="background-color: #a1be0d;"></span><span>PUN</span></li>
+                            <li class="legend-item"><span class="color-box" style="background-color: #dda891;"></span><span>CMB</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            var data = [
+            @foreach (var item in turnList)
+            {
+                <text>{ label: '@item.Client_Area_New', y: @item.FIU_IN_CR.Replace(",", "") }, </text>
+            }];
+
+            // Prepare data for bar chart
+            var barData = data.map(entry => ({ label: entry.label, y: parseFloat(entry.y) }));
+            barData.sort((a, b) => b.y - a.y);
+            // Prepare data for doughnut chart
+            var doughnutData = data.map(entry => ({ label: entry.label, y: parseFloat(entry.y) }));
+
+            // Create bar chart
+            var barChart = new CanvasJS.Chart("barContainer", {
+                animationEnabled: true,
+                theme: "light2",
+                title: {
+                    text: "Branchwise Turnover",
+                    fontSize: 15,
+                    margin: 25
+                },
+                axisX: {
+                    title: "Branch",
+                    titleFontWeight: "bold",
+                    titleFontSize: 15,
+                    margin: 10,
+                    labelFontSize: 10
+                },
+                axisY: {
+                    title: "Amount in Cr.",
+                    titleFontWeight: "bold",
+                    titleFontSize: 15,
+                    minimum: 0,
+                    //maximum: 100000,
+                    margin: 20,
+                    gridDashType: "dash",
+                    gridColor: "#d5dde58f",
+                    labelFontSize: 10
+                },
+                dataPointWidth: 40,
+
+                data: [{
+                    type: "column",
+                    color: "#2dc5c5",
+                    indexLabel: "{y}",
+                    indexLabelPlacement: "outside",
+                    indexLabelOrientation: "horizontal",
+                    indexLabelFontColor: "black",
+                    indexLabelFontSize: 12,
+                    dataPoints: barData
+                }]
+            });
+            barChart.render();
+            var totalValue = doughnutData.reduce((sum, dataPoint) => sum + dataPoint.y, 0);
+            doughnutData.sort((a, b) => b.y - a.y);
+            // Create doughnut chart
+            var doughnutChart = new CanvasJS.Chart("doughnutContainer", {
+                animationEnabled: true,
+                theme: "light2",
+                title: {
+                    text: "Branchwise Turnover",
+                    fontSize: 15,
+                    margin: 25
+                },
+                legend: {
+                    enabled: false
+                    // verticalAlign: "center", // Set the vertical alignment
+                    // horizontalAlign: "right", // Set the horizontal alignment
+                    // itemWrap: 50,
+                    // markerMargin: 5, // Adjust marker margin to decrease space between legend and chart
+                    // padding: 10, // Adjust padding to decrease space between legend items
+                    // fontSize: 12
+                },
+
+                data: [{
+                    type: "doughnut",
+                    showInLegend: false,
+                    //legendText: "{label}",
+                    innerRadius: "40%",
+                    indexLabel: "{percentage}%",
+                    dataPoints: doughnutData.map((dataPoint, index) => ({
+                        label: dataPoint.label,
+                        y: dataPoint.y,
+                        percentage: ((dataPoint.y / totalValue) * 100).toFixed(2), // Calculate percentage based on crores
+                        color: getColorByIndex(index)
+                    }))
+                }],
+                center: {
+                    text: totalValue, // Display the total value in the center
+                    verticalAlign: "center", // Center the text vertically
+                    horizontalAlign: "center", // Center the text horizontally
+                    fontSize: 10 // Adjust the font size of the center text
+                }
+            });
+            doughnutChart.render();
+            function getColorByIndex(index) {
+                var colors = ["#6a75c7", "#90daea", "#36c9e6", "#e38944", "#e0c46a", "#e995cc", "#eba671", "#ccdc6b", "#c196ce", "#e27b9e"]; // Add more colors as needed
+                return colors[index % colors.length]; // Loop through colors array
+            }
+        </script>
+        @*     <iframe class="card mycard pb-5 hiwd" title="FIU" src="https://app.powerbi.com/view?r=eyJrIjoiYjBiNWY4MTUtYzJjMS00ODM1LTljZjItMmVkZTc1OWY5NTc0IiwidCI6IjRlMTYwZDg4LTBjMzMtNGNiNy04YjJiLWJlMjcyNTZhNDY5NSJ9" frameborder="0" allowFullScreen="true" style="padding:33px 34px 37px 36px;"></iframe>
+        *@
+    </div>
+</div>
+<div class="row p-10">
+    <div class="col-lg-4">
+        <div class="tile-progress tile-light-purple">
+            <div class="tile-header pb-2">
+                <span>
+                    <Label>
+                        @Model.data.rp
+                    </Label> %
+                </span>
+            </div>
+            <div class="tile-progressbar "> <span data-fill="75.5%" style="width: 75.5%;"></span> </div>
+            <div class="tile-footer pt-2">
+                <h4 style="color:white;">Regularitory Discription</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="tile-progress tile-pink">
+            <div class="tile-header pb-2">
+                <span>
+                    <Label>
+                        @Model.data.dfyield
+                    </Label> %
+                </span>
+            </div>
+            <div class="tile-progressbar"> <span data-fill="75.5%" style="width: 75.5%;"></span> </div>
+            <div class="tile-footer pt-2">
+                <h4 style="color:white;">DF Yield</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="tile-progress tile-cyan">
+            <div class="tile-header pb-2">
+                <span>
+                    <Label>
+                        @Model.data.rfyield
+                    </Label> %
+                </span>
+            </div>
+            <div class="tile-progressbar "> <span data-fill="75.5%" style="width: 75.5%;"></span> </div>
+            <div class="tile-footer pt-2">
+                <h4 style="color:white;">EF Yield</h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function adjustPositPosition() {
+        var doughnutChartContainer = document.getElementById("doughnutChartContainer");
+        var posit = document.getElementById("posit");
+
+        // Calculate the left position for posit2
+        var leftPosition = (doughnutChartContainer.offsetWidth - posit.offsetWidth) / 2;
+
+        // Apply the calculated left position
+        posit.style.left = (leftPosition + 50) + "px"; // Adding 10px for the desired offset
+    }
+    window.addEventListener("resize", adjustPositPosition);
+
+    // Call the function initially to set the position
+    adjustPositPosition();
+
+    function adjustPosit2Position() {
+        var doughnutContainer = document.getElementById("doughnutContainer");
+        var posit2 = document.getElementById("posit2");
+
+        // Calculate the left position for posit2
+        var leftPosition = (doughnutContainer.offsetWidth - posit2.offsetWidth) / 2;
+
+        // Apply the calculated left position
+        posit2.style.left = (leftPosition + 60) + "px"; // Adding 10px for the desired offset
+    }
+
+    // Call the adjustPosit2Position function when the window is resized
+    window.addEventListener("resize", adjustPosit2Position);
+
+    // Call the function initially to set the position
+    adjustPosit2Position();
+</script>

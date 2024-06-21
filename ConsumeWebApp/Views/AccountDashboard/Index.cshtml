@@ -1,0 +1,565 @@
+﻿@model PrintSoftWeb.Controllers.MyViewModel
+<head>
+    <link href="~/css/style.bundle.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-3d"></script>
+    <link href="~/css/main.css" rel="stylesheet" />
+    <link href="~/css/util.css" rel="stylesheet" />
+    <script src="~/js/custom.js"></script>
+
+</head>
+<div id="kt_header" class="header" data-kt-sticky="true" data-kt-sticky-name="header" data-kt-sticky-offset="{default: '200px', lg: '300px'}">
+    <!--begin::Container-->
+    <div class="container-fluid d-flex align-items-center justify-content-between" id="kt_header_container">
+        <!--begin::Page title-->
+        <div class="page-title d-flex flex-column align-items-start justify-content-center flex-wrap me-lg-auto pb-5 pb-lg-0" data-kt-swapper="true" data-kt-swapper-mode="prepend" data-kt-swapper-parent="{default: '#kt_content_container', lg: '#kt_header_container'}">
+            <!--begin::Heading-->
+            <h1 class="text-black fw-bold my-0 fs-2 text-start">Financial Performance Dashboard </h1>
+            <!--end::Heading-->
+        </div>
+        <!--end::Page title-->
+        <!--begin::Logo
+        <div class="logo ms-auto">
+            <p class="logo-link">
+                <img src="~/images/sbilogo.png" alt="Logo" style="border-radius:7%" height="65px" width="120px" class="logo-img">
+            </p>
+        </div>
+        end::Logo-->
+    </div>
+</div>
+<div class="col-md-12 mt-3">
+    <div class="card mycard mb-3 bcolor1">
+        <div class="card-body d-flex p-4">
+
+            <!--begin::Nav-->
+            <ul class="nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent listdesign fw-bold">
+                <!--begin::Nav item-->
+                @*  <li class="nav-item">
+                <a class="nav-link nav-link1 text-active-primary py-5  active" id="NavOverview1" onclick="move1('Overview1')">Overview</a>
+                </li> *@
+                <!--end::Nav item-->
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link1 text-active-primary p-5 active" id="NavHighlights" onclick="move1('Highlights')">Highlights</a>
+                </li>
+                <!--end::Nav item-->
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link1 text-active-primary p-5" id="NavFinancial_Highlights" onclick="move1('Financial_Highlights')">Financial Highlights</a>
+                </li>
+                <!--end::Nav item-->
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link1 text-active-primary p-5" id="NavBudget_vs_Actual" onclick="move1('Budget_vs_Actual')">Budget vs Actual</a>
+                </li>
+                <!--end::Nav item-->
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link1 text-active-primary p-5" id="NavYeild" onclick="move1('Yeild')">Yield</a>
+                </li>
+                <!--end::Nav item-->
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link1 text-active-primary p-5" id="NavEfficiency_Ratio" onclick="move1('Efficiency_Ratio')">Efficiency Ratio</a>
+                </li>
+
+                <!--end::Nav item-->
+
+            </ul>
+            <!--end::Nav-->
+
+            <div class=" d-flex align-items-center " style="position:absolute;top:16px;right:16px;">
+
+                <input type="date" class="form-control" id="date12" name="name">
+
+
+                <button class="btn btn-md text-white bg-success mt-3 mt-lg-0 mt-md-0 ml-2" type="button" title="Search" onclick="search12()"><i class="fa fa-search" aria-hidden="true"></i></button>
+
+            </div>
+        </div>
+    </div>
+    <!--end::Navbar-->
+    <!--begin::Row-->
+
+    <div class="col-md-12  Add1 row1 gx-6 gx-xl-9 allcontainer" id="Highlights">
+        <!--begin::Col-->
+        <div class="col-lg-12  d-flex justify-content-end align-items-center" @* style="position: absolute;right: 12px;top: 10px;" *@>
+
+            <div class="col-auto">
+                <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                    Amount in Cr.
+                </a>
+
+            </div>
+
+        </div>
+        <div class="table100 ver1  m-b-30">
+            <table data-vertable="ver1">
+                <thead>
+                    <tr class="row100 head">
+                        <th class="column100 " data-column="column1">Particulars</th>
+                        <th class="column100 " data-column="column2"><label id="col1"></label></th>
+                        <th class="column100 " data-column="column3">F.Y. <label id="col2"></label></th>
+                        <th class="column100 " data-column="column4"><label id="col3"></label></th>
+                        <th class="column100 " data-column="column5"><label id="col4"></label></th>
+                        <th class="column100 " data-column="column6">M-O-M Growth (%)</th>
+                        <th class="column100 " data-column="column7">Y-O-Y Growth (%)</th>
+                        <th class="column100 " data-column="column8">Y-T-D Growth (%)</th>
+                    </tr>
+                </thead>
+                <tbody id="htmlrpt">
+                    @{
+                            @if (Model != null)
+                        {
+                            foreach (var item in Model.acclist1)
+                            {
+                                    <tr class="row100">
+                                        <td class="column100 column1 tal" data-column="column1">@Html.DisplayFor(modelItem => item.h_particulars)</td>
+                                        <td class="column100 column2 " data-column="column2">@Html.DisplayFor(modelItem => item.h_col1)</td>
+                                        <td class="column100 column3 " data-column="column3">@Html.DisplayFor(modelItem => item.h_col2)</td>
+                                        <td class="column100 column4 " data-column="column4">@Html.DisplayFor(modelItem => item.h_col3)</td>
+                                        <td class="column100 column5 " data-column="column5">@Html.DisplayFor(modelItem => item.h_col4)</td>
+                                        <td class="column100 column6 " data-column="column6">@Html.DisplayFor(modelItem => item.h_mom)</td>
+                                        <td class="column100 column7 " data-column="column7">@Html.DisplayFor(modelItem => item.h_yoy)</td>
+                                        <td class="column100 column8 " data-column="column8">@Html.DisplayFor(modelItem => item.h_ytd)</td>
+                                    </tr>
+                            }
+                        }
+
+                    }
+                    <!-- Repeat the above row structure for other data entries -->
+                </tbody>
+            </table>
+        </div>    <!--end::Col-->
+    </div>
+    <div class="col-md-12  row1 gx-6 gx-xl-9 allcontainer" id="Financial_Highlights">
+        <!--begin::Col-->
+        <div class="col-lg-12  d-flex justify-content-end align-items-center" @* style="position: absolute;right: 12px;top: 10px;" *@>
+
+            <div class="col-auto">
+                <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                    Amount in Cr.
+                </a>
+
+            </div>
+
+        </div>
+        <div class="table100 ver2 m-b-110">
+            <table data-vertable="ver2">
+                <thead>
+                    <tr class="row100 head">
+                        <th class="column100 " data-column="column1">Particulars</th>
+                        <th class="column100 " data-column="column2"><label id="col11"></label></th>
+                        <th class="column100 " data-column="column3">F.Y. <label id="col21"></label></th>
+                        <th class="column100 " data-column="column4"><label id="col31"></label></th>
+                        <th class="column100 " data-column="column5">Y-O-Y Growth (%)</th>
+                    </tr>
+                </thead>
+                <tbody id="htmlrpt1">
+                    @{
+                            @if (Model != null)
+                        {
+                            foreach (var item in Model.acclist2)
+                            {
+                                    <tr class="row100">
+                                        <td class="column100 column1 tal" data-column="column1">@Html.DisplayFor(modelItem => item.f_particulars)</td>
+                                        <td class="column100 column2 " data-column="column2">@Html.DisplayFor(modelItem => item.f_col1)</td>
+                                        <td class="column100 column3 " data-column="column3">@Html.DisplayFor(modelItem => item.f_col2)</td>
+                                        <td class="column100 column4 " data-column="column4">@Html.DisplayFor(modelItem => item.f_col3)</td>
+                                        <td class="column100 column5 " data-column="column5">@Html.DisplayFor(modelItem => item.f_yoy)</td>
+                                    </tr>
+                            }
+                        }
+
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-md-12  row1 gx-6 gx-xl-9 allcontainer" id="Budget_vs_Actual">
+        <!--begin::Col-->
+        <div class="col-lg-12  d-flex justify-content-end align-items-center" @* style="position: absolute;right: 12px;top: 10px;" *@>
+
+            <div class="col-auto">
+                <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                    Amount in Cr.
+                </a>
+
+            </div>
+
+        </div>
+        <div class="table100 ver3 m-b-30">
+            <table data-vertable="ver3">
+                <thead>
+                    <tr class="row100 head">
+                        <th class="column100 " data-column="column1">Particulars</th>
+                        <th class="column100 " data-column="column2"><label id="col12"></label></th>
+                        <th class="column100 " data-column="column3">MOU 2023-2024</th>
+                        <th class="column100 " data-column="column4">Annualized % Achievement of Budget</th>
+
+                    </tr>
+                </thead>
+                <tbody id="htmlrpt2">
+                    @{
+                            @if (Model != null)
+                        {
+                            foreach (var item in Model.acclist3)
+                            {
+                                    <tr class="row100">
+                                        <td class="column100 column1 tal" data-column="column1 tal">@Html.DisplayFor(modelItem => item.m_particulars)</td>
+                                        <td class="column100 column2 " data-column="column2 tar">@Html.DisplayFor(modelItem => item.m_col1)</td>
+                                        <td class="column100 column3 " data-column="column3 tar">@Html.DisplayFor(modelItem => item.m_col2)</td>
+                                        <td class="column100 column4 " data-column="column4 tar">@Html.DisplayFor(modelItem => item.m_achievement)</td>
+                                    </tr>
+                            }
+                        }
+
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-md-12  row1 gx-6 gx-xl-9 allcontainer" id="Yeild">
+        <!--begin::Col-->
+        <div class="col-lg-12  d-flex justify-content-end align-items-center" @* style="position: absolute;right: 12px;top: 10px;" *@>
+
+            <div class="col-auto">
+                <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                    Amount in Cr.
+                </a>
+
+            </div>
+
+        </div>
+        <div class="table100 ver4 m-b-30">
+            <table data-vertable="ver4">
+                <thead>
+                    <tr class="row100 head">
+                        <th class="column100 " data-column="column1">Particulars</th>
+                        <th class="column100 " data-column="column2"><label id="col13"></label></th>
+                        <th class="column100 " data-column="column3">F.Y. <label id="col23"></label></th>
+                        <th class="column100 " data-column="column4"><label id="col33"></label></th>
+                        <th class="column100 " data-column="column5"><label id="col43"></label></th>
+                    </tr>
+                </thead>
+
+                <tbody id="htmlrpt3">
+                    @{
+                            @if (Model != null)
+                        {
+                            foreach (var item in Model.acclist5)
+                            {
+                                    <tr class="row100">
+                                        <td class="column100 column1 tal" data-column="column1">@Html.DisplayFor(modelItem => item.y_particulars)</td>
+                                        <td class="column100 column2 " data-column="column2">@Html.DisplayFor(modelItem => item.y_col1)</td>
+                                        <td class="column100 column3 " data-column="column3">@Html.DisplayFor(modelItem => item.y_col2)</td>
+                                        <td class="column100 column4 " data-column="column4">@Html.DisplayFor(modelItem => item.y_col3)</td>
+                                        <td class="column100 column5 " data-column="column5">@Html.DisplayFor(modelItem => item.y_col4)</td>
+                                    </tr>
+                            }
+                        }
+
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-md-12 row1 gx-6 gx-xl-9 allcontainer" id="Efficiency_Ratio">
+        <!--begin::Col-->
+        <div class="col-lg-12  d-flex justify-content-end align-items-center" @* style="position: absolute;right: 12px;top: 10px;" *@>
+
+            @*<div class="col-auto">
+            <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+            Amount in Cr.
+            </a>
+
+            </div>*@
+
+        </div>
+        <div class="table100 ver5 m-b-30">
+            <table data-vertable="ver5">
+                <thead>
+                    <tr class="row100 head">
+                        <th class="column100 " data-column="column1">Particulars</th>
+                        <th class="column100 " data-column="column2"><label id="col14"></label></th>
+                        <th class="column100 " data-column="column3">F.Y. <label id="col24"></label></th>
+                        <th class="column100 " data-column="column4"><label id="col34"></label></th>
+                        <th class="column100 " data-column="column5"><label id="col44"></label></th>
+                    </tr>
+                </thead>
+
+                <tbody id="htmlrpt4">
+                    @{
+                            @if (Model != null)
+                        {
+                            foreach (var item in Model.acclist4)
+                            {
+                                    <tr class="row100">
+                                        <td class="column100 column1 tal" data-column="column1">@Html.DisplayFor(modelItem => item.e_particulars)</td>
+                                        <td class="column100 column2 " data-column="column2">@Html.DisplayFor(modelItem => item.e_col1)</td>
+                                        <td class="column100 column3 " data-column="column3">@Html.DisplayFor(modelItem => item.e_col2)</td>
+                                        <td class="column100 column4 " data-column="column4">@Html.DisplayFor(modelItem => item.e_col3)</td>
+                                        <td class="column100 column5 ar" data-column="column5">@Html.DisplayFor(modelItem => item.e_col4)</td>
+                                    </tr>
+                            }
+                        }
+
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    @*     </div>*@
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        document.getElementById('Financial_Highlights').style.display = 'none';
+        document.getElementById('Budget_vs_Actual').style.display = 'none';
+        document.getElementById('Yeild').style.display = 'none';
+        document.getElementById('Efficiency_Ratio').style.display = 'none';
+
+        $('#Overview1').show();
+
+        var date = new Date();
+        var currentDate = new Date(date.getFullYear(), date.getMonth(), 1);
+        var previousMonth = new Date(currentDate);
+        previousMonth.setMonth(previousMonth.getMonth() - 1);
+        var lastDayOfPreviousMonth = new Date(previousMonth.getFullYear(), previousMonth.getMonth() + 1, 0);
+        var formattedDate = lastDayOfPreviousMonth.getFullYear() + '-' + ('0' + (lastDayOfPreviousMonth.getMonth() + 1)).slice(-2) + '-' + ('0' + lastDayOfPreviousMonth.getDate()).slice(-2);
+        // $('#date').val(formattedDate);
+        // $('#date12').val(formattedDate);
+
+
+
+
+
+
+        const d = new Date();
+
+        if (d == "2024-02-29") {
+            d = "2024-02-28";
+        }
+        //var date = '2024-02-29';
+        search12();
+        //var currmonth = d.getMonth();
+
+        // var year = d.getFullYear();
+        // d.setFullYear(d.getFullYear() - 1);
+        // var previousYear = d.getFullYear();
+        // var prepreYear = previousYear - 1;
+        // var currmonth = d.toLocaleString('default', { month: 'long' });
+        // var currMonth = d.getMonth();
+        // var prevMonth = currMonth === 0 ? 11 : currMonth - 1;
+        // d.setMonth(prevMonth, 1);
+        // var prevMonthName = d.toLocaleString('default', { month: 'long' });
+        // var month = d.getMonth();
+        // if (month == "0") month = "10";
+        // else if (month == "1") month = "11";
+        // else if (month == "2") month = "12";
+        // else if (month == "3") month = "1";
+        // else if (month == "4") month = "2";
+        // else if (month == "5") month = "3";
+        // else if (month == "6") month = "4";
+        // else if (month == "7") month = "5";
+        // else if (month == "8") month = "6";
+        // else if (month == "9") month = "7";
+        // else if (month == "10") month = "8";
+        // else if (month == "11") month = "9";
+
+
+        // $('#col2').text(prepreYear + ' - ' + previousYear);
+        // $('#col1').text('April -' + prepreYear + ' to ' + currmonth + ' - ' + previousYear);
+        // $('#col3').text('April -' + previousYear + ' to ' + prevMonthName + ' - ' + previousYear);
+        // $('#col4').text('April -' + previousYear + ' to ' + currmonth + ' - ' + year);
+
+        // $('#col21').text(prepreYear + ' - ' + previousYear);
+        // $('#col11').text('April -' + prepreYear + ' to ' + currmonth + ' - ' + previousYear);
+        // $('#col31').text('April -' + previousYear + ' to ' + prevMonthName + ' - ' + previousYear);
+
+        // $('#col22').text(prepreYear + ' - ' + previousYear);
+        // $('#col12').text('April -' + prepreYear + ' to ' + currmonth + ' - ' + previousYear);
+
+        // $('#col23').text(prepreYear + ' - ' + previousYear);
+        // $('#col13').text('April -' + prepreYear + ' to ' + currmonth + ' - ' + previousYear);
+        // $('#col33').text('April -' + previousYear + ' to ' + prevMonthName + ' - ' + previousYear);
+        // $('#col43').text('April -' + previousYear + ' to ' + currmonth + ' - ' + year);
+
+        // $('#col24').text(prepreYear + ' - ' + previousYear);
+        // $('#col14').text('April -' + prepreYear + ' to ' + currmonth + ' - ' + previousYear);
+        // $('#col34').text('April -' + previousYear + ' to ' + prevMonthName + ' - ' + previousYear);
+        // $('#col44').text('April -' + previousYear + ' to ' + currmonth + ' - ' + year);
+
+    });
+    function search12() {
+        //var date = new Date();
+        //var currentDate = new Date(date.getFullYear(), date.getMonth(), 1);
+        //var previousMonth = new Date(currentDate);
+        //previousMonth.setMonth(previousMonth.getMonth() - 1);
+        //var lastDayOfPreviousMonth = new Date(previousMonth.getFullYear(), previousMonth.getMonth() + 1, 0);
+        //var formattedDate = lastDayOfPreviousMonth.getFullYear() + '-' + ('0' + (lastDayOfPreviousMonth.getMonth() + 1)).slice(-2) + '-' + ('0' + lastDayOfPreviousMonth.getDate()).slice(-2);
+        //$('#date12').val(formattedDate);
+
+        //var date = "2024-02-29";
+        var date = $('#date12').val();
+        if (date == "2024-02-29") {
+            date = "2024-02-28";
+        }
+        const d = new Date(date);
+        //var currmonth = d.getMonth();
+
+        var year = d.getFullYear();
+        d.setFullYear(d.getFullYear() - 1);
+        var previousYear = d.getFullYear();
+        var prepreYear = previousYear - 1;
+        var currmonth = d.toLocaleString('default', { month: 'long' });
+        var currMonth = d.getMonth();
+        var prevMonth = currMonth === 0 ? 11 : currMonth - 1;
+        d.setMonth(prevMonth, 1);
+        var prevMonthName = d.toLocaleString('default', { month: 'long' });
+        var month = d.getMonth();
+        if (month == "0") month = "10";
+        else if (month == "1") month = "11";
+        else if (month == "2") month = "12";
+        else if (month == "3") month = "1";
+        else if (month == "4") month = "2";
+        else if (month == "5") month = "3";
+        else if (month == "6") month = "4";
+        else if (month == "7") month = "5";
+        else if (month == "8") month = "6";
+        else if (month == "9") month = "7";
+        else if (month == "10") month = "8";
+        else if (month == "11") month = "9";
+
+
+        $('#col2').text(prepreYear + ' - ' + previousYear);
+        $('#col1').text('April -' + prepreYear + ' to ' + currmonth + ' - ' + previousYear);
+        $('#col3').text('April -' + previousYear + ' to ' + prevMonthName + ' - ' + year);
+        $('#col4').text('April -' + previousYear + ' to ' + currmonth + ' - ' + year);
+
+        $('#col21').text(prepreYear + ' - ' + previousYear);
+        $('#col11').text('April -' + prepreYear + ' to ' + currmonth + ' - ' + previousYear);
+        $('#col31').text('April -' + previousYear + ' to ' + prevMonthName + ' - ' + year);
+
+        $('#col22').text(prepreYear + ' - ' + previousYear);
+        $('#col12').text('April -' + prepreYear + ' to ' + currmonth + ' - ' + previousYear);
+
+        $('#col23').text(prepreYear + ' - ' + previousYear);
+        $('#col13').text('April -' + prepreYear + ' to ' + currmonth + ' - ' + previousYear);
+        $('#col33').text('April -' + previousYear + ' to ' + prevMonthName + ' - ' + year);
+        $('#col43').text('April -' + previousYear + ' to ' + currmonth + ' - ' + year);
+
+        $('#col24').text(prepreYear + ' - ' + previousYear);
+        $('#col14').text('April -' + prepreYear + ' to ' + currmonth + ' - ' + previousYear);
+        $('#col34').text('April -' + previousYear + ' to ' + prevMonthName + ' - ' + year);
+        $('#col44').text('April -' + previousYear + ' to ' + currmonth + ' - ' + year);
+
+        highlights();
+    }
+
+    function move1(id) {
+        $('.row1').hide();
+        document.getElementById(id).style.display = 'block';
+        $('.nav-link1').removeClass('active');
+        $('#Add1').hide();
+         //highlights();
+        $('#Nav' + id).addClass('active');
+    }
+
+    function search1() {
+        document.getElementById('Financial_Highlights').style.display = 'none';
+        document.getElementById('Budget_vs_Actual').style.display = 'none';
+        document.getElementById('Yeild').style.display = 'none';
+        document.getElementById('Efficiency_Ratio').style.display = 'none';
+        document.getElementById('Highlights').style.display = 'block';
+        highlights();
+    }
+    function highlights() {
+        var data = {
+            date: $('#date').val()
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: "AccountDashboard/Find?date=" + $('#date12').val(),
+            data: data,
+            success: function (response) {
+                console.log(response);
+                var htmlrpt = '';
+                var htmlrpt = '';
+                if (response.highlights.length > 0) {
+                    var forDate = response.highlights[0].h_date;
+                    var formattedDate = forDate.split('T')[0];
+
+                    $('#date').val(formattedDate);
+                    $('#date12').val(formattedDate);
+               }
+                for (var i = 0; i < response.highlights.length; i++) {
+                    htmlrpt += '<tr class="row100">';
+                    htmlrpt += '<td class="column100 column1" data-column="column1"><b>' + response.highlights[i].h_particulars + '</b></td>';
+                    htmlrpt += '<td class="column100 column2" data-column="column2">' + response.highlights[i].h_col1 + '</td>';
+                    htmlrpt += '<td class="column100 column3" data-column="column3">' + response.highlights[i].h_col2 + '</td>';
+                    htmlrpt += '<td class="column100 column4" data-column="column4">' + response.highlights[i].h_col3 + '</td>';
+                    htmlrpt += '<td class="column100 column5" data-column="column5">' + response.highlights[i].h_col4 + '</td>';
+                    htmlrpt += '<td class="column100 column6" data-column="column6">' + response.highlights[i].h_mom + '</span ></td>';
+                    htmlrpt += '<td class="column100 column7" data-column="column7">' + response.highlights[i].h_yoy + '</td>';
+                    htmlrpt += '<td class="column100 column8" data-column="column8">' + response.highlights[i].h_ytd + '</td>';
+                    htmlrpt += '</tr>';
+                }
+                $('#htmlrpt').html(htmlrpt);
+
+                var htmlrpt1 = '';
+                for (var i = 0; i < response.finhighlights.length; i++) {
+                    htmlrpt1 += '<tr class="row100">';
+                    htmlrpt1 += '<td class="column100 column1" data-column="column1"><b>' + response.finhighlights[i].f_particulars + '</b></td>';
+                    htmlrpt1 += '<td class="column100 column2" data-column="column2">' + response.finhighlights[i].f_col1 + '</td>';
+                    htmlrpt1 += '<td class="column100 column3" data-column="column3">' + response.finhighlights[i].f_col2 + '</td>';
+                    htmlrpt1 += '<td class="column100 column4" data-column="column4">' + response.finhighlights[i].f_col3 + '</td>';
+                    htmlrpt1 += '<td class="column100 column5" data-column="column5">' + response.finhighlights[i].f_yoy + '</td>';
+                    htmlrpt1 += '</tr>';
+                }
+                $('#htmlrpt1').html(htmlrpt1);
+
+                var htmlrpt2 = '';
+                for (var i = 0; i < response.mouRevised.length; i++) {
+                    htmlrpt2 += '<tr class="row100">';
+                    htmlrpt2 += '<td class="column100 column1" data-column="column1"><b>' + response.mouRevised[i].m_particulars + '</b></td>';
+                    htmlrpt2 += '<td class="column100 column2" data-column="column2">' + response.mouRevised[i].m_col1 + '</td>';
+                    htmlrpt2 += '<td class="column100 column3" data-column="column3">' + response.mouRevised[i].m_col2 + '</td>';
+                    htmlrpt2 += '<td class="column100 column4" data-column="column4">' + response.mouRevised[i].m_achievement + '</td>';
+                    htmlrpt2 += '</tr>';
+                }
+                $('#htmlrpt2').html(htmlrpt2);
+
+                var htmlrpt3 = '';
+                for (var i = 0; i < response.yeild.length; i++) {
+                    htmlrpt3 += '<tr class="row100">';
+                    htmlrpt3 += '<td class="column100 column1" data-column="column1"><b>' + response.yeild[i].y_particulars + '</b></td>';
+                    htmlrpt3 += '<td class="column100 column2" data-column="column2">' + response.yeild[i].y_col1 + '</td>';
+                    htmlrpt3 += '<td class="column100 column3" data-column="column3">' + response.yeild[i].y_col2 + '</td>';
+                    htmlrpt3 += '<td class="column100 column4" data-column="column4">' + response.yeild[i].y_col3 + '</td>';
+                    htmlrpt3 += '<td class="column100 column5" data-column="column5">' + response.yeild[i].y_col4 + '</td>';
+                    htmlrpt3 += '</tr>';
+                }
+                $('#htmlrpt3').html(htmlrpt3);
+
+                var htmlrpt4 = '';
+                for (var i = 0; i < response.eff.length; i++) {
+                    htmlrpt4 += '<tr class="row100">';
+                    htmlrpt4 += '<td class="column100 column1" data-column="column1"><b>' + response.eff[i].e_particulars + '</b></td>';
+                    htmlrpt4 += '<td class="column100 column2" data-column="column2">' + response.eff[i].e_col1 + '</td>';
+                    htmlrpt4 += '<td class="column100 column3" data-column="column3">' + response.eff[i].e_col2 + '</td>';
+                    htmlrpt4 += '<td class="column100 column4" data-column="column4">' + response.eff[i].e_col3 + '</td>';
+                    htmlrpt4 += '<td class="column100 column5" data-column="column5">' + response.eff[i].e_col4 + '</td>';
+                    htmlrpt4 += '</tr>';
+                }
+                $('#htmlrpt4').html(htmlrpt4);
+            },
+            error: function (xhr, status, error) {
+                console.error(xhr, status, error);
+            }
+        });
+    }
+
+</script>

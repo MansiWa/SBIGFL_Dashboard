@@ -1,0 +1,215 @@
+﻿@model PrintSoftWeb.Models.CreditModel;
+
+<head>
+    <link href="~/css/style.bundle.css" rel="stylesheet" />
+    <link href="~/css/main.css" rel="stylesheet" />
+    <link href="~/css/util.css" rel="stylesheet" />
+    <script src="~/js/custom.js"></script>
+
+</head>
+<body>
+    <div id="kt_header" class="header" data-kt-sticky="true" data-kt-sticky-name="header" data-kt-sticky-offset="{default: '200px', lg: '300px'}">
+        <!--begin::Container-->
+        <div class="container-fluid d-flex align-items-center justify-content-between" id="kt_header_container">
+            <!--begin::Page title-->
+            <div class="page-title d-flex flex-column align-items-start justify-content-center flex-wrap me-lg-auto pb-5 pb-lg-0" data-kt-swapper="true" data-kt-swapper-mode="prepend" data-kt-swapper-parent="{default: '#kt_content_container', lg: '#kt_header_container'}">
+                <!--begin::Heading-->
+                <h1 class="text-black fw-bold my-0 fs-2 text-start">Credit Dashboard </h1>
+                <!--end::Heading-->
+            </div>
+
+        </div>
+    </div>
+    <div class="col-md-12 mt-3">
+
+        <div class="card mycard bcolor ">
+            <div class="card-body d-flex p-4">
+
+                <!--begin::Nav-->
+                <ul class="nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent listdesign fw-bold">
+                    <!--begin::Nav item-->
+                    @* <li class="nav-item">
+                    <a class="nav-link nav-link3 text-active-primary p-5 active" id="NavOverview" onclick="move('Overview')">Overview</a>
+                    </li> *@
+                    <!--end::Nav item-->
+                    <!--begin::Nav item-->
+                    <li class="nav-item">
+                        <a class="nav-link nav-link3 text-active-primary active p-5 " id="NavAnnexII" onclick="move('AnnexII')">Annex II</a>
+                    </li>
+                    <!--end::Nav item-->
+                    <!--begin::Nav item-->
+                    <li class="nav-item">
+                        <a class="nav-link nav-link3 text-active-primary   p-5" id="NavAnnexIII" onclick="move('AnnexIII')">Annex III</a>
+                    </li>
+                    <!--end::Nav item-->
+
+
+                </ul>
+                <!--end::Nav-->
+                @* <form asp-controller="DebtDashboard" asp-action="Find" method="get">
+                <div class=" d-flex align-items-center " style="position:absolute;top:16px;right:16px;">
+
+                <input type="date" class="form-control" id="DebtDate" name="DebtDate">
+
+
+                <button class="btn btn-md text-white bg-success mt-3 mt-lg-0 mt-md-0 ml-2" title="Search"><i class="fa fa-search" aria-hidden="true"></i></button>
+                </div>
+                </form> *@
+
+            </div>
+        </div>
+        <div class="Add3 row3 pt-10 pr-5 allcontainer" id="AnnexII">
+            <!--begin::Col-->
+            <div class="col-lg-12  d-flex justify-content-end align-items-center" style="position: absolute;right: 20px;top: 88px;">
+
+                <div class="col-auto">
+                    <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                        Amount in Cr.
+                    </a>
+
+                </div>
+
+            </div>
+            <div class="table100 ver6 m-b-110">
+                <table data-vertable="ver6">
+                    <thead class="text-align-center">
+                        <tr class="row100 head">
+                            <th class="column100 " rowspan="2" width="7%" data-column="column1">Sr No</th>
+                            <th class="column100 tal" rowspan="2" data-column="column2">Branch</th>
+
+                            <th class="column100 " colspan="3" data-column="column2">
+                                As on March 31, 2024
+                            </th>
+                            <th class="column100 " colspan="3" data-column="column3">
+                                As on March  31, 2023
+                            </th>
+
+                        </tr>
+                        <tr class="row100 head">
+                            <th class="column100 " data-column="column3">No of Active Client</th>
+                            <th class="column100 " data-column="column4">FIU Outstanding (Cr)</th>
+                            <th class="column100 " data-column="column5">% To Total Outstanding</th>
+                            <th class="column100 " data-column="column3">No of Active Client</th>
+                            <th class="column100 " data-column="column4">FIU Outstanding (Cr)</th>
+                            <th class="column100 " data-column="column5">% To Total Outstanding</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int no6 = 1;
+
+                            if (Model != null)
+                            {
+                                Decimal total = 0;
+                                Decimal total1 = 0;
+                                Decimal total2 = 0;
+                                @foreach (var item in Model.listI)
+                                {
+
+                                    <tr class="row100">
+                                        <td class="column100 column1 " data-column="column1">@no6</td>
+                                        <td class="column100 column2 tal" data-column="column2">@item.Branch_name</td>
+                                        <td class="column100 column3 " data-column="column3">@item.ClientCount</td>
+                                        <td class="column100 column4 " data-column="column4">@item.TotalOutstanding</td>
+                                        <td class="column100 column5 " data-column="column5">@item.TotalPercentage </td>
+                                        <td class="column100 column6 " data-column="column6"></td>
+                                        <td class="column100 column7 " data-column="column7"></td>
+                                        <td class="column100 column8 " data-column="column8"></td>
+                                    </tr>
+                                    no6++;
+                                    total = total + Convert.ToDecimal(@item.ClientCount);
+                                    total1 = total1 + Convert.ToDecimal(@item.TotalOutstanding);
+                                    total2 = total2 + Convert.ToDecimal(@item.TotalPercentage);
+                                }
+                                <tr class="row100">
+                                    <td class="column100 column1 " data-column="column1"></td>
+                                    <td class="column100 column2 tal" data-column="column2">Total</td>
+                                    <td class="column100 column3 " data-column="column3">@total</td>
+                                    <td class="column100 column4 " data-column="column4">@total1</td>
+                                    <td class="column100 column5 " data-column="column5">@total2</td>
+                                    <td class="column100 column6 " data-column="column6"></td>
+                                    <td class="column100 column7 " data-column="column7"></td>
+                                    <td class="column100 column8 " data-column="column8"></td>
+                                </tr>
+                            }
+                        }
+
+                        <!-- Repeat the above row structure for other data entries -->
+                    </tbody>
+                </table>
+            </div>    <!--end::Col-->
+        </div>
+        <div class="Add3 row3  pt-10 pr-5 allcontainer" id="AnnexIII">
+            <!--begin::Col-->
+            <div class="col-lg-12  d-flex justify-content-end align-items-center" style="position: absolute;right: 20px;top: 88px;">
+
+                <div class="col-auto">
+                    <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                        Amount in Cr.
+                    </a>
+
+                </div>
+
+            </div>
+            <div class="table100 ver5 m-b-110">
+                <table data-vertable="ver5">
+                    <thead>
+                        <tr class="row100 head">
+                            <th class="column100 " width="7%" data-column="column1">Sr No</th>
+                            <th class="column100 tal" data-column="column2">DEC</th>
+                            <th class="column100 " data-column="column3">Region</th>
+                            <th class="column100 " data-column="column4">Principal WOA</th>
+                            <th class="column100 " data-column="column5">Date of NPA</th>
+                            <th class="column100 " data-column="column6">Date of WOA</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @*  @{
+                        int no1 = 1;
+
+                        if (Model != null)
+                        {
+                        @foreach (var item in Model.listI)
+                        {
+
+                        <tr class="row100">
+                        <td class="column100 column1 " data-column="column1">@no1</td>
+                        <td class="column100 column2 tal" data-column="column2">@item.dec</td>
+                        <td class="column100 column3 " data-column="column3">@item.REGION</td>
+                        <td class="column100 column4 " data-column="column4">@item.PRINCIPAL_WOA</td>
+                        <td class="column100 column5 " data-column="column5">@String.Format("{0:dd/MM/yyyy}", item.DATE_NPA)</td>
+                        <td class="column100 column6 " data-column="column6">@String.Format("{0:dd/MM/yyyy}", item.DATE_WOA)</td>
+
+                        </tr>
+                        no1++;
+
+                        }
+                        }
+                        } *@
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    $(document).ready(function () {
+        document.getElementById('AnnexIII').style.display = 'none';
+
+
+    });
+
+    function move(id) {
+        $('.row3').hide();
+        document.getElementById(id).style.display = 'block';
+        $('.nav-link3').removeClass('active');
+        $('#Add3').hide();
+        $('#Nav' + id).addClass('active');
+
+        if (id == 'Overview') {
+            window.location.reload();
+        }
+    }
+</script>

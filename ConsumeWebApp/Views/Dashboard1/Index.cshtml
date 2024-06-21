@@ -1,0 +1,2542 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization;
+@using Microsoft.Extensions.Localization
+@inject IViewLocalizer Localizer;
+@using System.Globalization;
+@* @model Tuple<IEnumerable<PrintSoftWeb.Models.CreditRatingModel>,IEnumerable<PrintSoftWeb.Models.CreditRatingModel>, IEnumerable<PrintSoftWeb.Models.CostOfBorrowingModel>, IEnumerable<PrintSoftWeb.Models.TBillModel>, IEnumerable<BorroAndRFRModel>, IEnumerable<BorroAndRFRModel>>
+ *@
+@model PrintSoftWeb.Controllers.MyViewModel
+
+@{
+
+}
+<head>
+    <link href="~/css/style.bundle.css" rel="stylesheet" />
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+    <script src="https://microsoft.github.io/PowerBI-JavaScript/dist/powerbi.min.js"></script>
+
+    <link href="~/css/main.css" rel="stylesheet" />
+    <link href="~/css/util.css" rel="stylesheet" />
+    <script src="~/js/custom.js"></script>
+
+</head>
+<script>
+    $(window).on('unload', function () {
+        setTimeout(function () {
+            $(window).scrollTop(0);
+        }, 100);
+    });
+</script>
+
+<div id="kt_header" class="header" data-kt-sticky="true" data-kt-sticky-name="header" data-kt-sticky-offset="{default: '200px', lg: '300px'}">
+    <!--begin::Container-->
+    <div class="container-fluid d-flex align-items-center justify-content-between" id="kt_header_container">
+        <!--begin::Page title-->
+        <div class="page-title d-flex flex-column align-items-start justify-content-center flex-wrap me-lg-auto pb-5 pb-lg-0" data-kt-swapper="true" data-kt-swapper-mode="prepend" data-kt-swapper-parent="{default: '#kt_content_container', lg: '#kt_header_container'}">
+            <!--begin::Heading-->
+            <h1 class="text-black fw-bold my-0 fs-2 text-start">Dashboard-SBI Global Factors </h1>
+            <!--end::Heading-->
+        </div>
+        <!--end::Page title-->
+        <!--begin::Logo-->
+        <div class="logo ms-auto">
+            <p class="logo-link">
+                <img src="~/images/sbilogo.png" alt="Logo" style="border-radius:7%" height="65px" width="120px" class="logo-img">
+            </p>
+        </div>
+        <!--end::Logo-->
+    </div>
+</div>
+@* <div class=" hstack m-2">
+ *@<div class="col-md-12  mb-3">
+    @*     <div id="reportContainer" class="card pb-5 hiwd"></div>
+    *@
+    <iframe class="card mycard pb-5 hiwd" title="PAT_FIU_Turnover 260224 V1" src="https://app.powerbi.com/reportEmbed?reportId=3a5082fa-781b-4cc0-a76f-b9d655988af0&autoAuth=true&ctid=4e160d88-0c33-4cb7-8b2b-be27256a4695" frameborder="0" allowFullScreen="true" style="padding:33px 34px 37px 36px;"></iframe>
+    @*    <iframe class="card pb-5 hiwd" title="PAT_FIU_Turnover 260224 V1" src="https://app.powerbi.com/reportEmbed?reportId=2d9e3169-c3b8-4e7f-a91a-5e683666f17d&autoAuth=true&ctid=4e160d88-0c33-4cb7-8b2b-be27256a4695" frameborder="0" allowFullScreen="true" style="padding:33px 34px 37px 36px;"></iframe>
+    *@
+</div>
+<div class="col-md-12 mb-3">
+    <iframe class="card mycard pb-5 hiwd" title="FIU" src="https://app.powerbi.com/reportEmbed?reportId=c35af0dc-bcd9-4dd7-8c7d-417085e65394&autoAuth=true&ctid=4e160d88-0c33-4cb7-8b2b-be27256a4695" frameborder="0" allowFullScreen="true" style="padding:33px 34px 37px 36px;"></iframe>
+</div>
+<div class="col-md-12 ">
+    <div class="card mycard mb-3 bcolor1">
+        <div class="card-body d-flex p-4">
+
+            <!--begin::Nav-->
+            <ul class="nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent listdesign fw-bold">
+                <!--begin::Nav item-->
+                @*  <li class="nav-item">
+                <a class="nav-link nav-link1 text-active-primary py-5  active" id="NavOverview1" onclick="move1('Overview1')">Overview</a>
+                </li> *@
+                <!--end::Nav item-->
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link1 text-active-primary p-5 active" id="NavHighlights" onclick="move1('Highlights')">Highlights</a>
+                </li>
+                <!--end::Nav item-->
+                <!--begin::Nav item-->
+                @*<li class="nav-item">
+                <a class="nav-link nav-link1 text-active-primary p-5" id="NavFinancial_Highlights" onclick="move1('Financial_Highlights')">Financial Highlights</a>
+                </li>*@
+                <!--end::Nav item-->
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link1 text-active-primary p-5" id="NavBudget_vs_Actual" onclick="move1('Budget_vs_Actual')">Budget vs Actual</a>
+                </li>
+                <!--end::Nav item-->
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link1 text-active-primary p-5" id="NavYeild" onclick="move1('Yeild')">Yield</a>
+                </li>
+                <!--end::Nav item-->
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link1 text-active-primary p-5" id="NavEfficiency_Ratio" onclick="move1('Efficiency_Ratio')">Efficiency Ratio</a>
+                </li>
+
+                <!--end::Nav item-->
+
+            </ul>
+            <!--end::Nav-->
+
+            <div class=" d-flex align-items-center " style="position:absolute;top:16px;right:16px;">
+
+                <input type="date" class="form-control" id="date12" name="name">
+
+
+                <button class="btn btn-md text-white bg-success mt-3 mt-lg-0 mt-md-0 ml-2" type="button" title="Search" onclick="search12()"><i class="fa fa-search" aria-hidden="true"></i></button>
+
+            </div>
+        </div>
+    </div>
+    <!--end::Navbar-->
+    <!--begin::Row-->
+    @*     <div class=" d-flex list-group-horizontal  fw-bold mt-3">
+    *@      @*   <div class="col-md-4 pt-10 pb-10 d-flex card card-flush card-body mycard list-group-horizontal mr-3 h-400 w-400"  id="Overview1">
+
+    <!--begin::Wrapper-->
+    <div class="">
+    <!--begin::Chart-->
+    <div class="col-lg-12  d-flex justify-content-end align-items-center">
+    <div class="col-auto">
+    <div class=" d-flex mt-3 mt-lg-0 mt-md-3">
+    <div class="col-lg-3 d-flex align-items-center p-0" style="width:20% !important">
+    <label for="name" class="form-label fw-bold p-0"> Date : </label>
+    </div>
+    <div class="col-lg-8 d-flex p-0">
+    <input type="date" class="form-control" id="date" name="name">
+    </div>
+    </div>
+    </div>
+    <div class="col-auto p-0">
+    <button class="btn btn-md text-white bg-success mt-3 mt-lg-0 mt-md-0 ml-0" type="button" title="Search" onclick="search1()">
+    <i class="fa fa-search" aria-hidden="true"></i>
+    </button>
+
+    </div>
+
+    </div>
+    <div class="position-relative d-flex flex-center pl-5 pt-5 mb-1">
+    @* <div class="position-absolute translate-middle start-50 top-50 d-flex flex-column flex-center">
+    <span class="fs-2qx fw-bold">237</span>
+    <span class="fs-6 fw-semibold text-gray-500">Total Tasks</span>
+    </div>
+
+    <canvas id="pieChart" width="175" height="175"></canvas>
+    <script>
+    // Retrieve data passed from the controller
+    var pieChartData = @Html.Raw(Json.Serialize(ViewBag.PieChartData));
+
+    // Prepare data for the chart
+    var labels = pieChartData.map(function (item) { return item.Label; });
+    var data = pieChartData.map(function (item) { return item.Value; });
+
+    // Render the pie chart
+    var ctx = document.getElementById('pieChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+    labels: labels,
+    datasets: [{
+    label: 'Pie Chart',
+    data: data,
+    backgroundColor: [
+    'rgba(255, 99, 132, 0.7)',
+    'rgba(54, 162, 235, 0.7)',
+    'rgba(255, 206, 86, 0.7)',
+    'rgba(75, 192, 192, 0.7)',
+    'rgba(153, 102, 255, 0.7)'
+    // Add more colors if needed
+    ],
+    borderWidth: 1
+    }]
+    },
+    options: {
+    cutoutPercentage: 0, // Set to 0 to create a circular layout
+    }
+    });
+    </script>
+
+    <div class="d-flex flex-wrap flex-center flex-md-column">
+    <canvas id="myPieChart1" width="400" height="400"></canvas>
+    <span class="pt-7 cirhead1">Financial <br /> Specialization</span>
+    </div>
+    <div class="legend-container d-none">
+    <ul class="legend-list">
+    <li class="legend-item"><span class="color-box" style="background-color: #744fE7;"></span><span>Highlights</span></li>
+    <li class="legend-item"><span class="color-box" style="background-color: #72B9f0;"></span><span>Financial Highlights</span></li>
+    <li class="legend-item"><span class="color-box" style="background-color: #D76A66;"></span><span>Budget vs Actual</span></li>
+    <li class="legend-item"><span class="color-box" style="background-color: #6fC884;"></span><span>Efficiency Ratio</span></li>
+    <li class="legend-item"><span class="color-box" style="background-color: #F4D065;"></span><span>Yeild</span></li>
+
+    </ul>
+    </div>
+    <!-- JavaScript code to render the pie chart -->
+    <script>
+    // Data for the pie chart
+    const pieChartData1 = [
+    { label: 'Highlights', value: 20 },
+    { label: 'Financial_Highlights', value: 20 },
+    { label: 'Budget_vs_Actual', value: 20 },
+    { label: 'Yeild', value: 20 },
+    { label: 'Efficiency_Ratio', value: 20 }
+    ];
+
+    // Extract labels and data from the data array
+    const labels1 = pieChartData1.map(item => item.label);
+    const data1 = pieChartData1.map(item => item.value);
+
+    // Render the pie chart using Chart.js library
+    const ctx1 = document.getElementById('myPieChart1').getContext('2d');
+    const myPieChart1 = new Chart(ctx1, {
+    type: 'doughnut',
+    data: {
+    labels: labels1,
+    datasets: [{
+    data: data1,
+    backgroundColor: [
+    '#744fE7',//'rgba(0, 185, 255, 0.99)',   //  Blue
+    '#72B9f0',// 'rgba(255, 108, 22, 0.99)', // Orange
+    '#D76A66',//'rgba(86, 217, 22, 1)',   // Green
+    '#F4D065',//' rgba(255, 209, 0, 0.96)',  // Yellow
+    '#6fC884'//'rgba(210, 118, 246, 0.96)'    // purple
+    ]
+
+    }]
+    },
+    options: {
+    cutoutPercentage: 10,
+    plugins: {
+    datalabels: {
+    formatter: (value, context) => {
+    return context.chart.data.labels[context.dataIndex];
+    },
+    color: '#fff',
+    font: {
+    size: 14
+    },
+    anchor: 'center',
+    align: 'end'
+    },
+
+    // legend: {
+    //     position: 'chartArea',
+    //     align: 'center',
+    //     labels: {
+    //         color: 'black',
+    //         boxWidth: 40,
+    //         padding: 20
+    //     }
+    // },
+    legend: {
+    display: false // Hide the legend
+    },
+    tooltip: {
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    displayColors: false
+    }
+    },
+    responsive: false,
+    height: 400,
+    width: '100%',
+    onClick: (event, elements) => {
+    if (elements && elements.length > 0) {
+    const index = elements[0].index;
+    const label = labels1[index];
+    move1(label);
+    }
+    }
+    }
+    });
+
+    </script>
+
+    </div>
+
+    </div>                <!--end::Wrapper-->
+
+    </div>
+    *@
+    <div class="col-md-12 card mycard Add1 row1 gx-6 gx-xl-9 allcontainer" id="Highlights">
+        <!--begin::Col-->
+        <div class="col-lg-12  d-flex justify-content-end align-items-center" style="position: absolute;right: 12px;top: 10px;">
+
+            <div class="col-auto">
+                <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                    Amount in Cr.
+                </a>
+
+            </div>
+
+        </div>
+        <div class="table100 ver1 m-b-110">
+            <table data-vertable="ver1">
+                <thead>
+                    <tr class="row100 head">
+                        <th class="column100 " data-column="column1">Particulars</th>
+                        <th class="column100 " data-column="column2"><label id="col1"></label></th>
+                        <th class="column100 " data-column="column3">F.Y. <label id="col2"></label></th>
+                        <th class="column100 " data-column="column4"><label id="col3"></label></th>
+                        <th class="column100 " data-column="column5"><label id="col4"></label></th>
+                        <th class="column100 " data-column="column6">M-O-M Growth (%)</th>
+                        <th class="column100 " data-column="column7">Y-O-Y Growth (%)</th>
+                        <th class="column100 " data-column="column8">Y-T-D Growth (%)</th>
+                    </tr>
+                </thead>
+                <tbody id="htmlrpt">
+                    @{
+                        @if (Model != null)
+                        {
+                            foreach (var item in Model.acclist1)
+                            {
+                                <tr class="row100">
+                                    <td class="column100 column1 tal" data-column="column1">@Html.DisplayFor(modelItem => item.h_particulars)</td>
+                                    <td class="column100 column2 " data-column="column2">@Html.DisplayFor(modelItem => item.h_col1)</td>
+                                    <td class="column100 column3 " data-column="column3">@Html.DisplayFor(modelItem => item.h_col2)</td>
+                                    <td class="column100 column4 " data-column="column4">@Html.DisplayFor(modelItem => item.h_col3)</td>
+                                    <td class="column100 column5 " data-column="column5">@Html.DisplayFor(modelItem => item.h_col4)</td>
+                                    <td class="column100 column6 " data-column="column6">@Html.DisplayFor(modelItem => item.h_mom)</td>
+                                    <td class="column100 column7 " data-column="column7">@Html.DisplayFor(modelItem => item.h_yoy)</td>
+                                    <td class="column100 column8 " data-column="column8">@Html.DisplayFor(modelItem => item.h_ytd)</td>
+                                </tr>
+                            }
+                        }
+
+                    }
+                    <!-- Repeat the above row structure for other data entries -->
+                </tbody>
+            </table>
+        </div>    <!--end::Col-->
+    </div>
+    <div class="col-md-12 card mycard row1 gx-6 gx-xl-9 allcontainer" id="Financial_Highlights">
+        <!--begin::Col-->
+        <div class="col-lg-12  d-flex justify-content-end align-items-center" style="position: absolute;right: 12px;top: 10px;">
+
+            <div class="col-auto">
+                <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                    Amount in Cr.
+                </a>
+
+            </div>
+
+        </div>
+        <div class="table100 ver2 m-b-110">
+            <table data-vertable="ver2">
+                <thead>
+                    <tr class="row100 head">
+                        <th class="column100 " data-column="column1">Particulars</th>
+                        <th class="column100 " data-column="column2"><label id="col11"></label></th>
+                        <th class="column100 " data-column="column3">F.Y. <label id="col21"></label></th>
+                        <th class="column100 " data-column="column4"><label id="col31"></label></th>
+                        <th class="column100 " data-column="column5">Y-O-Y Growth (%)</th>
+                    </tr>
+                </thead>
+                <tbody id="htmlrpt1">
+                    @{
+                        @if (Model != null)
+                        {
+                            foreach (var item in Model.acclist2)
+                            {
+                                <tr class="row100">
+                                    <td class="column100 column1 tal" data-column="column1">@Html.DisplayFor(modelItem => item.f_particulars)</td>
+                                    <td class="column100 column2 " data-column="column2">@Html.DisplayFor(modelItem => item.f_col1)</td>
+                                    <td class="column100 column3 " data-column="column3">@Html.DisplayFor(modelItem => item.f_col2)</td>
+                                    <td class="column100 column4 " data-column="column4">@Html.DisplayFor(modelItem => item.f_col3)</td>
+                                    <td class="column100 column5 " data-column="column5">@Html.DisplayFor(modelItem => item.f_yoy)</td>
+                                </tr>
+                            }
+                        }
+
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-md-12 card mycard row1 gx-6 gx-xl-9 allcontainer" id="Budget_vs_Actual">
+        <!--begin::Col-->
+        <div class="col-lg-12  d-flex justify-content-end align-items-center" style="position: absolute;right: 12px;top: 10px;">
+
+            <div class="col-auto">
+                <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                    Amount in Cr.
+                </a>
+
+            </div>
+
+        </div>
+        <div class="table100 ver3 m-b-110">
+            <table data-vertable="ver3">
+                <thead>
+                    <tr class="row100 head">
+                        <th class="column100 " data-column="column1">Particulars</th>
+                        <th class="column100 " data-column="column2"><label id="col12"></label></th>
+                        <th class="column100 " data-column="column3">MOU 2023-2024</th>
+                        <th class="column100 " data-column="column4">Annualized % Achievement of Budget</th>
+
+                    </tr>
+                </thead>
+                <tbody id="htmlrpt2">
+                    @{
+                        @if (Model != null)
+                        {
+                            foreach (var item in Model.acclist3)
+                            {
+                                <tr class="row100">
+                                    <td class="column100 column1 tal" data-column="column1 tal">@Html.DisplayFor(modelItem => item.m_particulars)</td>
+                                    <td class="column100 column2 " data-column="column2 tar">@Html.DisplayFor(modelItem => item.m_col1)</td>
+                                    <td class="column100 column3 " data-column="column3 tar">@Html.DisplayFor(modelItem => item.m_col2)</td>
+                                    <td class="column100 column4 " data-column="column4 tar">@Html.DisplayFor(modelItem => item.m_achievement)</td>
+                                </tr>
+                            }
+                        }
+
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-md-12 card mycard row1 gx-6 gx-xl-9 allcontainer" id="Yeild">
+        <!--begin::Col-->
+        <div class="col-lg-12  d-flex justify-content-end align-items-center" style="position: absolute;right: 12px;top: 10px;">
+
+            <div class="col-auto">
+                <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                    Amount in Cr.
+                </a>
+
+            </div>
+
+        </div>
+        <div class="table100 ver4 m-b-110">
+            <table data-vertable="ver4">
+                <thead>
+                    <tr class="row100 head">
+                        <th class="column100 " data-column="column1">Particulars</th>
+                        <th class="column100 " data-column="column2"><label id="col13"></label></th>
+                        <th class="column100 " data-column="column3">F.Y. <label id="col23"></label></th>
+                        <th class="column100 " data-column="column4"><label id="col33"></label></th>
+                        <th class="column100 " data-column="column5"><label id="col43"></label></th>
+                    </tr>
+                </thead>
+
+                <tbody id="htmlrpt3">
+                    @{
+                        @if (Model != null)
+                        {
+                            foreach (var item in Model.acclist5)
+                            {
+                                <tr class="row100">
+                                    <td class="column100 column1 tal" data-column="column1">@Html.DisplayFor(modelItem => item.y_particulars)</td>
+                                    <td class="column100 column2 " data-column="column2">@Html.DisplayFor(modelItem => item.y_col1)</td>
+                                    <td class="column100 column3 " data-column="column3">@Html.DisplayFor(modelItem => item.y_col2)</td>
+                                    <td class="column100 column4 " data-column="column4">@Html.DisplayFor(modelItem => item.y_col3)</td>
+                                    <td class="column100 column5 " data-column="column5">@Html.DisplayFor(modelItem => item.y_col4)</td>
+                                </tr>
+                            }
+                        }
+
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-md-12 card mycard row1 gx-6 gx-xl-9 allcontainer" id="Efficiency_Ratio">
+        <!--begin::Col-->
+        <div class="col-lg-12  d-flex justify-content-end align-items-center" style="position: absolute;right: 12px;top: 10px;">
+
+            @*<div class="col-auto">
+            <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+            Amount in Cr.
+            </a>
+
+            </div>*@
+
+        </div>
+        <div class="table100 ver5 m-b-110">
+            <table data-vertable="ver5">
+                <thead>
+                    <tr class="row100 head">
+                        <th class="column100 " data-column="column1">Particulars</th>
+                        <th class="column100 " data-column="column2"><label id="col14"></label></th>
+                        <th class="column100 " data-column="column3">F.Y. <label id="col24"></label></th>
+                        <th class="column100 " data-column="column4"><label id="col34"></label></th>
+                        <th class="column100 " data-column="column5"><label id="col44"></label></th>
+                    </tr>
+                </thead>
+
+                <tbody id="htmlrpt4">
+                    @{
+                        @if (Model != null)
+                        {
+                            foreach (var item in Model.acclist4)
+                            {
+                                <tr class="row100">
+                                    <td class="column100 column1 tal" data-column="column1">@Html.DisplayFor(modelItem => item.e_particulars)</td>
+                                    <td class="column100 column2 " data-column="column2">@Html.DisplayFor(modelItem => item.e_col1)</td>
+                                    <td class="column100 column3 " data-column="column3">@Html.DisplayFor(modelItem => item.e_col2)</td>
+                                    <td class="column100 column4 " data-column="column4">@Html.DisplayFor(modelItem => item.e_col3)</td>
+                                    <td class="column100 column5 ar" data-column="column5">@Html.DisplayFor(modelItem => item.e_col4)</td>
+                                </tr>
+                            }
+                        }
+
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    @*     </div>*@
+</div>
+
+<div class="col-md-12  mt-3 d-flex list-group-horizontal ">
+    @* Treasury *@
+    <div class="card mycard bcolor d-none">
+        <div class="card-body pt-9 pb-4" style="padding: 1px 7px 4px 0px;">
+
+            <!--begin::Nav-->
+            <ul class="nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent listdesign fw-bold">
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link2 text-active-primary py-5 active" id="NavOverview2" onclick="move2('Overview2')">Overview</a>
+                </li>
+                <!--end::Nav item-->
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link2 text-active-primary py-5" id="NavBorrowing" onclick="move2('Borrowing')">Borrowing</a>
+                </li>
+                <!--end::Nav item-->
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link2 text-active-primary py-5" id="NavRFR" onclick="move2('RFR')">RFR</a>
+                </li>
+                <!--end::Nav item-->
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link2 text-active-primary py-5" id="NavCredit_Rating" style="width: 64px;" onclick="move2('Credit_Rating')">Credit Rating</a>
+                </li>
+                <!--end::Nav item-->
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link2 text-active-primary py-5" id="NavPrime_Ref_Rate" style="width: 109px;" onclick="move2('Prime_Ref_Rate')">Prime Reference Rate</a>
+                </li>
+                <!--end::Nav item-->
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link2 text-active-primary py-5 " id="NavCOB" style="width: 67px;" onclick="move2('COB')">Cost Of Borrowing</a>
+                </li>
+                <!--end::Nav item-->
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link2 text-active-primary py-5" id="NavT_Bill" style="width: 50px;" onclick="move2('T_Bill')">T- Bill cut off</a>
+                </li>
+                <!--end::Nav item-->
+
+            </ul>
+            <!--end::Nav-->
+        </div>
+    </div>
+    <!--end::Navbar-->
+    <!--begin::Row-->
+    @*     <div class="card mycard fw-bold mt-3">
+    *@        <div class="col-md-4 pt-10 pb-10 d-flex justify-content-center card card-flush card-body mycard list-group-horizontal mr-3 h-400 w-400" id="Overview2">
+        <!--begin::Col-->
+        <!--begin::Wrapper-->
+        <div class="">
+            <!--begin::Chart-->
+            <div class="col-lg-12  d-flex justify-content-end align-items-center">
+                <div class="col-auto">
+                    <div class=" d-flex mt-3 mt-lg-0 mt-md-3">
+                        <div class="col-lg-3 d-flex align-items-center p-0" style="width:20% !important">
+                            <label for="name" class="form-label fw-bold p-0"> Date : </label>
+                        </div>
+                        <div class="col-lg-8 d-flex p-0">
+                            <input type="date" class="form-control" id="date" name="name">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-auto p-0">
+                    <button class="btn btn-md text-white bg-success mt-3 mt-lg-0 mt-md-0 ml-0" type="button" title="Search" onclick="search2()">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                    </button>
+
+                </div>
+
+            </div>
+            <div class="position-relative d-flex pt-5 flex-center mb-1" @* style="padding-top: 84px !important;padding-left: 72px !important;" *@>
+
+                <div class="d-flex flex-wrap flex-center flex-md-column">
+                    <canvas id="myPieChart2" width="400" height="400"></canvas>
+                    <p class="pt-6 cirhead2">Treasury</p>
+                </div>
+                <div class="legend-container d-none">
+                    <ul class="legend-list">
+                        <li class="legend-item"><span class="color-box" style="background-color: #E1A34D;"></span><span>Prime Reference Rate</span></li>
+                        <li class="legend-item"><span class="color-box" style="background-color: #D76A66;"></span><span>Borrowing</span></li>
+                        <li class="legend-item"><span class="color-box" style="background-color: #72B9f0;"></span><span>RFR</span></li>
+                        <li class="legend-item"><span class="color-box" style="background-color: #744FE6;"></span><span>Credit Rating</span></li>
+                        <li class="legend-item"><span class="color-box" style="background-color: #F4D065;"></span><span>COB</span></li>
+                        <li class="legend-item"><span class="color-box" style="background-color: #6fC884;"></span><span>T-Bill</span></li>
+                    </ul>
+
+                </div>
+                <!-- JavaScript code to render the pie chart -->
+                <script>
+                    // Data for the pie chart
+                    const pieChartData2 = [
+                        { label: 'Borrowing', value: 16.5 },
+                        { label: 'RFR', value: 16.5 },
+                        { label: 'Credit Rating', value: 16.5 },
+                        { label: 'Prime Reference Rate', value: 16.5 },
+                        { label: 'COB', value: 16.5 },
+                        { label: 'T Bill', value: 16.5 }
+                    ];
+
+                    // Extract labels and data from the data array
+                    const labels2 = pieChartData2.map(item => item.label);
+                    const data2 = pieChartData2.map(item => item.value);
+
+                    // Render the pie chart using Chart.js library
+                    const ctx2 = document.getElementById('myPieChart2').getContext('2d');
+                    const myPieChart2 = new Chart(ctx2, {
+                        type: 'doughnut',
+                        data: {
+                            labels: labels2,
+                            datasets: [{
+                                data: data2,
+                                backgroundColor: [
+                                    '#D76A66',//'rgba(0, 185, 255, 0.99)',   //  Blue
+                                    '#72B9f0',//'rgba(255, 108, 22, 0.99)', // Orange
+                                    '#744FE6',//'rgba(86, 217, 22, 1)',   //Green
+                                    '#E1A34D',//'rgba(255, 47, 92, 1)',   //red
+                                    '#883097f7',//' rgba(255, 209, 0, 0.96)',  // Yellow
+                                    '#6fC884'//'rgba(210, 118, 246, 0.96)'    // purple
+                                ]
+
+                            }]
+                        },
+                        options: {
+                            plugins: {
+                                chartJsPlugin3d: {
+                                    enabled: true,
+                                    alpha: 85,
+                                    beta: 50
+                                },
+                                legend: {
+                                    position: 'bottom',
+                                    align: 'center',
+                                    labels: {
+                                        color: 'black',
+                                        boxWidth: 40,
+                                        padding: 20
+                                    }
+                                },
+                                tooltip: {
+                                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                    displayColors: false
+                                }
+                            },
+                            cutout: '60%',
+                            responsive: false,
+                            height: 400,
+                            width: 550,
+                            onClick: (event, elements) => {
+                                if (elements && elements.length > 0) {
+                                    const index = elements[0].index;
+                                    const label = labels2[index];
+                                    if (label == 'T Bill') {
+                                        move2('T_Bill');
+                                    }
+                                    else if (label == 'Prime Reference Rate') {
+                                        move2('Prime_Ref_Rate');
+                                    } else if (label == 'Credit Rating') {
+                                        move2('Credit_Rating');
+                                    }
+                                    else {
+                                        move2(label);
+                                    }
+
+                                }
+                            }
+                        }
+                    });
+
+                </script>
+            </div>
+            <!--end::Chart-->
+            <!--begin::Labels-->
+            <!--end::Labels-->
+        </div>                <!--end::Wrapper-->
+
+    </div>
+    <div class="col-md-8   card mycard Add2 row2 gx-6 gx-xl-9 p-20 allcontainer" id="Borrowing">
+        <!--begin::Col-->
+
+        <div class="d-flex flex-wrap flex-center flex-md-column" @* style="padding-left:30px; *@">
+            <canvas id="MyBarChart" width="630" height="500"></canvas>
+            <p class="pt-6" style="color: midnightblue;font-size: 20px;">Borrowing</p>
+        </div>
+
+        <script>
+            // Extract data from the table
+            var labels = ['TIER II BOND', 'Commercial Paper', 'Bank Line WCL', 'FOREX'];//, 'Bank_Line_CC'
+            var amounts = [1000000000, 1000000000, 9620000000, 1472958290.47];//0,
+            var amountsInCrores = amounts.map(amount => amount / 10000000);
+            // Create the bar graph
+            var ctx = document.getElementById('MyBarChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Amount (Rs. in Crores)',
+                        data: amountsInCrores,
+                        backgroundColor: [
+                            'rgba(0, 185, 255, 0.99)',   //  Blue
+                            'rgba(255, 108, 22, 0.99)', // Orange
+                            // 'rgba(86, 217, 22, 1)',   //Green
+                            'rgba(255, 47, 92, 1)',   //red
+                            ' rgba(255, 209, 0, 0.96)'  // Yellow
+                        ]
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: {
+                            display: false // Hide the legend
+                        }
+
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                                callback: function (value, index, values) {
+                                    return value + ' Cr';
+                                }
+                            }
+                        }]
+                    },
+                    responsive: false,
+                    height: 500,
+                    width: 630,
+                    onClick: (event, elements) => {
+                        if (elements && elements.length > 0) {
+                            const index = elements[0].index;
+                            const label = labels[index];
+                            //moveb2(label);
+                            if (label == 'TIER II BOND') {
+                                moveb2('TIER_II_BOND');
+                            }
+                            else if (label == 'Commercial Paper') {
+                                moveb2('Commercial_Paper');
+                            } else if (label == 'Bank Line WCL') {
+                                moveb2('Bank_Line_WCL');
+                            }
+                            else {
+                                moveb2(label);
+                            }
+                        }
+                    }
+                }
+            })
+        </script>
+        @*   <div class="table100 ver3 m-b-110">
+        <table data-vertable="ver3">
+        <thead>
+        <tr class="row100 head">
+        <th class="column100 " width="8%" data-column="column1">Sr. no</th>
+        <th class="column100 " data-column="column2">Product</th>
+        <th class="column100 " data-column="column3">Issued Date</th>
+        <th class="column100 " data-column="column4">Rate</th>
+        <th class="column100 " data-column="column5">Amount</th>
+        </tr>
+        </thead>
+        <tbody>
+        @{
+        int no6 = 1;
+
+        if (Model != null)
+        {
+        @foreach (var item in Model.BorrowAndRFRModels1)
+        {
+
+        <tr class="align-items-center row100">
+        <td class="column100 column1" width="8%" data-column="column1">@no6</td>
+        <td class="column100 column2" data-column="column2">@Html.DisplayFor(modelItem => item.Product)</td>
+        <td class="column100 column3" data-column="column3">@String.Format("{0:dd/MM/yyyy}", item.Issued_Date)</td>
+        <td class="column100 column4" data-column="column4">@Html.DisplayFor(modelItem => item.Rate)</td>
+        <td class="column100 column5" data-column="column5">@Html.DisplayFor(modelItem => item.Amount)</td>
+        </tr>
+        no6++;
+
+        }
+        }
+        }
+        </tbody>
+        </table>
+        </div>    *@
+    </div>
+    <div class="col-md-8 card mycard row2 gx-6 gx-xl-9 allcontainer" id="TIER_II_BOND">
+        <!--begin::Col-->
+
+        <div class="col-lg-12  d-flex pl-0  align-items-center" style="height: 26px;">
+            <div class="col-md-4">
+                <h3 style="color: midnightblue;">
+                    TIER II BOND
+                </h3>
+            </div>
+            <div class="col-md-4  d-flex justify-content-end align-items-center" style="position: absolute;right: 12px;top: 0px;">
+                <button class="btn btn-md text-light bg-primary " style="height: 33px;" type="button" onclick="move2('Borrowing')">
+                    <i class="fa fa-angle-left d-flex"></i>
+                </button>
+                <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                    Amount in Cr.
+                </a>
+
+            </div>
+
+        </div>
+        <hr />
+        <div class="table100 ver3 m-b-110">
+            <table data-vertable="ver3">
+                <thead>
+                    <tr class="row100 head">
+                        <th class="column100 " width="8%" data-column="column1">Sr. no</th>
+                        <th class="column100 " data-column="column2">Name</th>
+                        <th class="column100 " data-column="column3">Issued Date</th>
+                        <th class="column100 " data-column="column4">Rate (%)</th>
+                        <th class="column100 " data-column="column5">Paid UpTo</th>
+                        <th class="column100 " data-column="column6">Due Date</th>
+                        <th class="column100 " data-column="column7">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+        @{
+            int no6 = 1;
+
+            if (Model != null)
+            {
+                @foreach (var item in Model.BorrowAndRFRModels2)
+                {
+
+                                <tr class="align-items-center row100">
+                                    <td class="column100 column1 " width="8%" data-column="column1">@no6</td>
+                                    <td class="column100 column2 " data-column="column2">@Html.DisplayFor(modelItem => item.Name)</td>
+                                    <td class="column100 column3 " data-column="column3">@String.Format("{0:dd/MM/yyyy}", item.Issued_Date)</td>
+                                    <td class="column100 column4 " data-column="column4">@Html.DisplayFor(modelItem => item.Rate)%</td>
+                                    <td class="column100 column5 " data-column="column5">@Html.DisplayFor(modelItem => item.Paid_UpTo)</td>
+                                    <td class="column100 column6 " data-column="column6">@Html.DisplayFor(modelItem => item.Due_Date)</td>
+                                    <td class="column100 column7 " data-column="column7">@Html.DisplayFor(modelItem => item.Amount)</td>
+                                </tr>
+                    no6++;
+
+                }
+            }
+        }
+                </tbody>
+            </table>
+        </div>    <!--end::Col-->
+    </div>
+    <div class="col-md-8 card mycard row2 gx-6 gx-xl-9 allcontainer" id="Commercial_Paper">
+        <!--begin::Col-->
+        <div class="col-lg-12  d-flex pl-0  align-items-center" style="height: 26px;">
+            <div class="col-md-4">
+                <h3 style="color: midnightblue;">
+                    Commercial Paper
+                </h3>
+            </div>
+            <div class="col-md-4  d-flex justify-content-end align-items-center" style="position: absolute;right: 12px;top: 0px;">
+                <button class="btn btn-md text-light bg-primary " style="height: 33px;" type="button" onclick="move2('Borrowing')">
+                    <i class="fa fa-angle-left d-flex"></i>
+                </button>
+                <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                    Amount in Cr.
+                </a>
+
+            </div>
+
+        </div>
+        <hr />
+        <div class="table100 ver3 m-b-110">
+            <table data-vertable="ver3">
+                <thead>
+                    <tr class="row100 head">
+                        <th class="column100 " width="8%" data-column="column1">Sr. no</th>
+                        <th class="column100 " data-column="column2">INVESTOR</th>
+                        <th class="column100 " data-column="column3">CP NOS</th>
+                        <th class="column100 " data-column="column4">Issued Date</th>
+                        <th class="column100 " data-column="column5">CP Deal Rate (%)</th>
+                        <th class="column100 " data-column="column6">CP Total Cost(CP Deal Rate+Stamp duty+IPA Charges) (%)</th>
+                        <th class="column100 " data-column="column7">No of Days</th>
+                        <th class="column100 " data-column="column8">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+        @{
+            int no7 = 1;
+
+            if (Model != null)
+            {
+                @foreach (var item in Model.BorrowAndRFRModels3)
+                {
+
+                                <tr class="align-items-center row100">
+                                    <td class="column100 column1 " width="8%" data-column="column1">@no7</td>
+                                    <td class="column100 column2 tal" data-column="column2">@Html.DisplayFor(modelItem => item.Investor)</td>
+                                    <td class="column100 column3 " data-column="column3">@Html.DisplayFor(modelItem => item.CP_NOS)</td>
+                                    <td class="column100 column4 " data-column="column4">@String.Format("{0:dd/MM/yyyy}", item.Issued_Date)</td>
+                                    <td class="column100 column5 " data-column="column5">@Html.DisplayFor(modelItem => item.CP_Deal_Rate)%</td>
+                                    <td class="column100 column6 " data-column="column6">@Html.DisplayFor(modelItem => item.CP_Total_Cost)%</td>
+                                    <td class="column100 column7 " data-column="column7">@Html.DisplayFor(modelItem => item.No_Of_Days)</td>
+                                    <td class="column100 column8 " data-column="column8">@Html.DisplayFor(modelItem => item.Amount)</td>
+                                </tr>
+                    no7++;
+
+                }
+            }
+        }
+                </tbody>
+            </table>
+        </div>    <!--end::Col-->
+    </div>
+    <div class="col-md-8 card mycard row2 gx-6 gx-xl-9 allcontainer" id="Bank_Line_CC">
+        <!--begin::Col-->
+        <div class="col-lg-12  d-flex pl-0  align-items-center" style="height: 26px;">
+            <div class="col-md-4">
+                <h3 style="color: midnightblue;">
+                    Bank Line CC
+                </h3>
+            </div>
+            <div class="col-md-4  d-flex justify-content-end align-items-center" style="position: absolute;right: 12px;top: 0px;">
+                <button class="btn btn-md text-light bg-primary " style="height: 33px;" type="button" onclick="move2('Borrowing')">
+                    <i class="fa fa-angle-left d-flex"></i>
+                </button>
+                <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                    Amount in Cr.
+                </a>
+
+            </div>
+
+        </div>
+        <hr />
+        <div class="table100 ver3 m-b-110">
+            <table data-vertable="ver3">
+                <thead>
+                    <tr class="row100 head">
+                        <th class="column100 " width="8%" data-column="column1">Sr. no</th>
+                        <th class="column100 " data-column="column2">Bank Name</th>
+                        <th class="column100 " data-column="column3">Issue Date</th>
+                        <th class="column100 " data-column="column4">Type of Loan</th>
+                        <th class="column100 " data-column="column5">Rate (%)</th>
+                        <th class="column100 " data-column="column6">Tenor (No of Days)</th>
+                        <th class="column100 " data-column="column7">Due Dt</th>
+                        <th class="column100 " data-column="column8">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+        @{
+            int no8 = 1;
+
+            if (Model != null)
+            {
+                @foreach (var item in Model.BorrowAndRFRModels4)
+                {
+
+                                <tr class="align-items-center row100">
+                                    <td class="column100 column1 " width="8%" data-column="column1">@no8</td>
+                                    <td class="column100 column2 tal" data-column="column2">@Html.DisplayFor(modelItem => item.Bank_Name)</td>
+                                    <td class="column100 column3 " data-column="column3">@String.Format("{0:dd/MM/yyyy}", item.Issued_Date)</td>
+                                    <td class="column100 column4 " data-column="column4">@Html.DisplayFor(modelItem => item.Type_of_Loan)</td>
+                                    <td class="column100 column5 " data-column="column5">@Html.DisplayFor(modelItem => item.Rate)%</td>
+                                    <td class="column100 column6 " data-column="column6">@Html.DisplayFor(modelItem => item.No_Of_Days)</td>
+                                    <td class="column100 column7 " data-column="column7">@Html.DisplayFor(modelItem => item.Due_Date)</td>
+                                    <td class="column100 column8 " data-column="column8">@Html.DisplayFor(modelItem => item.Amount)</td>
+                                </tr>
+                    no8++;
+
+                }
+            }
+        }
+                </tbody>
+            </table>
+        </div>    <!--end::Col-->
+    </div>
+    <div class="col-md-8 card mycard row2 gx-6 gx-xl-9 allcontainer" id="Bank_Line_WCL">
+        <!--begin::Col-->
+        <div class="col-lg-12  d-flex pl-0  align-items-center" style="height: 26px;">
+            <div class="col-md-4">
+                <h3 style="color: midnightblue;">
+                    Bank Line WCL
+                </h3>
+            </div>
+            <div class="col-md-4  d-flex justify-content-end align-items-center" style="position: absolute;right: 12px;top: 0px;">
+                <button class="btn btn-md text-light bg-primary " style="height: 33px;" type="button" onclick="move2('Borrowing')">
+                    <i class="fa fa-angle-left d-flex"></i>
+                </button>
+                <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                    Amount in Cr.
+                </a>
+
+            </div>
+
+        </div>
+        <hr />
+        <div class="table100 ver3 m-b-110">
+            <table data-vertable="ver3">
+                <thead>
+                    <tr class="row100 head">
+                        <th class="column100 " width="8%" data-column="column1">Sr. no</th>
+                        <th class="column100 " data-column="column2">Bank Name</th>
+                        <th class="column100 " data-column="column3">Issue Date</th>
+                        <th class="column100 " data-column="column4">Type of Loan</th>
+                        <th class="column100 " data-column="column5">Rate (%)</th>
+                        <th class="column100 " data-column="column6">Tenor (No of Days)</th>
+                        <th class="column100 " data-column="column7">Due Dt</th>
+                        <th class="column100 " data-column="column8">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+        @{
+            int no9 = 1;
+
+            if (Model != null)
+            {
+                @foreach (var item in Model.BorrowAndRFRModels5)
+                {
+
+                                <tr class="align-items-center row100">
+                                    <td class="column100 column1 " width="8%" data-column="column1">@no9</td>
+                                    <td class="column100 column2 tal" data-column="column2">@Html.DisplayFor(modelItem => item.Bank_Name)</td>
+                                    <td class="column100 column3 " data-column="column3">@String.Format("{0:dd/MM/yyyy}", item.Issued_Date)</td>
+                                    <td class="column100 column4 " data-column="column4">@Html.DisplayFor(modelItem => item.Type_of_Loan)</td>
+                                    <td class="column100 column5 " data-column="column5">@Html.DisplayFor(modelItem => item.Rate)%</td>
+                                    <td class="column100 column6 " data-column="column6">@Html.DisplayFor(modelItem => item.No_Of_Days)</td>
+                                    <td class="column100 column7 " data-column="column7">@Html.DisplayFor(modelItem => item.Due_Date)</td>
+                                    <td class="column100 column8 " data-column="column8">@Html.DisplayFor(modelItem => item.Amount)</td>
+                                </tr>
+                    no9++;
+
+                }
+            }
+        }
+                </tbody>
+            </table>
+        </div>    <!--end::Col-->
+    </div>
+    <div class="col-md-8 card mycard row2 gx-6 gx-xl-9 allcontainer" id="FOREX">
+        <!--begin::Col-->
+        <div class="col-lg-12  d-flex pl-0  align-items-center" style="height: 26px;">
+            <div class="col-md-4">
+                <h3 style="color: midnightblue;">
+                    FOREX
+                </h3>
+            </div>
+            <div class="col-md-4  d-flex justify-content-end align-items-center" style="position: absolute;right: 12px;top: 0px;">
+                <button class="btn btn-md text-light bg-primary " style="height: 33px;" type="button" onclick="move2('Borrowing')">
+                    <i class="fa fa-angle-left d-flex"></i>
+                </button>
+                <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                    Amount in Cr.
+                </a>
+
+            </div>
+
+        </div>
+        <hr />
+        <div class="table100 ver3 m-b-110">
+            <table data-vertable="ver3">
+                <thead>
+                    <tr class="row100 head">
+                        <th class="column100 " width="8%" data-column="column1">Sr. no</th>
+                        <th class="column100 " data-column="column2">SBI LONDON</th>
+                        <th class="column100 " data-column="column3">OUTSTANDING</th>
+                        <th class="column100 " data-column="column4"> CONVERSION RATE </th>
+                        <th class="column100 " data-column="column5">INR O/S</th>
+                        <th class="column100 " data-column="column6">USD Equiv O/S</th>
+                        <th class="column100 " data-column="column7">Limit</th>
+                    </tr>
+                </thead>
+                <tbody>
+        @{
+            int no10 = 1;
+
+            if (Model != null)
+            {
+                @foreach (var item in Model.BorrowAndRFRModels6)
+                {
+
+                                <tr class="align-items-center row100">
+                                    <td class="column100 column1 " width="8%" data-column="column1">@no10</td>
+                                    <td class="column100 column2 " data-column="column2">@Html.DisplayFor(modelItem => item.SBI_LONDON)</td>
+                                    <td class="column100 column3 " data-column="column3">@String.Format("{0:dd/MM/yyyy}", item.OUTSTANDING)</td>
+                                    <td class="column100 column4 " data-column="column4">@Html.DisplayFor(modelItem => item.CONVERSION_RATE)</td>
+                                    <td class="column100 column5 " data-column="column5">@Html.DisplayFor(modelItem => item.INR_OS)</td>
+                                    <td class="column100 column6 " data-column="column6">@Html.DisplayFor(modelItem => item.USD_Equiv_OS)</td>
+                                    <td class="column100 column7 " data-column="column7">@Html.DisplayFor(modelItem => item.Limit)</td>
+                                </tr>
+                    no10++;
+
+                }
+            }
+        }
+                </tbody>
+            </table>
+        </div>    <!--end::Col-->
+    </div>
+    <div class="col-md-8 card mycard row2 gx-6 gx-xl-9 allcontainer" id="RFR">
+        <!--begin::Col-->
+        <div class="col-lg-12  d-flex pl-0">
+            <div class="col-md-4">
+                <h3 style="color: midnightblue;">
+                    Risk Free Rate
+                </h3>
+            </div>
+        @*  <div class="col-md-4  d-flex justify-content-end align-items-center" style="position: absolute;right: 12px;top: 0px;">
+            <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+            Amount in Cr.
+            </a>
+
+            </div>
+            *@
+        </div>
+        <hr />
+        <div class="table100 ver2 m-b-110">
+            <table data-vertable="ver2">
+                <thead>
+                    <tr class="row100 head">
+                        <th class="column100 " width="8%" data-column="column1">Sr. no</th>
+                        <th class="column100 " data-column="column2">Currency</th>
+                        <th class="column100 " data-column="column3">RFR</th>
+                        <th class="column100 " data-column="column4">Effective Rate</th>
+                    </tr>
+                </thead>
+                <tbody>
+        @*  @{
+                    int no5 = 1;
+
+                    if (Model != null)
+                    {
+                    @foreach (var item in Model.BorrowAndRFRModels1)
+                    {
+
+                    <tr class="align-items-center row100">
+                    <td class="column100 column1 " width="8%" data-column="column1">@no5</td>
+                    <td class="column100 column2 tal" data-column="column2">@Html.DisplayFor(modelItem => item.Currency)</td>
+                    <td class="column100 column3 " data-column="column3">@String.Format("{0:dd/MM/yyyy}", item.EffectiveDate)</td>
+                    <td class="column100 column4 " data-column="column4">@Html.DisplayFor(modelItem => item.Rate)</td>
+                    </tr>
+                    no5++;
+
+                    }
+                    }
+                    } *@
+                    <tr class="align-items-center row100">
+                        <td class="column100 column1 " width="8%" data-column="column1">1</td>
+                        <td class="column100 column2 " data-column="column2">GBP</td>
+                        <td class="column100 column3 " data-column="column3">SONIA</td>
+                        <td class="column100 column4 " data-column="column4">5.18%</td>
+                    </tr>
+                    <tr class="align-items-center row100">
+                        <td class="column100 column1 " width="8%" data-column="column1">2</td>
+                        <td class="column100 column2 " data-column="column2">EUR</td>
+                        <td class="column100 column3 " data-column="column3">ESTR</td>
+                        <td class="column100 column4 " data-column="column4">3.90%</td>
+                    </tr>
+                    <tr class="align-items-center row100">
+                        <td class="column100 column1 " width="8%" data-column="column1">3</td>
+                        <td class="column100 column2 " data-column="column2">USD</td>
+                        <td class="column100 column3 " data-column="column3">SOFR</td>
+                        <td class="column100 column4 " data-column="column4">5.34%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-md-8 card mycard row2 gx-6 gx-xl-9 allcontainer" id="Credit_Rating">
+        <!--begin::Col-->
+        <div class="col-lg-12  d-flex pl-0">
+            <div class="col-md-4">
+                <h3 style="color: midnightblue;">
+                    Credit Rating
+                </h3>
+            </div>
+        @*  <div class="col-md-4  d-flex justify-content-end align-items-center" style="position: absolute;right: 12px;top: 0px;">
+            <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+            Amount in Cr.
+            </a>
+
+            </div>
+            *@
+        </div>
+        <hr />
+        <div class="table100 ver1 m-b-110">
+            <table data-vertable="ver1">
+                <thead class="text-align-center">
+                    <tr class="row100 head" style="text-align:center">
+                        <th class="column100 " width="8%" data-column="column1" rowspan="2">Sr.No</th>
+                        <th class="column100 " data-column="column2">Rating Date</th>
+                        <th class="column100 " data-column="column3">Company Name</th>
+                        <th class="column100 " data-column="column4">Long Term Rating</th>
+                        <th class="column100 " data-column="column5">Short Term Rating</th>
+                    </tr>
+        @* <tr class="row100 head">
+                    <th class="column100 " data-column="column1">Long Term Rating</th>
+                    <th class="column100 " data-column="column2">Short Term Rating</th>
+                    @*    <th class="column100 " data-column="column3">Long Term Rating</th>
+                    <th class="column100 " data-column="column4">Short Term Rating</th>
+                    </tr> *@
+                </thead>
+                <tbody>
+         @{
+                    int no4 = 1;
+
+                    if (Model != null)
+                    {
+                    @foreach (var item in Model.CreditRatingModels)
+                    {
+
+                    <tr class=" row100">
+                    <td class="column100 column1 " data-column="column1">@no4</td>
+                    <td class="column100 column2 " data-column="column2">@String.Format("{0:dd/MM/yyyy}", item.cr_createddate)</td>
+                                    <td class="column100 column3 tar" data-column="column3">@Html.DisplayFor(modelItem => item.cr_companyname)</td>
+                    <td class="column100 column4 tar" data-column="column4">@Html.DisplayFor(modelItem => item.cr_ltr)</td>
+                    <td class="column100 column5 tar" data-column="column5">@Html.DisplayFor(modelItem => item.cr_str)</td>
+                    </tr>
+                    no4++;
+
+                    }
+                    }
+                    } 
+                   @* <tr class=" row100">
+                        <td class="column100 column1 " data-column="column1">1</td>
+                        <td class="column100 column2 " data-column="column2">18/07/2023</td>
+                        <td class="column100 column3 " data-column="column3">Crisil Ltd</td>
+                        <td class="column100 column4 " data-column="column4">AAA</td>
+                        <td class="column100 column5 " data-column="column5">A1+</td>
+
+                    </tr>
+                    <tr class=" row100">
+                        <td class="column100 column1 " data-column="column1">2</td>
+                        <td class="column100 column2 " data-column="column2">29/09/2023</td>
+                        <td class="column100 column3 " data-column="column3">Icra Ltd</td>
+                        <td class="column100 column4 " data-column="column4">AAA</td>
+                        <td class="column100 column5 " data-column="column5">A1+</td>
+
+                    </tr>*@
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-md-8 card mycard row2 gx-6 gx-xl-9 allcontainer" id="Prime_Ref_Rate">
+        <!--begin::Col-->
+        <div class="col-lg-12  d-flex pl-0">
+            <div class="col-md-4">
+                <h3 style="color: midnightblue;">
+                    Prime Reference Rate
+                </h3>
+            </div>
+        @*  <div class="col-md-4  d-flex justify-content-end align-items-center" style="position: absolute;right: 12px;top: 0px;">
+            <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+            Amount in Cr.
+            </a>
+
+            </div>
+            *@
+        </div>
+        <hr />
+        <div class="table100 ver6 m-b-110">
+            <table data-vertable="ver6">
+                <thead>
+                    <tr class="row100 head">
+                        <th class="column100 " width="8%" data-column="column1">Sr. No</th>
+                        <th class="column100 " data-column="column2">Date</th>
+                        <th class="column100 " data-column="column3">Rate (%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+        @{
+            int no3 = 1;
+
+            if (Model != null)
+            {
+                @foreach (var item in Model.OtherCreditRatingModels)
+                {
+
+                                <tr class="row100">
+                                    <td class="column100 column1 " width="8%" data-column="column1">@no3</td>
+                                    <td class="column100 column2 " data-column="column2">@String.Format("{0:dd/MM/yyyy}", item.pr_date)</td>
+                                    <td class="column100 column3 " data-column="column3"> @Html.DisplayFor(modelItem => item.pr_rate)%</td>
+                                </tr>
+                    no3++;
+
+                }
+            }
+        }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-md-8 card mycard row2 gx-6 gx-xl-9 allcontainer" id="COB">
+        <div class="col-lg-12  d-flex pl-0">
+            <div class="col-md-4">
+                <h3 style="color: midnightblue;">
+                    Cost Of Borrowing
+                </h3>
+            </div>
+        @*  <div class="col-md-4  d-flex justify-content-end align-items-center" style="position: absolute;right: 12px;top: 0px;">
+            <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+            Amount in Cr.
+            </a>
+
+            </div>
+            *@
+        </div>
+        <hr />
+        <div class="table100 ver4 m-b-110">
+            <table data-vertable="ver4">
+                <thead>
+                    <tr class="row100 head">
+                        <th class="column100 " width="8%" data-column="column1">Sr. No</th>
+                        <th class="column100 " data-column="column2">Period</th>
+                        <th class="column100 " data-column="column3">Financial Year</th>
+                        <th class="column100 " data-column="column4">Average COB (Including NCDs) (%)</th>
+                        <th class="column100 " data-column="column5">Marginal COB (Excluding NCDs) (%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+        @{
+
+
+            int no2 = 1;
+
+            if (Model != null)
+            {
+                @foreach (var item in Model.CostOfBorrowingModels)
+                {
+
+                                <tr class=" row100">
+                                    <td class="column100 column1 " width="8%" data-column="column1">@no2</td>
+                                    <td class="column100 column2 " data-column="column2"> @Html.DisplayFor(modelItem => item.cob_period)</td>
+                                    <td class="column100 column3 " data-column="column3"> @Html.DisplayFor(modelItem => item.cob_finantialyear)</td>
+                                    <td class="column100 column4 " data-column="column4"> @Html.DisplayFor(modelItem => item.cob_includingncd)%</td>
+                                    <td class="column100 column5 " data-column="column5"> @Html.DisplayFor(modelItem => item.cob_excludingncd)%</td>
+
+                                </tr>
+                    no2++;
+
+                }
+            }
+        }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-md-8 card mycard row2 gx-6 gx-xl-9 allcontainer" id="T_Bill">
+        <!--begin::Col-->
+        <div class="col-lg-12  d-flex pl-0">
+            <div class="col-md-4">
+                <h3 style="color: midnightblue;">
+                    T-Bill Rate
+                </h3>
+            </div>
+        @*  <div class="col-md-4  d-flex justify-content-end align-items-center" style="position: absolute;right: 12px;top: 0px;">
+            <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+            Amount in Cr.
+            </a>
+
+            </div>
+            *@
+        </div>
+        <hr />
+        <div class="table100 ver5 m-b-110">
+            <table data-vertable="ver5">
+                <thead>
+                    <tr class="row100 head align-items-center">
+                        <th class="column100 " width="8%" data-column="column1">Sr.No.</th>
+                        <th class="column100 " data-column="column2">Date</th>
+
+                        <th class="column100 " data-column="column3">91 Days</th>
+                        <th class="column100 " data-column="column4">182 Days</th>
+                        <th class="column100 " data-column="column5">364 Days</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+        @{
+
+
+            int no = 1;
+
+            if (Model != null)
+            {
+                @foreach (var item in Model.TBillModels)
+                {
+
+                                <tr class=" row100">
+                                    <td class="column100 column1 " width="8%" data-column="column1">@no</td>
+                                    <td class="column100 column2 " data-column="column2">@String.Format("{0:dd/MM/yyyy}", item.tbr_date)</td>
+
+                                    <td class="column100 column3 " data-column="column3"> @Html.DisplayFor(modelItem => item.tbr_90_days)</td>
+                                    <td class="column100 column4 " data-column="column4"> @Html.DisplayFor(modelItem => item.tbr_182_days)</td>
+                                    <td class="column100 column5 " data-column="column5"> @Html.DisplayFor(modelItem => item.tbr_364_days)</td>
+
+                                </tr>
+                    no++;
+
+                }
+            }
+        }
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<div class="col-md-12 mt-3">
+
+        @* business *@
+    <div class="card mycard bcolor ">
+        <div class="card-body  p-4" ">
+
+            <!--begin::Nav-->
+            <ul class="nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent listdesign fw-bold">
+                <!--begin::Nav item-->
+                @* <li class="nav-item">
+                <a class="nav-link nav-link3 text-active-primary py-5 active" id="NavOverview3" onclick="move3('Overview3')">Overview</a>
+                </li> *@
+                <!--end::Nav item-->
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link3 text-active-primary  p-5 active" id="NavSummary" onclick="move3('Summary')">Summary</a>
+                </li>
+                <!--end::Nav item-->
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link3 text-active-primary   p-5" id="NavUnder_Process" onclick="move3('Under_Process')">Under Process</a>
+                </li>
+                <!--end::Nav item-->
+                <!--begin::Nav item-->
+                <li class="nav-item">
+                    <a class="nav-link nav-link3 text-active-primary  p-5" id="NavDisbursal_New" onclick="move3('Disbursal_New')">Disbursal New</a>
+                </li>
+                <!--end::Nav item-->
+            </ul>
+            <!--end::Nav-->
+        </div>
+    </div>
+    <!--end::Navbar-->
+    <!--begin::Row-->
+    <div class="card mycard fw-bold mt-3" style="height:auto">
+
+        <div class=" gx-6 gx-xl-9 p-10 d-flex list-group-horizontal" style="height:auto" id="Overview3">
+            <!--begin::Col-->
+            <div class="col-md-4 p-0 d-none">
+                <!--begin::Summary-->
+                <div class="card card-flush ">
+                    <!--begin::Card header-->
+                    <!--end::Card header-->
+                    <!--begin::Card body-->
+                    <div class="card-body p-0 pt-0">
+                        <!--begin::Wrapper-->
+                        <div class="">
+                            <!--begin::Chart-->
+                            <div class="col-lg-12  d-flex justify-content-end align-items-center">
+                                <div class="col-auto">
+                                    <div class=" d-flex mt-3 mt-lg-0 mt-md-3">
+                                        <div class="col-lg-3 d-flex align-items-center p-0" style="width:20% !important">
+                                            <label for="name" class="form-label fw-bold p-0"> Date : </label>
+                                        </div>
+                                        <div class="col-lg-8 d-flex p-0">
+                                            <input type="date" class="form-control" id="date" name="name">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-auto p-0">
+                                    <button class="btn btn-md text-white bg-success mt-3 mt-lg-0 mt-md-0 ml-0" type="button" title="Search" onclick="search3()">
+                                        <i class="fa fa-search" aria-hidden="true"></i>
+                                    </button>
+
+                                </div>
+
+                            </div>
+                            <div class="position-relative d-flex flex-center pt-5 mb-1">
+
+                                <div class="d-flex flex-wrap flex-center flex-md-column">
+                                    <canvas id="myPieChart3" width="550" height="370"></canvas>
+                                    <p class="pt-6 cirhead">Business</p>
+                                </div>
+                                <div class="legend-container d-none">
+                                    <ul class="legend-list">
+                                        <li class="legend-item"><span class="color-box" style="background-color: #744FE6;"></span><span>Summary</span></li>
+                                        <li class="legend-item"><span class="color-box" style="background-color: #E1A34D;"></span><span>Under_Process</span></li>
+                                        <li class="legend-item"><span class="color-box" style="background-color: #72B9f0;"></span><span>Disbursal_New</span></li>
+                                    </ul>
+
+                                </div>
+                                <!-- JavaScript code to render the pie chart -->
+                                <script>
+                                    // Data for the pie chart
+                                    const pieChartData3 = [
+                                        { label: 'Summary', value: 9.25 },
+                                        { label: 'Under_Process', value: 118 },
+                                        { label: 'Disbursal_New', value: 9.25 },
+
+                                    ];
+
+                                    // Extract labels and data from the data array
+                                    const labels3 = pieChartData3.map(item => item.label);
+                                    const data3 = pieChartData3.map(item => item.value);
+
+                                    // Render the pie chart using Chart.js library
+                                    const ctx3 = document.getElementById('myPieChart3').getContext('2d');
+                                    const myPieChart3 = new Chart(ctx3, {
+                                        type: 'doughnut',
+                                        data: {
+                                            labels: labels3,
+                                            datasets: [{
+                                                data: data3,
+                                                backgroundColor: [
+                                                    '#744FE6',//'rgba(0, 185, 255, 0.99)',   //  Blue
+                                                    '#E1A34D',//'rgba(255, 108, 22, 0.99)', // Orange
+                                                    '#72B9f0'//'rgba(86, 217, 22, 1)',   // Green
+                                                ]
+
+                                            }]
+                                        },
+                                        options: {
+                                            // cutoutPercentage: 70,
+                                            plugins: {
+                                                chartJsPlugin3d: {
+                                                    enabled: true,
+                                                    alpha: 85,
+                                                    beta: 50
+                                                },
+                                                legend: {
+                                                    display: false // Hide the legend
+                                                },
+                                                tooltip: {
+                                                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                                    displayColors: false
+                                                }
+                                            },
+                                            cutout: '50%',
+                                            responsive: false,
+                                            height: 400,
+                                            width: 550,
+                                            onClick: (event, elements) => {
+                                                if (elements && elements.length > 0) {
+                                                    const index = elements[0].index;
+                                                    const label = labels3[index];
+                                                    move3(label);
+                                                }
+                                            }
+                                        }
+                                    });
+
+                                </script>
+                            </div>
+                            <!--end::Chart-->
+                            <!--begin::Labels-->
+                            <!--end::Labels-->
+                        </div>                <!--end::Wrapper-->
+
+                    </div>
+                    <!--end::Card body-->
+                </div>
+                <!--end::Summary-->
+                <div class="ViewContent">
+                </div>
+            </div>
+            <!--end::Col-->
+
+            <div class="Add3 row3 gx-6 gx-xl-9 allcontainer" id="Summary">
+                <!--begin::Col-->
+                <div class="col-lg-12  d-flex justify-content-end align-items-center" style="position: absolute;right: 20px;top: 20px;">
+
+                    <div class="col-auto">
+                        <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                            Amount in Cr.
+                        </a>
+
+                    </div>
+
+                </div>
+                <div class="table100 ver6 m-b-110">
+                    <table data-vertable="ver6">
+                        <thead class="text-align-center">
+                            <tr class="row100 head">
+                                <th class="column100" rowspan="3" width="4%" data-column="column1">Sr. No</th>
+                                <th class="column100" rowspan="3" width="8%" data-column="column2">Branch</th>
+                                <th class="column100" colspan="2" data-column="column3">Proposals Sourced (NBO Stage)</th>
+                                <th class="column100" colspan="2" data-column="column4">Proposals sourced (FSA Stage)</th>
+                                <th class="column100" colspan="2" data-column="column5">Proposals With Branches (For Query resolution / Deferred)</th>
+                                <th class="column100" colspan="2" data-column="column6">Proposals with credit</th>
+                                <th class="column100" colspan="2" data-column="column7">Proposals sanctioned In (Likely to be activated)</th>
+                                <th class="column100" colspan="2" data-column="column8">Expected Disbursals in new sanctions</th>
+                                @*                                 <th class="column100" rowspan="3" data-column="column9">Disbursals in Accounts</th>
+                                *@
+                            </tr>
+                            <tr class="row100 head">
+                                <th class="column100" rowspan="2" width="5%" data-column="column3">No.</th>
+                                <th class="column100" rowspan="2" width="5%" data-column="column4">Limit</th>
+                                <th class="column100" rowspan="2" width="5%" data-column="column5">No.</th>
+                                <th class="column100" rowspan="2" width="5%" data-column="column6">Limit</th>
+                                <th class="column100" rowspan="2" width="5%" data-column="column7">No.</th>
+                                <th class="column100" rowspan="2" width="5%" data-column="column8">Limit</th>
+                                <th class="column100" rowspan="2" width="5%" data-column="column9">No.</th>
+                                <th class="column100" rowspan="2" width="5%" data-column="column10">Limit</th>
+                                <th class="column100" rowspan="2" width="5%" data-column="column11">No.</th>
+                                <th class="column100" rowspan="2" width="5%" data-column="column12">Limit</th>
+                            </tr>
+                            <tr class="row100 head">
+                                <th class="column100" width="7%" data-column="column13">Number</th>
+                                <th class="column100" width="7%" data-column="column14">Amount</th>
+                                @*                                 <th class="column100" data-column="column15">By Date</th>
+                                *@
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="row100">
+                                <td class="column100 column1 " data-column="column1">1</td>
+                                <td class="column100 column2 tal" data-column="column2">Bengaluru</td>
+                                <td class="column100 column3 " data-column="column3"></td>
+                                <td class="column100 column4 " data-column="column4"></td>
+                                <td class="column100 column5 " data-column="column5">1</td>
+                                <td class="column100 column6 " data-column="column6">8.00</td>
+                                <td class="column100 column7 " data-column="column7"></td>
+                                <td class="column100 column8 " data-column="column8"></td>
+                                <td class="column100 column9 " data-column="column9"></td>
+                                <td class="column100 column10 " data-column="column10"></td>
+                                <td class="column100 column11 " data-column="column11">3</td>
+                                <td class="column100 column12 " data-column="column12">16.00</td>
+                                <td class="column100 column13 " data-column="column13">4</td>
+                                <td class="column100 column14 " data-column="column14">10.00</td>
+                                @*  <td class="column100 column15 tal" data-column="column15"></td>
+                                <td class="column100 column16 tal" data-column="column16"></td> *@
+                            </tr>
+                            <tr class="row100">
+                                <td class="column100 column1 " data-column="column1">2</td>
+                                <td class="column100 column2 tal" data-column="column2">Chennai</td>
+                                <td class="column100 column3 " data-column="column3">1</td>
+                                <td class="column100 column4 " data-column="column4">1.00</td>
+                                <td class="column100 column5 " data-column="column5"></td>
+                                <td class="column100 column6 " data-column="column6"></td>
+                                <td class="column100 column7 " data-column="column7"></td>
+                                <td class="column100 column8 " data-column="column8"></td>
+                                <td class="column100 column9 " data-column="column9">2</td>
+                                <td class="column100 column10 " data-column="column10">11.00</td>
+                                <td class="column100 column11 " data-column="column11">3</td>
+                                <td class="column100 column12 " data-column="column12">8.00</td>
+                                <td class="column100 column13 " data-column="column13">4</td>
+                                <td class="column100 column14 " data-column="column14">8.50</td>
+                                @*   <td class="column100 column15 tal" data-column="column15"></td>
+                                <td class="column100 column16 tal" data-column="column16"></td> *@
+                            </tr>
+                            <tr class="row100">
+                                <td class="column100 column1 " data-column="column1">3</td>
+                                <td class="column100 column2 tal" data-column="column2">Coimbatore</td>
+                                <td class="column100 column3 " data-column="column3"></td>
+                                <td class="column100 column4 " data-column="column4"></td>
+                                <td class="column100 column5 " data-column="column5"></td>
+                                <td class="column100 column6 " data-column="column6"></td>
+                                <td class="column100 column7 " data-column="column7"></td>
+                                <td class="column100 column8 " data-column="column8"></td>
+                                <td class="column100 column9 " data-column="column9"></td>
+                                <td class="column100 column10 " data-column="column10"></td>
+                                <td class="column100 column11 " data-column="column11">3</td>
+                                <td class="column100 column12 " data-column="column12">5.00</td>
+                                <td class="column100 column13 " data-column="column13">2</td>
+                                <td class="column100 column14 " data-column="column14">0.75</td>
+                                @*  <td class="column100 column15 tal" data-column="column15"></td>
+                                <td class="column100 column16 tal" data-column="column16"></td> *@
+                            </tr>
+                            <tr class="row100">
+                                <td class="column100 column1 " data-column="column1">4</td>
+                                <td class="column100 column2 tal" data-column="column2">Delhi</td>
+                                <td class="column100 column3 " data-column="column3"></td>
+                                <td class="column100 column4 " data-column="column4"></td>
+                                <td class="column100 column5 " data-column="column5">2</td>
+                                <td class="column100 column6 " data-column="column6">11.50</td>
+                                <td class="column100 column7 " data-column="column7"></td>
+                                <td class="column100 column8 " data-column="column8"></td>
+                                <td class="column100 column9 " data-column="column9"></td>
+                                <td class="column100 column10 " data-column="column10"></td>
+                                <td class="column100 column11 " data-column="column11">3</td>
+                                <td class="column100 column12 " data-column="column12">43.00</td>
+                                <td class="column100 column13 " data-column="column13">4</td>
+                                <td class="column100 column14 " data-column="column14">13.80</td>
+                                @*  <td class="column100 column15 tal" data-column="column15"></td>
+                                <td class="column100 column16 tal" data-column="column16"></td> *@
+                            </tr>
+                            <tr class="row100">
+                                <td class="column100 column1 " data-column="column1">5</td>
+                                <td class="column100 column2 tal" data-column="column2">Hyderabad</td>
+                                <td class="column100 column3 " data-column="column3"></td>
+                                <td class="column100 column4 " data-column="column4"></td>
+                                <td class="column100 column5 " data-column="column5">3</td>
+                                <td class="column100 column6 " data-column="column6">22.50</td>
+                                <td class="column100 column7 " data-column="column7"></td>
+                                <td class="column100 column8 " data-column="column8"></td>
+                                <td class="column100 column9 " data-column="column9">1</td>
+                                <td class="column100 column10 " data-column="column10">20.00</td>
+                                <td class="column100 column11 " data-column="column11">2</td>
+                                <td class="column100 column12 " data-column="column12">20.00</td>
+                                <td class="column100 column13 " data-column="column13">2</td>
+                                <td class="column100 column14 " data-column="column14">10.00</td>
+                                @* <td class="column100 column15 tal" data-column="column15"></td>
+                                <td class="column100 column16 tal" data-column="column16"></td> *@
+                            </tr>
+                            <tr class="row100">
+                                <td class="column100 column1 " data-column="column1">6</td>
+                                <td class="column100 column2 tal" data-column="column2">Ludhiana</td>
+                                <td class="column100 column3 " data-column="column3"></td>
+                                <td class="column100 column4 " data-column="column4"></td>
+                                <td class="column100 column5 " data-column="column5">1</td>
+                                <td class="column100 column6 " data-column="column6">32.00</td>
+                                <td class="column100 column7 " data-column="column7"></td>
+                                <td class="column100 column8 " data-column="column8"></td>
+                                <td class="column100 column9 " data-column="column9">1</td>
+                                <td class="column100 column10 " data-column="column10">4.00</td>
+                                <td class="column100 column11 " data-column="column11">1</td>
+                                <td class="column100 column12 " data-column="column12">1.50</td>
+                                <td class="column100 column13 " data-column="column13"></td>
+                                <td class="column100 column14 " data-column="column14"></td>
+                                @*   <td class="column100 column15 tal" data-column="column15"></td>
+                                <td class="column100 column16 tal" data-column="column16"></td> *@
+                            </tr>
+                            <tr class="row100">
+                                <td class="column100 column1 " data-column="column1">7</td>
+                                <td class="column100 column2 tal" data-column="column2">Jaipur</td>
+                                <td class="column100 column3 " data-column="column3"></td>
+                                <td class="column100 column4 " data-column="column4"></td>
+                                <td class="column100 column5 " data-column="column5">4</td>
+                                <td class="column100 column6 " data-column="column6">40.00</td>
+                                <td class="column100 column7 " data-column="column7"></td>
+                                <td class="column100 column8 " data-column="column8"></td>
+                                <td class="column100 column9 " data-column="column9"></td>
+                                <td class="column100 column10 " data-column="column10"></td>
+                                <td class="column100 column11 " data-column="column11">3</td>
+                                <td class="column100 column12 " data-column="column12">7.00</td>
+                                <td class="column100 column13 " data-column="column13">1</td>
+                                <td class="column100 column14 " data-column="column14">1.50</td>
+                                @* <td class="column100 column15 tal" data-column="column15"></td>
+                                <td class="column100 column16 tal" data-column="column16"></td> *@
+                            </tr>
+                            <tr class="row100">
+                                <td class="column100 column1 " data-column="column1">8</td>
+                                <td class="column100 column2 tal" data-column="column2">Kolkata</td>
+                                <td class="column100 column3 " data-column="column3">1</td>
+                                <td class="column100 column4 " data-column="column4">15.00</td>
+                                <td class="column100 column5 " data-column="column5"></td>
+                                <td class="column100 column6 " data-column="column6"></td>
+                                <td class="column100 column7 " data-column="column7"></td>
+                                <td class="column100 column8 " data-column="column8"></td>
+                                <td class="column100 column9 " data-column="column9">1</td>
+                                <td class="column100 column10 " data-column="column10">2.00</td>
+                                <td class="column100 column11 " data-column="column11">4</td>
+                                <td class="column100 column12 " data-column="column12">31.00</td>
+                                <td class="column100 column13 " data-column="column13">2</td>
+                                <td class="column100 column14 " data-column="column14">7.00</td>
+                                @* <td class="column100 column15 tal" data-column="column15"></td>
+                                <td class="column100 column16 tal" data-column="column16"></td> *@
+                            </tr>
+                            <tr class="row100">
+                                <td class="column100 column1 " data-column="column1">9</td>
+                                <td class="column100 column2 tal" data-column="column2">Mumbai</td>
+                                <td class="column100 column3 " data-column="column3">1</td>
+                                <td class="column100 column4 " data-column="column4">10.00</td>
+                                <td class="column100 column5 " data-column="column5">4</td>
+                                <td class="column100 column6 " data-column="column6">43.00</td>
+                                <td class="column100 column7 " data-column="column7"></td>
+                                <td class="column100 column8 " data-column="column8"></td>
+                                <td class="column100 column9 " data-column="column9">2</td>
+                                <td class="column100 column10 " data-column="column10">13.00</td>
+                                <td class="column100 column11 " data-column="column11">1</td>
+                                <td class="column100 column12 " data-column="column12">8.50</td>
+                                <td class="column100 column13 " data-column="column13">7</td>
+                                <td class="column100 column14 " data-column="column14">18.00</td>
+                                @*    <td class="column100 column15 tal" data-column="column15"></td>
+                                <td class="column100 column16 tal" data-column="column16"></td> *@
+                            </tr>
+                            <tr class="row100">
+                                <td class="column100 column1 " data-column="column1">10</td>
+                                <td class="column100 column2 tal" data-column="column2">Pune</td>
+                                <td class="column100 column3 " data-column="column3"></td>
+                                <td class="column100 column4 " data-column="column4"></td>
+                                <td class="column100 column5 " data-column="column5"></td>
+                                <td class="column100 column6 " data-column="column6"></td>
+                                <td class="column100 column7 " data-column="column7"></td>
+                                <td class="column100 column8 " data-column="column8"></td>
+                                <td class="column100 column9 " data-column="column9"></td>
+                                <td class="column100 column10 " data-column="column10"></td>
+                                <td class="column100 column11 " data-column="column11">2</td>
+                                <td class="column100 column12 " data-column="column12">20.00</td>
+                                <td class="column100 column13 " data-column="column13">5</td>
+                                <td class="column100 column14 " data-column="column14">8.00</td>
+                                @* <td class="column100 column15 tal" data-column="column15"></td>
+                                <td class="column100 column16 tal" data-column="column16"></td> *@
+                            </tr>
+                            <tr class="row100">
+                                <td class="column100 column1 " data-column="column1">11</td>
+                                <td class="column100 column2 tal" data-column="column2">VP North</td>
+                                <td class="column100 column3 " data-column="column3"></td>
+                                <td class="column100 column4 " data-column="column4"></td>
+                                <td class="column100 column5 " data-column="column5">2</td>
+                                <td class="column100 column6 " data-column="column6">21.00</td>
+                                <td class="column100 column7 " data-column="column7"></td>
+                                <td class="column100 column8 " data-column="column8"></td>
+                                <td class="column100 column9 " data-column="column9"></td>
+                                <td class="column100 column10 " data-column="column10"></td>
+                                <td class="column100 column11 " data-column="column11"></td>
+                                <td class="column100 column12 " data-column="column12"></td>
+                                <td class="column100 column13 " data-column="column13"></td>
+                                <td class="column100 column14 " data-column="column14"></td>
+                                @*  <td class="column100 column15 tal" data-column="column15"></td>
+                                <td class="column100 column16 tal" data-column="column16"></td> *@
+                            </tr>
+                            <tr class="row100">
+                                <td class="column100 column1 " data-column="column1"></td>
+                                <td class="column100 column2 tal" data-column="column2">Total</td>
+                                <td class="column100 column3 " data-column="column3">3</td>
+                                <td class="column100 column4 " data-column="column4">26.00</td>
+                                <td class="column100 column5 " data-column="column5">17</td>
+                                <td class="column100 column6 " data-column="column6">178.20</td>
+                                <td class="column100 column7 " data-column="column7">0</td>
+                                <td class="column100 column8 " data-column="column8">0.00</td>
+                                <td class="column100 column9 " data-column="column9">7</td>
+                                <td class="column100 column10 " data-column="column10">50.00</td>
+                                <td class="column100 column11 " data-column="column11">25</td>
+                                <td class="column100 column12 " data-column="column12">160.00</td>
+                                <td class="column100 column13 " data-column="column13">31</td>
+                                <td class="column100 column14 " data-column="column14">77.55</td>
+                                @*  <td class="column100 column15 tal" data-column="column15"></td>
+                                <td class="column100 column16 tal" data-column="column16"></td> *@
+                            </tr>
+                            <!-- Repeat the above row structure for other data entries -->
+                        </tbody>
+                    </table>
+                </div>    <!--end::Col-->
+            </div>
+            <div class="row3 gx-6 gx-xl-9 allcontainer" id="Under_Process">
+                <!--begin::Col-->
+                <div class="col-lg-12  d-flex justify-content-end align-items-center" style="position: absolute;right: 20px;top: 20px;">
+
+                    <div class="col-auto">
+                        <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                            Amount in Cr.
+                        </a>
+
+                    </div>
+
+                </div>
+                <div class="table100 ver5 m-b-110">
+                    <table data-vertable="ver5">
+                        <thead>
+                            <tr class="row100 head">
+                                <th class="column100 " width="4%" data-column="column1">Sr. No</th>
+                                <th class="column100 " data-column="column2">Location</th>
+                                <th class="column100 " data-column="column3">BDM</th>
+                                <th class="column100 " data-column="column4">Client</th>
+                                <th class="column100 " data-column="column5">Credit officer</th>
+                                <th class="column100 " data-column="column6">Proposed Limit</th>
+                                <th class="column100 " data-column="column7">Debtors</th>
+                                <th class="column100 " data-column="column8">Date of submission to credit (mm/dd/yyyy)</th>
+                                <th class="column100 " data-column="column9">Days with Credit</th>
+                                <th class="column100 " data-column="column10">Level</th>
+                                @*  <th class="column100 " data-column="column11">Updates as on(08/02/2024)</th>
+                                <th class="column100 " data-column="column12">Updates as on(13/02/2024)</th>
+                                <th class="column100 " data-column="column13">Updates as on(15/02/2024)</th> *@
+                                <th class="column100 " data-column="column14">Updates as on(27/02/2024)</th>
+                                <th class="column100 " data-column="column15">BDM Update</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="row100">
+                                <td class="column100 column1 " data-column="column1">1</td>
+                                <td class="column100 column2 tal" data-column="column2">Chennai</td>
+                                <td class="column100 column3 tal" data-column="column3">Yuvaraj R</td>
+                                <td class="column100 column4 tal" data-column="column4">Stalwart People Services</td>
+                                <td class="column100 column5 tal" data-column="column5">Priyanka</td>
+                                <td class="column100 column6 " data-column="column6">8.00</td>
+                                <td class="column100 column7 " data-column="column7">DF</td>
+                                <td class="column100 column8 tal" data-column="column8">12/02/2024</td>
+                                <td class="column100 column9 " data-column="column9">20</td>
+                                <td class="column100 column10 tal" data-column="column10">Credit</td>
+                                @*   <td class="column100 column11 tal" data-column="column11">Supporting documents being uploaded.</td>
+                                <td class="column100 column12 tal" data-column="column12">Proposal Under scrutiny</td>
+                                <td class="column100 column13 tal" data-column="column13"></td> *@
+                                <td class="column100 column14 tal" data-column="column14">Reply to queries awaited.</td>
+                                <td class="column100 column15 tal" data-column="column15">Awaiting for clarification from client</td>
+                            </tr>
+                            <tr class="row100">
+                                <td class="column100 column1 " data-column="column1">2</td>
+                                <td class="column100 column2 tal" data-column="column2">Chennai</td>
+                                <td class="column100 column3 tal" data-column="column3">Yuvaraj R</td>
+                                <td class="column100 column4 tal" data-column="column4">Braincapital Technologies</td>
+                                <td class="column100 column5 tal" data-column="column5">Jigar</td>
+                                <td class="column100 column6 " data-column="column6">3.00</td>
+                                <td class="column100 column7 " data-column="column7">DF</td>
+                                <td class="column100 column8 tal" data-column="column8">12/02/2024</td>
+                                <td class="column100 column9 " data-column="column9">20</td>
+                                <td class="column100 column10 tal" data-column="column10">Credt</td>
+                                @*   <td class="column100 column11 tal" data-column="column11"></td>
+                                <td class="column100 column12 tal" data-column="column12">Proposal pushed through LOS on 13/2/24 but supporting documents are awaited.</td>
+                                <td class="column100 column13 tal" data-column="column13"></td> *@
+                                <td class="column100 column14 tal" data-column="column14">Queries raised on 14/2/24 reply yet to be received.</td>
+                                <td class="column100 column15 tal" data-column="column15">Awaiting for clarification from client.</td>
+                            </tr>
+                            <tr class="row100">
+                                <td class="column100 column1 " data-column="column1">3</td>
+                                <td class="column100 column2 tal" data-column="column2">Hyderabad</td>
+                                <td class="column100 column3 tal" data-column="column3">Nagaraj</td>
+                                <td class="column100 column4 tal" data-column="column4">Styrax Lifesciences Pvt Ltd</td>
+                                <td class="column100 column5 tal" data-column="column5">Uma</td>
+                                <td class="column100 column6 " data-column="column6">20.00</td>
+                                <td class="column100 column7 " data-column="column7">DF</td>
+                                <td class="column100 column8 tal" data-column="column8">20/02/2024</td>
+                                <td class="column100 column9 " data-column="column9">12</td>
+                                <td class="column100 column10 tal" data-column="column10">Credit</td>
+                                @*    <td class="column100 column11 tal" data-column="column11"></td>
+                                <td class="column100 column12 tal" data-column="column12"></td>
+                                <td class="column100 column13 tal" data-column="column13"></td> *@
+                                <td class="column100 column14 tal" data-column="column14">Call with client set up on 29/02/2024. Proposal will be submitted to CCC-II on 01/03/2024</td>
+                                <td class="column100 column15 tal" data-column="column15"></td>
+                            </tr>
+                            <tr class="row100">
+                                <td class="column100 column1 " data-column="column1">4</td>
+                                <td class="column100 column2 tal" data-column="column2">Kolkata</td>
+                                <td class="column100 column3 tal" data-column="column3">Mridanga</td>
+                                <td class="column100 column4 tal" data-column="column4">Brilliant Packaging</td>
+                                <td class="column100 column5 tal" data-column="column5">Jigar</td>
+                                <td class="column100 column6 " data-column="column6">2.00</td>
+                                <td class="column100 column7 " data-column="column7">DF</td>
+                                <td class="column100 column8 tal" data-column="column8">30/01/2024</td>
+                                <td class="column100 column9 " data-column="column9">33</td>
+                                <td class="column100 column10 tal" data-column="column10">Credit</td>
+                                @*   <td class="column100 column11 tal" data-column="column11">Replied to queries on 7/2/24. Bank CIR, Plant Visit, and Networth for PG pending</td>
+                                <td class="column100 column12 tal" data-column="column12">Queries reverted by branch. Few pendency left</td>
+                                <td class="column100 column13 tal" data-column="column13"></td> *@
+                                <td class="column100 column14 tal" data-column="column14">Circulated for CCC-II on 27/02/2024</td>
+                                <td class="column100 column15 tal" data-column="column15"></td>
+                            </tr>
+                            <tr class="row100">
+                                <td class="column100 column1 " data-column="column1">5</td>
+                                <td class="column100 column2 tal" data-column="column2">Ludhiana</td>
+                                <td class="column100 column3 tal" data-column="column3">Md Shahid</td>
+                                <td class="column100 column4 tal" data-column="column4">Capital Bolts</td>
+                                <td class="column100 column5 tal" data-column="column5"></td>
+                                <td class="column100 column6 " data-column="column6">4.00</td>
+                                <td class="column100 column7 " data-column="column7">DF</td>
+                                <td class="column100 column8 tal" data-column="column8">27/02/2024</td>
+                                <td class="column100 column9 " data-column="column9">5</td>
+                                <td class="column100 column10 tal" data-column="column10"></td>
+                                @*     <td class="column100 column11 tal" data-column="column11"></td>
+                                <td class="column100 column12 tal" data-column="column12"></td>
+                                <td class="column100 column13 tal" data-column="column13"></td> *@
+                                <td class="column100 column14 tal" data-column="column14">Supporting documents awaited</td>
+                                <td class="column100 column15 tal" data-column="column15"></td>
+                            </tr>
+                            <tr class="row100">
+                                <td class="column100 column1 " data-column="column1">6</td>
+                                <td class="column100 column2 tal" data-column="column2">Mumbai</td>
+                                <td class="column100 column3 tal" data-column="column3">Bhavesh</td>
+                                <td class="column100 column4 tal" data-column="column4">Jay Jagdamba</td>
+                                <td class="column100 column5 tal" data-column="column5">Priyanka</td>
+                                <td class="column100 column6 " data-column="column6">5.00</td>
+                                <td class="column100 column7 " data-column="column7">DF</td>
+                                <td class="column100 column8 tal" data-column="column8">06/02/2024</td>
+                                <td class="column100 column9 " data-column="column9">26</td>
+                                <td class="column100 column10 tal" data-column="column10">Credit</td>
+                                @*  <td class="column100 column11 tal" data-column="column11">Prelimnary query to be raised by 8/2/24</td>
+                                <td class="column100 column12 tal" data-column="column12">Replied to queries on 12/2/24</td>
+                                <td class="column100 column13 tal" data-column="column13"></td> *@
+                                <td class="column100 column14 tal" data-column="column14">Partial replies to queries received proposal is under process</td>
+                                <td class="column100 column15 tal" data-column="column15">Clarifications Pending. Awaiting from client</td>
+                            </tr>
+                            <tr class="row100">
+                                <td class="column100 column1 " data-column="column1">7</td>
+                                <td class="column100 column2 tal" data-column="column2">Mumbai</td>
+                                <td class="column100 column3 tal" data-column="column3">Uzair</td>
+                                <td class="column100 column4 tal" data-column="column4">K K Silk</td>
+                                <td class="column100 column5 tal" data-column="column5">Jigar</td>
+                                <td class="column100 column6 " data-column="column6">5</td>
+                                <td class="column100 column7 " data-column="column7">DF</td>
+                                <td class="column100 column8 tal" data-column="column8">27/02/2024</td>
+                                <td class="column100 column9 " data-column="column9">5</td>
+                                <td class="column100 column10 tal" data-column="column10">Credit</td>
+                                @*  <td class="column100 column11 tal" data-column="column11">NBO accepted on 8/2/24 FSA initiated on 09/02/2024</td>
+                                <td class="column100 column12 tal" data-column="column12">FSA under process</td>
+                                <td class="column100 column13 tal" data-column="column13">FSA under process</td> *@
+                                <td class="column100 column14 tal" data-column="column14">Proposal alloted on 27/02/2024</td>
+                                <td class="column100 column15 tal" data-column="column15">Queries raised. Partial replies submitted. (Copy of Teaser requiqred, Transaction structure wanted, FSA audit report is unstamped, un-signed). Jigar is submitting proposal to VP Credit on 29/02/2024.</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row3 gx-6 gx-xl-9  allcontainer" id="Disbursal_New">
+                <!--begin::Col-->
+                <div class="col-lg-12  d-flex justify-content-end align-items-center" style="position: absolute;right:20px;top: 20px;">
+
+                    <div class="col-auto">
+                        <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                            Amount in Cr.
+                        </a>
+
+                    </div>
+
+                </div>
+                <div class="table100 ver2 m-b-110">
+                    <table data-vertable="ver2">
+                        <thead>
+                            <tr class="row100 head">
+                                <th class="column100 " width="4%" data-column="column1">Sr No</th>
+                                <th class="column100 " data-column="column2">Location</th>
+                                <th class="column100 " data-column="column3">Client</th>
+                                <th class="column100 " data-column="column4">Sanctioned Limit</th>
+                                <th class="column100 " data-column="column5">Sanctioned date</th>
+                                <th class="column100 " data-column="column6">Facility</th>
+                                <th class="column100 " data-column="column7">Disbursal Amount</th>
+                                <th class="column100 " data-column="column8">Expected By</th>
+                                <th class="column100 " data-column="column9">Remark</th>
+                                <th class="column100 " data-column="column10">Updates</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="row100">
+                                <td class="column100 column1" data-column="column1">1</td>
+                                <td class="column100 column2 tal" data-column="column2">Bengaluru</td>
+                                <td class="column100 column3 tal" data-column="column3">Beneka Electronics</td>
+                                <td class="column100 column4 " data-column="column4">3.00</td>
+                                <td class="column100 column5 tal" data-column="column5">31/01/2024</td>
+                                <td class="column100 column6 " data-column="column6">DF</td>
+                                <td class="column100 column7 " data-column="column7">1</td>
+                                <td class="column100 column8 tal" data-column="column8">16/02/2024</td>
+                                <td class="column100 column9 tal" data-column="column9">Expected to be disbursed in next week</td>
+
+                                <td class="column100 column10 tal" data-column="column10"></td>
+                            </tr>
+                            <tr class="row100">
+                                <td class="column100 column1 " data-column="column1">2</td>
+                                <td class="column100 column2 tal" data-column="column2">Chennai</td>
+                                <td class="column100 column3 tal" data-column="column3">AGX India Logistics</td>
+                                <td class="column100 column4 " data-column="column4">3.00</td>
+                                <td class="column100 column5 tal" data-column="column5">17/01/2024</td>
+                                <td class="column100 column6 " data-column="column6">DF</td>
+                                <td class="column100 column7 " data-column="column7">1.5</td>
+                                <td class="column100 column8 tal" data-column="column8"></td>
+                                <td class="column100 column9 tal" data-column="column9">VAN Account update is under process.</td>
+                                <td class="column100 column10 tal" data-column="column10">0.57 L disbursed.</td>
+                            </tr>
+                            <tr class="row100">
+                                <td class="column100 column1" data-column="column1">3</td>
+                                <td class="column100 column2 tal" data-column="column2">Chennai</td>
+                                <td class="column100 column3 tal" data-column="column3">Sri Atchay Engginering</td>
+                                <td class="column100 column4 " data-column="column4">4.00</td>
+                                <td class="column100 column5 tal" data-column="column5">16/02/2024</td>
+                                <td class="column100 column6 " data-column="column6">DF</td>
+                                <td class="column100 column7 " data-column="column7">1</td>
+                                <td class="column100 column8 tal" data-column="column8"></td>
+                                <td class="column100 column9 tal" data-column="column9">Documentation to be completed on 26/02/2024. Debtor visit pending expected to be done next week.</td>
+                                <td class="column100 column10 tal" data-column="column10"></td>
+                            </tr>
+                            <tr class="row100">
+                                <td class="column100 column1" data-column="column1">4</td>
+                                <td class="column100 column2 tal" data-column="column2">Coimbatore</td>
+                                <td class="column100 column3 tal" data-column="column3">Bicelli Geco Hydraulics</td>
+                                <td class="column100 column4 " data-column="column4">2.00</td>
+                                <td class="column100 column5 tal" data-column="column5">16/02/2024</td>
+                                <td class="column100 column6 " data-column="column6">EF</td>
+                                <td class="column100 column7 " data-column="column7"></td>
+                                <td class="column100 column8 tal" data-column="column8"></td>
+                                <td class="column100 column9 tal" data-column="column9">Documentation under process and will be completed by 23/02/2024. Update on disbursement will be provided by 23/02/2024.</td>
+                                <td class="column100 column10 tal" data-column="column10"></td>
+                            </tr>
+                            <tr class="row100">
+                                <td class="column100 column1" data-column="column1">5</td>
+                                <td class="column100 column2 tal" data-column="column2">Delhi</td>
+                                <td class="column100 column3 tal" data-column="column3">Zircon</td>
+                                <td class="column100 column4 " data-column="column4">10.00</td>
+                                <td class="column100 column5 tal" data-column="column5">16/02/2024</td>
+                                <td class="column100 column6 " data-column="column6">DF</td>
+                                <td class="column100 column7 " data-column="column7"></td>
+                                <td class="column100 column8 tal" data-column="column8"></td>
+                                <td class="column100 column9 tal" data-column="column9">Sanction letter received on 22/02/2024. Disbursement targeted by 29/02/2024.</td>
+                                <td class="column100 column10 tal" data-column="column10"></td>
+                            </tr>
+                            <tr class="row100">
+                                <td class="column100 column1" data-column="column1">6</td>
+                                <td class="column100 column2 tal" data-column="column2">Delhi</td>
+                                <td class="column100 column3 tal" data-column="column3">Silver Apparels</td>
+                                <td class="column100 column4 " data-column="column4">3.00</td>
+                                <td class="column100 column5 tal" data-column="column5">16/02/2024</td>
+                                <td class="column100 column6 " data-column="column6">DF</td>
+                                <td class="column100 column7 " data-column="column7"></td>
+                                <td class="column100 column8 tal" data-column="column8"></td>
+                                <td class="column100 column9 tal" data-column="column9">Documentation to be held in the next week on Monday</td>
+                                <td class="column100 column10 tal" data-column="column10"></td>
+                            </tr>
+                            <tr class="row100">
+                                <td class="column100 column1" data-column="column1">7</td>
+                                <td class="column100 column2 tal" data-column="column2">Hyderabad</td>
+                                <td class="column100 column3 tal" data-column="column3">Vasishta Pharma</td>
+                                <td class="column100 column4 " data-column="column4">10.00</td>
+                                <td class="column100 column5 tal" data-column="column5">27/12/2023</td>
+                                <td class="column100 column6 " data-column="column6">DF</td>
+                                <td class="column100 column7 " data-column="column7">1</td>
+                                <td class="column100 column8 tal" data-column="column8">26/02/2024</td>
+                                <td class="column100 column9 tal" data-column="column9"></td>
+                                <td class="column100 column10 tal" data-column="column10"></td>
+                            </tr>
+                            <tr class="row100">
+                                <td class="column100 column1" data-column="column1">8</td>
+                                <td class="column100 column2 tal" data-column="column2">Jaipur</td>
+                                <td class="column100 column3 tal" data-column="column3">Continental Engineers</td>
+                                <td class="column100 column4 " data-column="column4">3.00</td>
+                                <td class="column100 column5 tal" data-column="column5">16/02/2024</td>
+                                <td class="column100 column6 " data-column="column6">DF</td>
+                                <td class="column100 column7 " data-column="column7"></td>
+                                <td class="column100 column8 tal" data-column="column8"></td>
+                                <td class="column100 column9 tal" data-column="column9">Legal documentation under drafting and debtor visit pending. Disbursement expected by first week of March</td>
+                                <td class="column100 column10 tal" data-column="column10"></td>
+                            </tr>
+                            <tr class="row100">
+                                <td class="column100 column1" data-column="column1">9</td>
+                                <td class="column100 column2 tal" data-column="column2">Kolkata</td>
+                                <td class="column100 column3 tal" data-column="column3">Ramakrishna Forging</td>
+                                <td class="column100 column4 " data-column="column4">25.00</td>
+                                <td class="column100 column5 tal" data-column="column5">01/02/2024</td>
+                                <td class="column100 column6 " data-column="column6">EF</td>
+                                <td class="column100 column7 " data-column="column7"></td>
+                                <td class="column100 column8 tal" data-column="column8"></td>
+                                <td class="column100 column9 tal" data-column="column9">Daily basis conversations are happening with the Company. As understood, after 22.02.24 they will place it for internal approval. Hardly any chance to operationalize before 7th March 2024.</td>
+                                <td class="column100 column10 tal" data-column="column10"></td>
+
+                            </tr>
+                            <tr class="row100">
+                                <td class="column100 column1" data-column="column1">10</td>
+                                <td class="column100 column2 tal" data-column="column2">Kolkata</td>
+                                <td class="column100 column3 tal" data-column="column3">National electrical</td>
+                                <td class="column100 column4 " data-column="column4">1.00</td>
+                                <td class="column100 column5 tal" data-column="column5">10/01/2024</td>
+                                <td class="column100 column6 " data-column="column6">DF</td>
+                                <td class="column100 column7 " data-column="column7">0.2</td>
+                                <td class="column100 column8 tal" data-column="column8">26/02/2024</td>
+                                <td class="column100 column9 tal" data-column="column9">Expected to be disbursed on given timeline</td>
+                                <td class="column100 column10 tal" data-column="column10"></td>
+
+                            </tr>
+                            <tr class="row100">
+                                <td class="column100 column1" data-column="column1">11</td>
+                                <td class="column100 column2 tal" data-column="column2">Kolkata</td>
+                                <td class="column100 column3 tal" data-column="column3">Polytech wires and cables</td>
+                                <td class="column100 column4 " data-column="column4">7.00</td>
+                                <td class="column100 column5 tal" data-column="column5">03/01/2024</td>
+                                <td class="column100 column6 " data-column="column6">DF</td>
+                                <td class="column100 column7 " data-column="column7">0.3</td>
+                                <td class="column100 column8 tal" data-column="column8">26/02/2024</td>
+                                <td class="column100 column9 tal" data-column="column9">Expected to be disbursed on given timeline</td>
+                                <td class="column100 column10 tal" data-column="column10"></td>
+
+                            </tr>
+                            <tr class="row100">
+                                <td class="column100 column1" data-column="column1">12</td>
+                                <td class="column100 column2 tal" data-column="column2">Kolkata</td>
+                                <td class="column100 column3 tal" data-column="column3">Life Saver</td>
+                                <td class="column100 column4 " data-column="column4">2.00</td>
+                                <td class="column100 column5 tal" data-column="column5">16/02/2024</td>
+                                <td class="column100 column6 " data-column="column6">DF</td>
+                                <td class="column100 column7 " data-column="column7">0.3</td>
+                                <td class="column100 column8 tal" data-column="column8">29/02/2024</td>
+                                <td class="column100 column9 tal" data-column="column9">Documentation completed. Debtor visit planned for next week. Disbursement expected in Feb end.</td>
+                                <td class="column100 column10 tal" data-column="column10"></td>
+
+                            </tr>
+                            <tr class="row100">
+                                <td class="column100 column1" data-column="column1">13</td>
+                                <td class="column100 column2 tal" data-column="column2">Kolkata</td>
+                                <td class="column100 column3 tal" data-column="column3">Tirupati Structure Pvt Ltd</td>
+                                <td class="column100 column4 " data-column="column4">3.00</td>
+                                <td class="column100 column5 tal" data-column="column5">16/02/2024</td>
+                                <td class="column100 column6 " data-column="column6">RF BG</td>
+                                <td class="column100 column7 " data-column="column7"></td>
+                                <td class="column100 column8 tal" data-column="column8"></td>
+                                <td class="column100 column9 tal" data-column="column9">Will update with respect to opening of BG</td>
+                                <td class="column100 column10 tal" data-column="column10"></td>
+
+                            </tr>
+                            <tr class="row100">
+                                <td class="column100 column1" data-column="column1">14</td>
+                                <td class="column100 column2 tal" data-column="column2">Mumbai</td>
+                                <td class="column100 column3 tal" data-column="column3">Ram Fashion</td>
+                                <td class="column100 column4 " data-column="column4">5.00</td>
+                                <td class="column100 column5 tal" data-column="column5">11/10/2023</td>
+                                <td class="column100 column6 " data-column="column6">DF</td>
+                                <td class="column100 column7 " data-column="column7"></td>
+                                <td class="column100 column8 tal" data-column="column8"></td>
+                                <td class="column100 column9 tal" data-column="column9">Will update after confirmation from client</td>
+                                <td class="column100 column10 tal" data-column="column10"></td>
+
+                            </tr>
+                            <tr class="row100">
+                                <td class="column100 column1" data-column="column1">15</td>
+                                <td class="column100 column2 tal" data-column="column2">Mumbai</td>
+                                <td class="column100 column3 tal" data-column="column3">Alok ingots</td>
+                                <td class="column100 column4 " data-column="column4">8.50</td>
+                                <td class="column100 column5 tal" data-column="column5">16/02/2024</td>
+                                <td class="column100 column6 " data-column="column6">EF</td>
+                                <td class="column100 column7 " data-column="column7"></td>
+                                <td class="column100 column8 tal" data-column="column8"></td>
+                                <td class="column100 column9 tal" data-column="column9">Legal documentation under process, disbursement expected by first week of March.</td>
+                                <td class="column100 column10 tal" data-column="column10"></td>
+                            </tr>
+                            <tr class="row100">
+                                <td class="column100 column1" data-column="column1">16</td>
+                                <td class="column100 column2 tal" data-column="column2">Pune</td>
+                                <td class="column100 column3 tal" data-column="column3">DTL Ancillary</td>
+                                <td class="column100 column4 " data-column="column4">10.00</td>
+                                <td class="column100 column5 tal" data-column="column5">13/12/2023</td>
+                                <td class="column100 column6 " data-column="column6">DF</td>
+                                <td class="column100 column7 " data-column="column7"></td>
+                                <td class="column100 column8 tal" data-column="column8"></td>
+                                <td class="column100 column9 tal" data-column="column9">Change in Bank details pending from debtor.</td>
+                                <td class="column100 column10 tal" data-column="column10"></td>
+                            </tr>
+                            <tr class="row100">
+                                <td class="column100 column1" data-column="column1">17</td>
+                                <td class="column100 column2 tal" data-column="column2">Pune</td>
+                                <td class="column100 column3 tal" data-column="column3">SPCX Pvt Ltd</td>
+                                <td class="column100 column4 " data-column="column4">10.00</td>
+                                <td class="column100 column5 tal" data-column="column5">16/02/2024</td>
+                                <td class="column100 column6 " data-column="column6">DF</td>
+                                <td class="column100 column7 " data-column="column7"></td>
+                                <td class="column100 column8 tal" data-column="column8"></td>
+                                <td class="column100 column9 tal" data-column="column9">Client has some reservation in few stipulations mentioned in sanction letter for which they will mail to us by 26/2/2024.</td>
+                                <td class="column100 column10 tal" data-column="column10"></td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        document.getElementById('Under_Process').style.display = 'none';
+        document.getElementById('Disbursal_New').style.display = 'none';
+        document.getElementById('Financial_Highlights').style.display = 'none';
+        document.getElementById('Budget_vs_Actual').style.display = 'none';
+        document.getElementById('Yeild').style.display = 'none';
+        document.getElementById('Efficiency_Ratio').style.display = 'none';
+        document.getElementById('RFR').style.display = 'none';
+        document.getElementById('Credit_Rating').style.display = 'none';
+        document.getElementById('Prime_Ref_Rate').style.display = 'none';
+        document.getElementById('COB').style.display = 'none';
+        document.getElementById('T_Bill').style.display = 'none';
+        document.getElementById('TIER_II_BOND').style.display = 'none';
+        document.getElementById('Commercial_Paper').style.display = 'none';
+        document.getElementById('Bank_Line_CC').style.display = 'none';
+        document.getElementById('Bank_Line_WCL').style.display = 'none';
+        document.getElementById('FOREX').style.display = 'none';
+        $('#Overview1').show();
+        $('#Overview2').show();
+        $('#Overview3').show();
+        var date = new Date();
+        var currentDate = new Date(date.getFullYear(), date.getMonth(), 1);
+        var previousMonth = new Date(currentDate);
+        previousMonth.setMonth(previousMonth.getMonth() - 1);
+        var lastDayOfPreviousMonth = new Date(previousMonth.getFullYear(), previousMonth.getMonth() + 1, 0);
+        var formattedDate = lastDayOfPreviousMonth.getFullYear() + '-' + ('0' + (lastDayOfPreviousMonth.getMonth() + 1)).slice(-2) + '-' + ('0' + lastDayOfPreviousMonth.getDate()).slice(-2);
+        $('#date').val(formattedDate);
+        $('#date12').val(formattedDate);
+
+
+
+
+        search12();
+        var date = '2024-01-31';
+        const d = new Date(date);
+        //var currmonth = d.getMonth();
+
+        var year = d.getFullYear();
+        d.setFullYear(d.getFullYear() - 1);
+        var previousYear = d.getFullYear();
+        var prepreYear = previousYear - 1;
+        var currmonth = d.toLocaleString('default', { month: 'long' });
+        var currMonth = d.getMonth();
+        var prevMonth = currMonth === 0 ? 11 : currMonth - 1;
+        d.setMonth(prevMonth, 1);
+        var prevMonthName = d.toLocaleString('default', { month: 'long' });
+        var month = d.getMonth();
+        if (month == "0") month = "10";
+        else if (month == "1") month = "11";
+        else if (month == "2") month = "12";
+        else if (month == "3") month = "1";
+        else if (month == "4") month = "2";
+        else if (month == "5") month = "3";
+        else if (month == "6") month = "4";
+        else if (month == "7") month = "5";
+        else if (month == "8") month = "6";
+        else if (month == "9") month = "7";
+        else if (month == "10") month = "8";
+        else if (month == "11") month = "9";
+
+
+        $('#col2').text(prepreYear + ' - ' + previousYear);
+        $('#col1').text('April -' + prepreYear + ' to ' + currmonth + ' - ' + previousYear);
+        $('#col3').text('April -' + previousYear + ' to ' + prevMonthName + ' - ' + previousYear);
+        $('#col4').text('April -' + previousYear + ' to ' + currmonth + ' - ' + year);
+
+        $('#col21').text(prepreYear + ' - ' + previousYear);
+        $('#col11').text('April -' + prepreYear + ' to ' + currmonth + ' - ' + previousYear);
+        $('#col31').text('April -' + previousYear + ' to ' + prevMonthName + ' - ' + previousYear);
+
+        $('#col22').text(prepreYear + ' - ' + previousYear);
+        $('#col12').text('April -' + prepreYear + ' to ' + currmonth + ' - ' + previousYear);
+
+        $('#col23').text(prepreYear + ' - ' + previousYear);
+        $('#col13').text('April -' + prepreYear + ' to ' + currmonth + ' - ' + previousYear);
+        $('#col33').text('April -' + previousYear + ' to ' + prevMonthName + ' - ' + previousYear);
+        $('#col43').text('April -' + previousYear + ' to ' + currmonth + ' - ' + year);
+
+        $('#col24').text(prepreYear + ' - ' + previousYear);
+        $('#col14').text('April -' + prepreYear + ' to ' + currmonth + ' - ' + previousYear);
+        $('#col34').text('April -' + previousYear + ' to ' + prevMonthName + ' - ' + previousYear);
+        $('#col44').text('April -' + previousYear + ' to ' + currmonth + ' - ' + year);
+        // highlights();
+        // const config = {
+        //     type: 'report',
+        //     tokenType: models.TokenType.Embed,
+        //     accessToken: 'your-access-token', // Replace with your access token
+        //     embedUrl: 'https://app.powerbi.com/reportEmbed?reportId=c35af0dc-bcd9-4dd7-8c7d-417085e65394&autoAuth=true&ctid=4e160d88-0c33-4cb7-8b2b-be27256a4695',
+        //     permissions: models.Permissions.All,
+        //     settings: {
+        //         filterPaneEnabled: false,
+        //         navContentPaneEnabled: false
+        //     }
+        // };
+
+        // // Embed the Power BI report
+        // var reportContainer = document.getElementById('reportContainer');
+        // var report = powerbi.embed(reportContainer, config);
+    });
+    function search12() {
+        //var date = new Date();
+        //var currentDate = new Date(date.getFullYear(), date.getMonth(), 1);
+        //var previousMonth = new Date(currentDate);
+        //previousMonth.setMonth(previousMonth.getMonth() - 1);
+        //var lastDayOfPreviousMonth = new Date(previousMonth.getFullYear(), previousMonth.getMonth() + 1, 0);
+        //var formattedDate = lastDayOfPreviousMonth.getFullYear() + '-' + ('0' + (lastDayOfPreviousMonth.getMonth() + 1)).slice(-2) + '-' + ('0' + lastDayOfPreviousMonth.getDate()).slice(-2);
+        //$('#date12').val(formattedDate);
+
+        var date = "2024-01-31";
+        //var date = $('#date12').val();
+        const d = new Date(date);
+        //var currmonth = d.getMonth();
+
+        var year = d.getFullYear();
+        d.setFullYear(d.getFullYear() - 1);
+        var previousYear = d.getFullYear();
+        var prepreYear = previousYear - 1;
+        var currmonth = d.toLocaleString('default', { month: 'long' });
+        var currMonth = d.getMonth();
+        var prevMonth = currMonth === 0 ? 11 : currMonth - 1;
+        d.setMonth(prevMonth, 1);
+        var prevMonthName = d.toLocaleString('default', { month: 'long' });
+        var month = d.getMonth();
+        if (month == "0") month = "10";
+        else if (month == "1") month = "11";
+        else if (month == "2") month = "12";
+        else if (month == "3") month = "1";
+        else if (month == "4") month = "2";
+        else if (month == "5") month = "3";
+        else if (month == "6") month = "4";
+        else if (month == "7") month = "5";
+        else if (month == "8") month = "6";
+        else if (month == "9") month = "7";
+        else if (month == "10") month = "8";
+        else if (month == "11") month = "9";
+
+
+        $('#col2').text(prepreYear + ' - ' + previousYear);
+        $('#col1').text('April -' + prepreYear + ' to ' + currmonth + ' - ' + previousYear);
+        $('#col3').text('April -' + previousYear + ' to ' + prevMonthName + ' - ' + previousYear);
+        $('#col4').text('April -' + previousYear + ' to ' + currmonth + ' - ' + year);
+
+        $('#col21').text(prepreYear + ' - ' + previousYear);
+        $('#col11').text('April -' + prepreYear + ' to ' + currmonth + ' - ' + previousYear);
+        $('#col31').text('April -' + previousYear + ' to ' + prevMonthName + ' - ' + previousYear);
+
+        $('#col22').text(prepreYear + ' - ' + previousYear);
+        $('#col12').text('April -' + prepreYear + ' to ' + currmonth + ' - ' + previousYear);
+
+        $('#col23').text(prepreYear + ' - ' + previousYear);
+        $('#col13').text('April -' + prepreYear + ' to ' + currmonth + ' - ' + previousYear);
+        $('#col33').text('April -' + previousYear + ' to ' + prevMonthName + ' - ' + previousYear);
+        $('#col43').text('April -' + previousYear + ' to ' + currmonth + ' - ' + year);
+
+        $('#col24').text(prepreYear + ' - ' + previousYear);
+        $('#col14').text('April -' + prepreYear + ' to ' + currmonth + ' - ' + previousYear);
+        $('#col34').text('April -' + previousYear + ' to ' + prevMonthName + ' - ' + previousYear);
+        $('#col44').text('April -' + previousYear + ' to ' + currmonth + ' - ' + year);
+    }
+
+    function move1(id) {
+        $('.row1').hide();
+        document.getElementById(id).style.display = 'block';
+        $('.nav-link1').removeClass('active');
+        $('#Add1').hide();
+         highlights();
+        $('#Nav' + id).addClass('active');
+    } function move2(id) {
+        $('.row2').hide();
+        $('#Add2').hide();
+        document.getElementById(id).style.display = 'block';
+        $('.nav-link2').removeClass('active');
+
+        $('#Nav' + id).addClass('active');
+    } function moveb2(id) {
+        $('.row2').hide();
+        document.getElementById(id).style.display = 'block';
+        // $('.nav-link2').removeClass('active');
+        $('#Add2').hide();
+
+        // $('#Nav' + id).addClass('active');
+    } function move3(id) {
+        $('.row3').hide();
+        document.getElementById(id).style.display = 'block';
+        $('.nav-link3').removeClass('active');
+        $('#Add3').hide();
+        $('#Nav' + id).addClass('active');
+    }
+    function search1() {
+        document.getElementById('Financial_Highlights').style.display = 'none';
+        document.getElementById('Budget_vs_Actual').style.display = 'none';
+        document.getElementById('Yeild').style.display = 'none';
+        document.getElementById('Efficiency_Ratio').style.display = 'none';
+        document.getElementById('Highlights').style.display = 'block';
+        highlights();
+    } function search2() {
+        document.getElementById('Under_Process').style.display = 'none';
+        document.getElementById('Disbursal_New').style.display = 'none';
+        document.getElementById('Summary').style.display = 'block';
+    } function search3() {
+        document.getElementById('RFR').style.display = 'none';
+        document.getElementById('Credit_Rating').style.display = 'none';
+        document.getElementById('Prime_Ref_Rate').style.display = 'none';
+        document.getElementById('COB').style.display = 'none';
+        document.getElementById('T_Bill').style.display = 'none';
+        document.getElementById('TIER_II_BOND').style.display = 'none';
+        document.getElementById('Commercial_Paper').style.display = 'none';
+        document.getElementById('Bank_Line_CC').style.display = 'none';
+        document.getElementById('Bank_Line_WCL').style.display = 'none';
+        document.getElementById('FOREX').style.display = 'none';
+        document.getElementById('Borrowing').style.display = 'block';
+    }
+    function highlights() {
+        var data = {
+            date: "2024-01-31",
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: "/AccountDashboard/Find?date=" + date,
+            data: data,
+            success: function (response) {
+                console.log(response);
+                var htmlrpt = '';
+                var htmlrpt = '';
+                for (var i = 0; i < response.highlights.length; i++) {
+                    htmlrpt += '<tr class="row100">';
+                    htmlrpt += '<td class="column100 column1" data-column="column1"><b>' + response.highlights[i].h_particulars + '</b></td>';
+                    htmlrpt += '<td class="column100 column2" data-column="column2">' + response.highlights[i].h_col1 + '</td>';
+                    htmlrpt += '<td class="column100 column3" data-column="column3">' + response.highlights[i].h_col2 + '</td>';
+                    htmlrpt += '<td class="column100 column4" data-column="column4">' + response.highlights[i].h_col3 + '</td>';
+                    htmlrpt += '<td class="column100 column5" data-column="column5">' + response.highlights[i].h_col4 + '</td>';
+                    htmlrpt += '<td class="column100 column6" data-column="column6">' + response.highlights[i].h_mom + '</span ></td>';
+                    htmlrpt += '<td class="column100 column7" data-column="column7">' + response.highlights[i].h_yoy + '</td>';
+                    htmlrpt += '<td class="column100 column8" data-column="column8">' + response.highlights[i].h_ytd + '</td>';
+                    htmlrpt += '</tr>';
+                }
+                $('#htmlrpt').html(htmlrpt);
+
+                var htmlrpt1 = '';
+                for (var i = 0; i < response.finhighlights.length; i++) {
+                    htmlrpt1 += '<tr class="row100">';
+                    htmlrpt1 += '<td class="column100 column1" data-column="column1"><b>' + response.finhighlights[i].f_particulars + '</b></td>';
+                    htmlrpt1 += '<td class="column100 column2" data-column="column2">' + response.finhighlights[i].f_col1 + '</td>';
+                    htmlrpt1 += '<td class="column100 column3" data-column="column3">' + response.finhighlights[i].f_col2 + '</td>';
+                    htmlrpt1 += '<td class="column100 column4" data-column="column4">' + response.finhighlights[i].f_col3 + '</td>';
+                    htmlrpt1 += '<td class="column100 column5" data-column="column5">' + response.finhighlights[i].f_yoy + '</td>';
+                    htmlrpt1 += '</tr>';
+                }
+                $('#htmlrpt1').html(htmlrpt1);
+
+                var htmlrpt2 = '';
+                for (var i = 0; i < response.mouRevised.length; i++) {
+                    htmlrpt2 += '<tr class="row100">';
+                    htmlrpt2 += '<td class="column100 column1" data-column="column1"><b>' + response.mouRevised[i].m_particulars + '</b></td>';
+                    htmlrpt2 += '<td class="column100 column2" data-column="column2">' + response.mouRevised[i].m_col1 + '</td>';
+                    htmlrpt2 += '<td class="column100 column3" data-column="column3">' + response.mouRevised[i].m_col2 + '</td>';
+                    htmlrpt2 += '<td class="column100 column4" data-column="column4">' + response.mouRevised[i].m_achievement + '</td>';
+                    htmlrpt2 += '</tr>';
+                }
+                $('#htmlrpt2').html(htmlrpt2);
+
+                var htmlrpt3 = '';
+                for (var i = 0; i < response.yeild.length; i++) {
+                    htmlrpt3 += '<tr class="row100">';
+                    htmlrpt3 += '<td class="column100 column1" data-column="column1"><b>' + response.yeild[i].y_particulars + '</b></td>';
+                    htmlrpt3 += '<td class="column100 column2" data-column="column2">' + response.yeild[i].y_col1 + '</td>';
+                    htmlrpt3 += '<td class="column100 column3" data-column="column3">' + response.yeild[i].y_col2 + '</td>';
+                    htmlrpt3 += '<td class="column100 column4" data-column="column4">' + response.yeild[i].y_col3 + '</td>';
+                    htmlrpt3 += '<td class="column100 column5" data-column="column5">' + response.yeild[i].y_col4 + '</td>';
+                    htmlrpt3 += '</tr>';
+                }
+                $('#htmlrpt3').html(htmlrpt3);
+
+                var htmlrpt4 = '';
+                for (var i = 0; i < response.eff.length; i++) {
+                    htmlrpt4 += '<tr class="row100">';
+                    htmlrpt4 += '<td class="column100 column1" data-column="column1"><b>' + response.eff[i].e_particulars + '</b></td>';
+                    htmlrpt4 += '<td class="column100 column2" data-column="column2">' + response.eff[i].e_col1 + '</td>';
+                    htmlrpt4 += '<td class="column100 column3" data-column="column3">' + response.eff[i].e_col2 + '</td>';
+                    htmlrpt4 += '<td class="column100 column4" data-column="column4">' + response.eff[i].e_col3 + '</td>';
+                    htmlrpt4 += '<td class="column100 column5" data-column="column5">' + response.eff[i].e_col4 + '</td>';
+                    htmlrpt4 += '</tr>';
+                }
+                $('#htmlrpt4').html(htmlrpt4);
+            },
+            error: function (xhr, status, error) {
+                console.error(xhr, status, error);
+            }
+        });
+    }
+
+</script>
+

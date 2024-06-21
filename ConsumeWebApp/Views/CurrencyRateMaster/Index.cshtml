@@ -1,0 +1,291 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization;
+@using Microsoft.Extensions.Localization
+@inject IViewLocalizer Localizer;
+@model IEnumerable<PrintSoftWeb.Models.CurrencyRateMasterModel>
+@{
+    ViewData["Title"] = "Currency Rate";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <script src="~/jsfiles/currencyratemaster/currencyratemaster.js"></script>
+</head>
+<div class="card shadow mb-4">
+    <!--Start Header --> 
+    <div class="card-header py-3">
+        <div class="row align-items-center">
+            <div class="col">
+                <h4 class="m-0 font-weight-bold text-primary">@Localizer["Currency Rate"]</h4>
+            </div>
+            <div class="col-md-2 justify-content-lg-end justify-content-md-end justify-content-center mt-lg-0 mt-md-0 mt-3">
+                <input type="text" id="custom-search" class="form-control" placeholder=@Localizer["Search"] />
+            </div>
+            <div class="col-auto d-flex flex-wrap toggle">
+                <div class="form-check form-switch mt-lg-1 mt-md-1 mt-3 ml-2 ">
+                    <input class="form-check-input" type="checkbox" id="toggleStatus" checked onclick="performAction()">
+                    <label class="form-check-label" for="toggleStatus" data-on="On" data-off="Off"></label>
+                </div>
+                <button class="btn btn-md text-light bg-primary mt-3 mt-lg-0 mt-md-0 ml-2" type="button" title="Add Currency Rate" data-bs-toggle="modal" data-bs-target="#addSubscription" onclick="return AddCurrencyRate()" style="display:@Context.Session.GetString("AddAccess")"> <i class="fa fa-plus"></i>  </button>
+                <button class="btn btn-md text-light bg-success mt-3 mt-lg-0 mt-md-0 ml-2" type="button" title="Excel" data-bs-toggle="modal" data-bs-target="#addSubscription" onclick="return Excel()">  <i class="fas fa-file-excel"></i> </button>
+                <button class="btn btn-md text-light bg-danger mt-3 mt-lg-0 mt-md-0 ml-2" type="button" title="Pdf" data-bs-toggle="modal" data-bs-target="#addSubscription" onclick="return Pdf()"> <i class="fas fa-file-pdf"></i> </button>
+            </div>
+        </div>
+    </div>
+    <!--End  Header -->
+    <!--Start Body -->
+    <div class="card-body">
+        <!-- start Griddata-->
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable1" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th width="6%">
+                            @Localizer["Sr.No"]
+                        </th>
+                        <th style="display:none"> @Localizer[@Html.DisplayNameFor(model => model.cr_id)]</th>
+                        <th> @Localizer[@Html.DisplayNameFor(model => model.cr_currency_name)]</th>
+                        <th> @Localizer[@Html.DisplayNameFor(model => model.cr_currencyrate)]</th>
+                        <th> @Localizer[@Html.DisplayNameFor(model => model.cr_fromdate)]</th>
+                        <th style="display:none"> @Localizer[@Html.DisplayNameFor(model => model.cr_currencyid)]</th>
+                        <th> @Localizer[@Html.DisplayNameFor(model => model.cr_todate)]</th>
+                        <th width="7%"> @Localizer[@Html.DisplayNameFor(model => model.cr_isactive)]</th>
+                        <th width="7%">@Localizer["Action"]</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int itemNumber = 1;
+                    }
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@itemNumber</td>
+                            <td style="display:none"> @Html.DisplayFor(modelItem => item.cr_id)</td>
+                            <td> @Html.DisplayFor(modelItem => item.cr_currency_name)</td>
+                            <td style="text-align:right"> @Html.DisplayFor(modelItem => item.cr_currencyrate)</td>
+                            <td> @Html.DisplayFor(modelItem => item.cr_fromdate) </td>
+                            <td style="display:none">
+                                @Html.DisplayFor(modelItem => item.cr_currencyid)
+                            </td>
+                            <td> @Html.DisplayFor(modelItem => item.cr_todate)</td>
+                            <td>
+                                @* @Html.DisplayFor(modelItem => item.d_isactive)*@
+                                <div class="form-check form-switch ml-auto active-toggle">
+                                    @if (item.cr_isactive == "Active")
+                                    {
+                                        <input class="form-check-input ml-auto" type="checkbox" id="toggleSwitch" title="Active" checked onclick="ToggleSwitch('@item.cr_id','@item.cr_currency_name','@item.cr_currencyid','@item.cr_currencyrate','@item.cr_fromdate','@item.cr_todate','0')">
+                                        <label class="form-check-label" for="toggleSwitch" data-on="On" data-off="Off"></label>
+                                    }
+                                    else
+                                    {
+                                        <input class="form-check-input ml-auto" type="checkbox" id="toggleSwitch" title="Inactive" onclick="ToggleSwitch('@item.cr_id','@item.cr_currency_name','@item.cr_currencyid','@item.cr_currencyrate','@item.cr_fromdate','@item.cr_todate','1')">
+                                        <label class="form-check-label" for="toggleSwitch" data-on="On" data-off="Off"></label>
+                                    }
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-inline-flex">
+                                    <a class='editicon text-primary' title="Edit" onclick="editLinkClick('@item.cr_id','@item.cr_currencyrate','@item.cr_currencyid','@item.cr_currency_name','@item.cr_fromdate','@item.cr_isactive')" style="display:@Context.Session.GetString("EditAccess")"> <span class='fas fa-edit'></span></a>
+                                    <a href="@Url.Action("Delete", new { cr_id = @item.cr_id,CurrencyId = @item.cr_currencyid,CurrencyName = @item.cr_currency_name })" onclick="return confirm('Are you sure you want to delete?')" class='deleteicon text-danger' title="Delete" style="display:@Context.Session.GetString("DeleteAccess")"> <span class='fa fa-trash ml-2'></span></a>
+                                </div>
+                            </td>
+                        </tr>
+                        itemNumber++;
+                    }
+                </tbody>
+            </table>
+        </div>
+        <!-- End Griddata-->
+        <!-- start Pagination-->
+        <div class="row mt-3">
+            <div class="col-lg-5 col-md-5 col-12 ">
+                <div class="row ">
+                    <div class="col-lg-3 col-md-3 col-12 d-flex justify-content-lg-start justify-content-md-start justify-content-center ">
+                        <h6 class="mt-2">@Localizer["Show"]</h6>&nbsp;&nbsp;
+                        <select name="table_id_length" id="table_length_select" aria-controls="table_id" class="form-select w-auto">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                        &nbsp;&nbsp;
+                        <h6 class="mt-2">@Localizer["entries"]</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2"></div>
+            <div class="col-lg-5 col-md-5 col-12 mt-lg-0 mt-md-0 mt-3">
+                <nav aria-label="Page navigation example">
+                    <div id="table_id_length">
+
+                        <div id="custom-pagination" class=" d-flex text-center text-lg-end justify-content-end  text-end float-end">
+                            <ul class="pagination justify-content-lg-end justify-content-md-end justify-content-center">
+                                <li class="page-item disabled">
+                                    <button class="page-link" href="#" aria-label="Previous" data-page="0"> <span aria-hidden="true">&laquo;</span></button>
+                                </li>
+                                <li class="page-item active"><button class="page-link" href="#" data-page="1">1</button></li>
+
+                                <li class="page-item "><button class="page-link" href="#" data-page="2" aria-label="Next">  <span aria-hidden="true">&raquo;</span></button></li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <!-- end Pagination-->
+        <!-- start Modal-->
+        <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createModalLabel">@Localizer["Add Currency Rate"]</h5>
+                        <button type="button" class="btn-close bg-primary text-white" data-bs-dismiss="modal" aria-label="Close" onclick="CancelData()"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="createForm">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            @* <div class="form-group">
+                            <label asp-for="UserId" class="control-label"></label>
+                            <input asp-for="UserId" class="form-control" />
+                            <span asp-validation-for="UserId" class="text-danger"></span>
+                            </div> *@
+
+                            <div class="form-group" style="display:none">
+                                <label class="control-label">Id</label>
+                                <input id="cr_id" class="form-control" />
+                                <span class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">@Localizer["Currency Name"]</label>
+                                <input id="cr_currency_name" class="form-control" readonly />
+                                <span class="text-danger"></span>
+                                @* <select class="form-select" id="cr_currency_name" asp-items="@(new SelectList(ViewBag.cr_currency_name,"Id","Value"))" placeholder="Select Currency" readonly>
+                                <option>-- Select --</option>
+                                </select> *@
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">@Localizer["Currency Rate"]</label>
+                                <input id="cr_currencyrate" style="text-align:right" class="form-control" placeholder="Enter Currency Rate" maxlength="23" oninput="validateFloatInput(this)" />
+                                <span class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">@Localizer["From Date"]</label>
+                                <input id="cr_fromdate" class="form-control" type="date" />
+                                <span class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group" style="display:none">
+                                <label class="control-label">Currency Id</label>
+                                <input id="cr_currencyid" class="form-control" />
+                                <span class="text-danger"></span>
+                            </div>
+                            <div class="form-group" style="display:none">
+                                <label class="control-label">To Date</label>
+                                <input id="cr_todate" class="form-control" placeholder="Enter Timezone" />
+                                <span class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <input class="control-label checked" id="cr_isactive" type="checkbox">
+                                <label for="cr_isactive"> @Localizer["Is Active"]</label>
+                            </div>
+                            <div class="modal-footer">
+                                <button title="Save" type="submit" id="btnsubmit" value="Create" class="btn btn-primary" onclick="submitCurrencyRate()">@Localizer["Submit"]</button>
+                                <button type="button" title="Close" class="btn btn-danger" data-dismiss="modal" onclick="CancelData()">@Localizer["Cancel"]</button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="createModal12" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createModalLabel">@Localizer["Edit Currency Rate"]</h5>
+                        <button type="button" class="btn-close bg-primary text-white" data-bs-dismiss="modal" aria-label="Close" onclick="CancelData()"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="createForm">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            @* <div class="form-group">
+                            <label asp-for="UserId" class="control-label"></label>
+                            <input asp-for="UserId" class="form-control" />
+                            <span asp-validation-for="UserId" class="text-danger"></span>
+                            </div> *@
+
+                            <div class="form-group" style="display:none">
+                                <label class="control-label">Id</label>
+                                <input id="cr_id1" class="form-control" />
+                                <span class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">@Localizer["Currency Name"]</label>
+                                <input id="cr_currency_name1" class="form-control" placeholder="Select Currency" readonly />
+                                <span class="text-danger"></span>
+                                @*  <select class="form-select" id="cr_currency_name1" asp-items="@(new SelectList(ViewBag.cr_currency_name,"Id","Value"))" placeholder="Select Currency" readonly>
+                                <option>-- Select --</option>
+                                </select> *@
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">@Localizer["Currency Rate"]</label>
+                                <input id="cr_currencyrate1" class="form-control" placeholder="Enter Currency Rate" maxlength="23" />
+                                <span class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group" style="display:none">
+                                <label class="control-label">Currency Id</label>
+                                <input id="cr_currencyid1" class="form-control" />
+                                <span class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">@Localizer["From Date"]</label>
+                                <input id="cr_fromdate1" class="form-control" type="date" readonly />
+                                <span class="text-danger"></span>
+                            </div>
+                            <div class="form-group" style="display:none">
+                                <label class="control-label">To Date</label>
+                                <input id="cr_todate1" class="form-control" placeholder="Enter Timezone" />
+                                <span class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <input class="control-label" id="cr_isactive1" type="checkbox">
+                                <label for="cr_isactive1"> @Localizer["Is Active"]</label>
+                            </div>
+                            <div class="modal-footer">
+                                <button title="Save" type="submit" id="btnsubmit" value="Create" class="btn btn-primary" onclick="updateCurrencyRate()">@Localizer["Submit"]</button>
+                                <button type="button" title="Close" class="btn btn-danger" data-dismiss="modal" onclick="CancelData()">@Localizer["Cancel"]</button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- end Modal-->
+    </div>
+    <!--End Body -->
+</div>
+<script>
+    $(document).ready(function () {
+        $('#dataTable').DataTable();
+        //$('.table_id_length').css("display", "none");
+        $('#createModal').modal({
+            backdrop: 'static', // Prevents closing on outside click
+            keyboard: false // Prevents closing with the escape key
+        });
+        $('#createModal12').modal({
+            backdrop: 'static', // Prevents closing on outside click
+            keyboard: false // Prevents closing with the escape key
+        });
+        const urlParams = new URLSearchParams(window.location.search);
+
+        const status = urlParams.get('status');
+        if (status === '0') {
+
+            $('#toggleStatus').prop('checked', false);
+        }
+
+    });
+    myFunction();
+    $('#table_length_select').change();
+</script>

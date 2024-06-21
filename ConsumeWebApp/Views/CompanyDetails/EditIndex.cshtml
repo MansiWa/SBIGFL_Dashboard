@@ -1,0 +1,226 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization;
+@using Microsoft.Extensions.Localization
+@inject IViewLocalizer Localizer;
+@model PrintSoftWeb.Models.CompanyDetailsModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = " Master";
+}
+<head>
+    <script src="~/jsfiles/companydetails/companydetails.js"></script>
+</head>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <div class="row">
+            <div class="col-lg-6">
+                <h4 class="m-0 font-weight-bold text-primary">@Localizer["Edit Company Details"]</h4>
+            </div>
+
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-lg-10">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label for="name" class="form-label float-lg-end">@Localizer["Company Name"]:<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control" maxlength="100" oninput="validateInput(this)" id="com_company_name" placeholder="@Localizer["Enter Company Name"]" name="name" value="@Model.com_company_name">
+                        <input style="display:none" type="text" class="form-control" id="com_id" placeholder="@Localizer["Enter Company Name"]" name="name" value="@Model.com_company_name">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2">
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-lg-10">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label for="name" class="form-label float-lg-end">@Localizer["Company Name 2"]:<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <input type="text" maxlength="100" class="form-control" oninput="validateInput(this)" id="com_company_name2" placeholder="@Localizer["Enter Company Name 2"]" name="name" value="@Model.com_company_name2">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2">
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-lg-10">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label for="name" class="form-label float-lg-end">@Localizer["Owner Name"]:<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <input type="text" maxlength="100" class="form-control" onkeydown="return letterOnly(event)" id="com_owner_name" placeholder="@Localizer["Enter Owner Name"]" name="name" value="@Model.com_owner_name">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2">
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-lg-10">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label for="name" class="form-label float-lg-end">@Localizer["Address"]:<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <input type="text" maxlength="100" oninput="validateInput(this)" class="form-control" id="com_address" rows="2" value="@Model.com_address" placeholder="@Localizer["Enter Address"]">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2">
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-lg-10">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label for="name" class="form-label float-lg-end">@Localizer["Contact No"]:<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <input type="number" onblur="validateMobile(this)" class="form-control" id="com_contact" placeholder="@Localizer["Enter Contact No"]." name="name" value="@Model.com_contact" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2">
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-lg-10">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label for="name" class="form-label float-lg-end">@Localizer["GST No"]:</label>
+                    </div>
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control" onblur="validateGST(this)" id="com_gst_no" placeholder="@Localizer["Enter GST No"]" ." value="@Model.com_gst_no" name="name">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2">
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-lg-10">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label for="name" class="form-label float-lg-end">@Localizer["Email Id"]:<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <input type="text" maxlength="250" onblur="checkemail(this)" class="form-control" id="com_email" placeholder="@Localizer["Enter Email Id"]" value="@Model.com_email" name="name">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2">
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-lg-10">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label for="name" class="form-label float-lg-end">@Localizer["Website"]:</label>
+                    </div>
+                    <div class="col-lg-8">
+                        <input type="text" maxlength="100" class="form-control" onblur="validateWebsite(this)" id="com_website" value="@Model.com_website" placeholder="@Localizer["Enter Website"]" name="name">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2">
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-lg-10">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label for="name" class="form-label float-lg-end">@Localizer["Bank Name"]:</label>
+                    </div>
+                    <div class="col-lg-8">
+                        <input type="text" maxlength="100" class="form-control" id="com_bank_name" placeholder="@Localizer["Enter Bank Name"]" value="@Model.com_bank_name" name="name">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2">
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-lg-10">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label for="name" class="form-label float-lg-end">@Localizer["Branch Name"]:</label>
+                    </div>
+                    <div class="col-lg-8">
+                        <input type="text" maxlength="50" class="form-control" id="com_branch" value="@Model.com_branch" placeholder="@Localizer["Enter Branch Name"]" name="name">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2">
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-lg-10">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label for="name" class="form-label float-lg-end">@Localizer["Bank Account Number"]:</label>
+                    </div>
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control" maxlength="20" id="com_acc_no" value="@Model.com_acc_no" placeholder="@Localizer["Enter Bank Account Number"]" name="name">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2">
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-lg-10">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label for="name" class="form-label float-lg-end">@Localizer["Branch IFSC"]:</label>
+                    </div>
+                    <div class="col-lg-8">
+                        <input type="text" maxlength="25" class="form-control" id="com_ifsc" value="@Model.com_ifsc" placeholder="@Localizer["Enter Branch IFSC"]" name="name">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2">
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-lg-10">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label for="name" class="form-label float-lg-end">@Localizer["UPI Number"]:</label>
+                    </div>
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control" id="upiNo" placeholder="@Localizer["Enter UPI Number"]" name="name">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2">
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <div class="row">
+            <div class="col-lg-10">
+                <div class="row">
+                    <div class="col-lg-4">
+                    </div>
+                    <div class="col-lg-8">
+                        <button class="btn btn-success" onclick="updatecompany()" type="button">@Localizer["Update"]</button>
+                        <button class="btn btn-secondary ml-2" onclick="GoBack()" type="button">@Localizer["Cancel"]</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2">
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
