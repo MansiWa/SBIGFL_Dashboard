@@ -117,7 +117,7 @@ namespace Master.Repository
             parameters.Add("@rb_docid", user.rb_docid, DbType.String);
             parameters.Add("@rb_doctype", user.rb_doctype, DbType.String);
             parameters.Add("@batchid", user.batchid, DbType.String);
-            parameters.Add("@rb_date", user.rb_date, DbType.DateTime);
+            parameters.Add("@rb_date", user.rb_date, DbType.String);
             parameters.Add("@rb_filename", user.rb_filename, DbType.String);
             parameters.Add("@rb_count", user.rb_count, DbType.String);
             parameters.Add("@rb_updatedby", user.rb_updatedby, DbType.String);
