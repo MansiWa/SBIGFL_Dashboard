@@ -1,5 +1,7 @@
-﻿using System;
+﻿using DashboardService;
+using System;
 using System.Configuration;
+using System.IO;
 using System.ServiceProcess;
 using System.Timers;
 
@@ -7,68 +9,72 @@ namespace DashboardService
 {
     public partial class Service1 : ServiceBase
     {
-        Timer timer = new Timer();
+        Timer timer = new Timer(); // name space(using System.Timers;)
         public Service1()
         {
             InitializeComponent();
+
         }
 
         protected override void OnStart(string[] args)
         {
-            // Schedule the initial execution
-            ScheduleTimer();
-        }
+            WriteToFile("Service is started at " + DateTime.Now);
+            timer.Elapsed += new ElapsedEventHandler(OnElapsedTime);
+            timer.Interval = 60000; //number in miliseconds
+            timer.Enabled = true;
 
+        }
         protected override void OnStop()
         {
-            timer.Stop();
+            WriteToFile("Service is stopped at " + DateTime.Now);
+            timer.Enabled = false;
+            timer.Dispose();
         }
+        private void OnElapsedTime(object source, ElapsedEventArgs e)
+        {
+            DateTime now = DateTime.Now;
+            int time = Convert.ToInt32(ConfigurationManager.AppSettings["Time"]);
+            TimeSpan startTime = new TimeSpan(time, 33, 0); // 4:00 PM
+            if ((now.DayOfWeek != DayOfWeek.Saturday && now.DayOfWeek != DayOfWeek.Sunday) &&
+                now.TimeOfDay.Hours == startTime.Hours && now.TimeOfDay.Minutes == startTime.Minutes)
+            {
+                WriteToFile("Service hit to method at " + DateTime.Now);
 
+                UploadCSData _pastdata = new UploadCSData();
+                var Result = _pastdata.GetValues();
+                UploadCreditData _creditdata = new UploadCreditData();
+                var Result2 = _creditdata.GetValues();
+                //UploadDebtData _debtdata = new UploadDebtData();
+                //var result3 = _debtdata.GetValues();
+            }
+        }
+        public void WriteToFile(string Message)
+        {
+            string path = AppDomain.CurrentDomain.BaseDirectory + "\\Logs";
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            string filepath = AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\ServiceLog_" + DateTime.Now.Date.ToShortDateString().Replace('/', '_') + ".txt";
+            if (!File.Exists(filepath))
+            {
+                // Create a file to write to.
+                using (StreamWriter sw = File.CreateText(filepath))
+                {
+                    sw.WriteLine(Message);
+                }
+            }
+            else
+            {
+                using (StreamWriter sw = File.AppendText(filepath))
+                {
+                    sw.WriteLine(Message);
+                }
+            }
+        }
         public void OnDebug()
         {
             OnStart(null);
-        }
-
-        private void ScheduleTimer()
-        {
-            // Calculate the time until the next run time (5:25 PM or configured time)
-            int time = Convert.ToInt32(ConfigurationManager.AppSettings["Time"]);
-            DateTime now = DateTime.Now;
-            DateTime nextRunTime = new DateTime(now.Year, now.Month, now.Day, time, 25, 0); // Assuming 5:25 PM as the target time
-
-            if (now > nextRunTime)
-            {
-                nextRunTime = nextRunTime.AddDays(1); // Move to the next day if it's already past the scheduled time
-            }
-
-            double interval = (nextRunTime - now).TotalMilliseconds;
-
-            // Set the timer to trigger at the calculated next run time
-            timer.Elapsed += OnTimer;
-            timer.Interval = interval;
-            timer.Start();
-        }
-
-        private void OnTimer(object sender, ElapsedEventArgs args)
-        {
-            timer.Stop(); // Stop the timer to avoid re-entry
-            try
-            {
-                // Execute the desired task
-                //UploadCSData _pastdata = new UploadCSData();
-                //var Result = _pastdata.GetValues();
-                //UploadCreditData _creditdata = new UploadCreditData();
-                //var Result2 = _creditdata.GetValues();
-                UploadDebtData _debtdata = new UploadDebtData();
-                var result3 = _debtdata.GetValues();
-
-                // Task executed successfully, reschedule for the next day
-                ScheduleTimer();
-            }
-            catch (Exception ex)
-            {
-                // Log any exceptions if necessary
-            }
         }
     }
 }

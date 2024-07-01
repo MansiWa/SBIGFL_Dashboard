@@ -63,7 +63,7 @@ namespace PrintSoftWeb.Controllers
                 HttpResponseMessage borrow4response = _httpClient.GetAsync(_httpClient.BaseAddress + "/UploadBorroRFR/GetBank_Line_WCL?user_id=" + new Guid(userid) + "&date=" + date).Result;
                 HttpResponseMessage borrow5response = _httpClient.GetAsync(_httpClient.BaseAddress + "/UploadBorroRFR/GetFOREX?user_id=" + new Guid(userid) + "&date=" + date).Result;
                 HttpResponseMessage borrowrvalue = _httpClient.GetAsync(_httpClient.BaseAddress + "/UploadBorroRFR/GetBorrowValue?user_id=" + new Guid(userid)+ "&date=" + date).Result;
-                HttpResponseMessage assetresponse = _httpClient.GetAsync(_httpClient.BaseAddress + "/AssetsLiabilities/GetAssests?user_id=" + new Guid(userid) + "&date=" + date).Result;
+                HttpResponseMessage assetresponse = _httpClient.GetAsync(_httpClient.BaseAddress + "/AssetsLiabilities/GetAssests?UserId=" + new Guid(userid) + "&date=" + date).Result;
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -218,6 +218,8 @@ namespace PrintSoftWeb.Controllers
         {
             try
             {
+                TempData["Date"] = treDate.AsDateTime().ToString("dd-MMM-yy");
+
                 if (treDate == null)
                 {
                     return RedirectToAction("Index");
@@ -253,7 +255,7 @@ namespace PrintSoftWeb.Controllers
                 HttpResponseMessage borrow4response = _httpClient.GetAsync(_httpClient.BaseAddress + "/UploadBorroRFR/GetBank_Line_WCL?user_id=" + new Guid(userid) + "&date=" + treDate).Result;
                 HttpResponseMessage borrow5response = _httpClient.GetAsync(_httpClient.BaseAddress + "/UploadBorroRFR/GetFOREX?user_id=" + new Guid(userid) + "&date=" + treDate).Result;
                 HttpResponseMessage borrowrvalue = _httpClient.GetAsync(_httpClient.BaseAddress + "/UploadBorroRFR/GetBorrowValue?user_id=" + new Guid(userid) + "&date=" + treDate).Result;
-                HttpResponseMessage assetresponse = _httpClient.GetAsync(_httpClient.BaseAddress + "/AssetsLiabilities/GetAssests?user_id=" + new Guid(userid) + "&date=" + treDate).Result;
+                HttpResponseMessage assetresponse = _httpClient.GetAsync(_httpClient.BaseAddress + "/AssetsLiabilities/GetAssests?UserId=" + new Guid(userid) + "&date=" + treDate).Result;
 
                 if (response.IsSuccessStatusCode)
                 {
