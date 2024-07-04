@@ -114,12 +114,6 @@ namespace DashboardService
                     DataType = typeof(string),
                     DefaultValue = null
                 });
-                dt.Columns.Add(new DataColumn
-                {
-                    ColumnName = "YEILD",
-                    DataType = typeof(string),
-                    DefaultValue = null
-                });
 
                 dt.Columns.Add(new DataColumn
                 {
