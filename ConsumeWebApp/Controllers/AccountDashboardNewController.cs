@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using Microsoft.VisualBasic;
 using Newtonsoft.Json;
 using PrintSoftWeb.Models;
+using System.Web.WebPages;
 namespace PrintSoftWeb.Controllers
 {
     public class AccountDashboardNewController : Controller
@@ -75,6 +77,13 @@ namespace PrintSoftWeb.Controllers
                     var dataObject1212 = new { data = new List<AccountDashboard>() };
                     var responses1212 = JsonConvert.DeserializeAnonymousType(data1212, dataObject1212);
                     FileDataList1122 = responses1212.data;
+                    var singleValue = "";
+
+                    if (FileHighlightList.Count > 0)
+                    {
+                        singleValue = FileHighlightList[0].h_date;
+                    }
+                    TempData["Date"] = singleValue.AsDateTime().ToString("dd-MMM-yy");
                     if (highlight != null)
                     {
                         var localizedTitle = _localizer[""];
@@ -126,72 +135,101 @@ namespace PrintSoftWeb.Controllers
         }
 
 
-        public JsonResult Find(string? date)
+        public IActionResult Find(string? treDate)
         {
             try
             {
+                TempData["Date"] = treDate.AsDateTime().ToString("dd-MMM-yy");
 
-                var FileUploadDataList = new List<AccountDashboard>(); ;
-                var FileUploadDataList1 = new List<AccountDashboard>(); ;
-                var FileUploadDataList11 = new List<AccountDashboard>(); ;
-                var FileUploadDataList112 = new List<AccountDashboard>(); ;
-                var FileUploadDataList1122 = new List<AccountDashboard>(); ;
+                var FileHighlightList = new List<AccountDashboard>();
+                var FileDataList1 = new List<AccountDashboard>();
+                var FileDataList11 = new List<AccountDashboard>();
+                var FileDataList112 = new List<AccountDashboard>();
+                var FileDataList1122 = new List<AccountDashboard>();
                 string? userid = Request.Cookies["com_id"];// "C587998C-9C7F-4547-B9EA-FEE649274EBC";
 
                 List<AccountDashboard> FileUploadlist = new List<AccountDashboard>();
-                HttpResponseMessage finhighlights = _httpClient.GetAsync(_httpClient.BaseAddress + "/AccountDashboard/GetAllFinhighlights?user_id=" + new Guid(userid) + "&date=" + date).Result;
-                HttpResponseMessage response = _httpClient.GetAsync(_httpClient.BaseAddress + "/AccountDashboard/GetHighlights?user_id=" + new Guid(userid) + "&date=" + date).Result;
-                HttpResponseMessage mourevised = _httpClient.GetAsync(_httpClient.BaseAddress + "/AccountDashboard/GetAllMourevised?user_id=" + new Guid(userid) + "&date=" + date).Result;
-                HttpResponseMessage effratio = _httpClient.GetAsync(_httpClient.BaseAddress + "/AccountDashboard/GetAllEffratio?user_id=" + new Guid(userid) + "&date=" + date).Result;
-                HttpResponseMessage yeild = _httpClient.GetAsync(_httpClient.BaseAddress + "/AccountDashboard/GetAllYeild?user_id=" + new Guid(userid) + "&date=" + date).Result;
-                if (response.IsSuccessStatusCode)
+                HttpResponseMessage finhighlights = _httpClient.GetAsync(_httpClient.BaseAddress + "/AccountDashboard/GetAllFinhighlights?user_id=" + new Guid(userid) + "&date=" + treDate).Result;
+                HttpResponseMessage highlight = _httpClient.GetAsync(_httpClient.BaseAddress + "/AccountDashboard/GetHighlights?user_id=" + new Guid(userid) + "&date=" + treDate).Result;
+                HttpResponseMessage mourevised = _httpClient.GetAsync(_httpClient.BaseAddress + "/AccountDashboard/GetAllMourevised?user_id=" + new Guid(userid) + "&date=" + treDate).Result;
+                HttpResponseMessage effratio = _httpClient.GetAsync(_httpClient.BaseAddress + "/AccountDashboard/GetAllEffratio?user_id=" + new Guid(userid) + "&date=" + treDate).Result;
+                HttpResponseMessage yeild = _httpClient.GetAsync(_httpClient.BaseAddress + "/AccountDashboard/GetAllYeild?user_id=" + new Guid(userid) + "&date=" + treDate).Result;
+                if (highlight.IsSuccessStatusCode)
                 {
-                    dynamic data = response.Content.ReadAsStringAsync().Result;
-                    var dataObject = new { data = new List<AccountDashboard>() };
-                    var responses = JsonConvert.DeserializeAnonymousType(data, dataObject);
-                    FileUploadDataList = responses.data;
+
+                    dynamic hidata = highlight.Content.ReadAsStringAsync().Result;
+                    var hidataObject = new { data = new List<AccountDashboard>() };
+                    var hiresponses = JsonConvert.DeserializeAnonymousType(hidata, hidataObject);
+                    FileHighlightList = hiresponses.data;
 
                     dynamic data12 = finhighlights.Content.ReadAsStringAsync().Result;
                     var dataObject12 = new { data = new List<AccountDashboard>() };
                     var responses12 = JsonConvert.DeserializeAnonymousType(data12, dataObject12);
-                    FileUploadDataList1 = responses12.data;
+                    FileDataList1 = responses12.data;
 
                     dynamic data121 = mourevised.Content.ReadAsStringAsync().Result;
                     var dataObject121 = new { data = new List<AccountDashboard>() };
                     var responses121 = JsonConvert.DeserializeAnonymousType(data121, dataObject121);
-                    FileUploadDataList11 = responses121.data;
+                    FileDataList11 = responses121.data;
 
                     dynamic data1211 = effratio.Content.ReadAsStringAsync().Result;
                     var dataObject1211 = new { data = new List<AccountDashboard>() };
                     var responses1211 = JsonConvert.DeserializeAnonymousType(data1211, dataObject1211);
-                    FileUploadDataList112 = responses1211.data;
+                    FileDataList112 = responses1211.data;
 
                     dynamic data1212 = yeild.Content.ReadAsStringAsync().Result;
                     var dataObject1212 = new { data = new List<AccountDashboard>() };
                     var responses1212 = JsonConvert.DeserializeAnonymousType(data1212, dataObject1212);
-                    FileUploadDataList1122 = responses1212.data;
-                    if (FileUploadDataList != null)
+                    FileDataList1122 = responses1212.data;
+                    var singleValue = "";
+
+                    if (FileHighlightList.Count > 0)
+                    {
+                        singleValue = FileHighlightList[0].h_date;
+                    }
+                    TempData["Date"] = singleValue.AsDateTime().ToString("dd-MMM-yy");
+                    if (highlight != null)
                     {
                         var localizedTitle = _localizer[""];
-                        var res = new
-                        {
+                        //var viewModel = new Tuple<IEnumerable<CreditRatingModel>, IEnumerable<CreditRatingModel>, IEnumerable<CostOfBorrowingModel>, IEnumerable<TBillModel>, IEnumerable<BorroAndRFRModel>, IEnumerable<BorroAndRFRModel>, IEnumerable<BorroAndRFRModel>, IEnumerable<BorroAndRFRModel>, IEnumerable<BorroAndRFRModel>, IEnumerable<BorroAndRFRModel>, IEnumerable<BorroAndRFRModel>>(creditList, prrlist, cobList, FileUploadDataList, borrowList, rfrList, borrow1List, borrow2List, borrow3List, borrow4List, borrow5List);
 
-                            Highlights = FileUploadDataList,
-                            Finhighlights = FileUploadDataList1,
-                            MouRevised = FileUploadDataList11,
-                            eff = FileUploadDataList112,
-                            yeild = FileUploadDataList1122,
+                        var viewModel = new MyViewModel
+                        {
+                            acclist1 = FileHighlightList,
+                            acclist2 = FileDataList1,
+                            acclist3 = FileDataList11,
+                            acclist4 = FileDataList112,
+                            acclist5 = FileDataList1122
+
                         };
-                        return Json(res);
+                        return View("Index",viewModel);
                     }
                     else
                     {
                         var localizedTitle = _localizer[""];
-                        var FileUploadDataList2 = new List<AccountDashboard>();
-                        return Json(FileUploadDataList2);
+                        var viewModel = new MyViewModel
+                        {
+
+                            acclist1 = FileHighlightList,
+                            acclist2 = FileDataList1,
+                            acclist3 = FileDataList11,
+                            acclist4 = FileDataList112,
+                            acclist5 = FileDataList1122
+                        };
+                        return View("Index",viewModel);
                     }
                 }
-                return Json(FileUploadDataList);
+                var viewModel2 = new MyViewModel
+                {
+
+                    acclist1 = FileHighlightList,
+                    acclist2 = FileDataList1,
+                    acclist3 = FileDataList11,
+                    acclist4 = FileDataList112,
+                    acclist5 = FileDataList1122
+                };
+
+                return View("Index", viewModel2);
             }
             catch (Exception ex)
             {

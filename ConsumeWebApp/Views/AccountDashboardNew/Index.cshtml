@@ -67,15 +67,25 @@
 
             </ul>
             <!--end::Nav-->
+            <form asp-controller="AccountDashboardNew" asp-action="Find" method="get">
+                <div class=" d-flex align-items-center " style="position:absolute;top:16px;right:16px;">
 
-            <div class=" d-flex align-items-center " style="position:absolute;top:16px;right:16px;">
+                    @{
+                        string dateValue = TempData["Date"] as string;
+                        DateTime parsedDate;
+                        if (DateTime.TryParse(dateValue, out parsedDate))
+                        {
+                            <input type="date" class="form-control" id="treDate" name="treDate" value="@parsedDate.ToString("yyyy-MM-dd")">
+                        }
+                        else
+                        {
+                            <input type="date" class="form-control" id="treDate" name="treDate" value="">
+                        }
+                    }
 
-                <input type="date" class="form-control" id="date12" name="name">
-
-
-                <button class="btn btn-md text-white bg-success mt-3 mt-lg-0 mt-md-0 ml-2" type="button" title="Search" onclick="search12()"><i class="fa fa-search" aria-hidden="true"></i></button>
-
-            </div>
+                    <button class="btn btn-md text-white bg-success mt-3 mt-lg-0 mt-md-0 ml-2" title="Search"><i class="fa fa-search" aria-hidden="true"></i></button>
+                </div>
+            </form>
         </div>
     </div>
     <!--end::Navbar-->
@@ -109,43 +119,59 @@
                 </thead> *@
                 <thead id="htmlrpt0">
                     @{
-                        if(Model != null)
+                        if (Model != null && Model.acclist1.Any())
                         {
-                            foreach (var item1 in Model.acclist1.Take(1))
-                            {
-                            
-                                <tr class="row100 head">
-                                    <th class="column100 " data-column="column1">@Html.DisplayFor(modelItem => item1.h_particulars)</th>
-                                    <th class="column100 " data-column="column2">@Html.DisplayFor(modelItem => item1.h_col1)</th>
-                                    <th class="column100 " data-column="column3">@Html.DisplayFor(modelItem => item1.h_col2)</th>
-                                    <th class="column100 " data-column="column4">@Html.DisplayFor(modelItem => item1.h_col3)</th>
-                                    <th class="column100 " data-column="column6">@Html.DisplayFor(modelItem => item1.h_mom)</th>
-                                    <th class="column100 " data-column="column7">@Html.DisplayFor(modelItem => item1.h_yoy)</th>
-                                </tr>
-                            }
+                            var firstItem = Model.acclist1.First();
+                            <tr class="row100 head">
+
+                                <th class="column100 " data-column="column1">@firstItem.h_particulars</th>
+                                <th class="column100 @((firstItem.col1== "") ? "displaynone" :"displayblock")" data-column="column2">@firstItem.col1</th>
+                                <th class="column100 @((firstItem.col2== "") ? "displaynone" :"displayblock")" data-column="column3">@firstItem.col2</th>
+                                <th class="column100 @((firstItem.col3== "") ? "displaynone" :"displayblock")" data-column="column4">@firstItem.col3</th>
+                                <th class="column100 @((firstItem.col4== "") ? "displaynone" :"displayblock")" data-column="column5">@firstItem.col4</th>
+                                <th class="column100 @((firstItem.col5== "") ? "displaynone" :"displayblock")" data-column="column6">@firstItem.col5</th>
+                                <th class="column100 @((firstItem.col6== "") ? "displaynone" :"displayblock")" data-column="column7">@firstItem.col6</th>
+                                <th class="column100 @((firstItem.col7== "") ? "displaynone" :"displayblock")" data-column="column8">@firstItem.col7</th>
+                                <th class="column100 @((firstItem.col8== "") ? "displaynone" :"displayblock")" data-column="column9">@firstItem.col8</th>
+                                <th class="column100 @((firstItem.col9== "") ? "displaynone" :"displayblock")" data-column="column10">@firstItem.col9</th>
+                                <th class="column100 @((firstItem.col10== "") ? "displaynone" :"displayblock")" data-column="column11">@firstItem.col10</th>
+                                <th class="column100 @((firstItem.col11== "") ? "displaynone" :"displayblock")" data-column="column12">@firstItem.col11</th>
+                                <th class="column100 @((firstItem.col12== "") ? "displaynone" :"displayblock")" data-column="column13">@firstItem.col12</th>
+                                <th class="column100 @((firstItem.col13== "") ? "displaynone" :"displayblock")" data-column="column14">@firstItem.col13</th>
+                                <th class="column100 @((firstItem.col14== "") ? "displaynone" :"displayblock")" data-column="column15">@firstItem.col14</th>
+                            </tr>
                         }
                     }
                 </thead>
                 <tbody id="htmlrpt">
                     @{
-                        @if (Model != null)
+                        if (Model != null)
                         {
-                            
-                            foreach (var item in Model.acclist1.Skip(1))
-                            {                             
+                            var remainingItems = Model.acclist1.Skip(1); // Skip the first item
+                            foreach (var item in remainingItems)
+                            {
                                 <tr class="row100">
-                                    <td class="column100 column1 tal" data-column="column1">@Html.DisplayFor(modelItem => item.h_particulars)</td>
-                                    <td class="column100 column2 " data-column="column2">@Html.DisplayFor(modelItem => item.h_col1)</td>
-                                    <td class="column100 column3 " data-column="column3">@Html.DisplayFor(modelItem => item.h_col2)</td>
-                                    <td class="column100 column4 " data-column="column4">@Html.DisplayFor(modelItem => item.h_col3)</td>
-                                    <td class="column100 column6 " data-column="column6">@Html.DisplayFor(modelItem => item.h_mom)</td>
-                                    <td class="column100 column7 " data-column="column7">@Html.DisplayFor(modelItem => item.h_yoy)</td>
+
+                                    <td class="column100 column1 " data-column="column1">@item.h_particulars</td>
+                                    <td class="column100 column2  @((Model.acclist1.ToList()[0].col1== "") ? "displaynone" :"displayblock")" data-column="column2">@item.col1</td>
+                                    <td class="column100 column3  @((Model.acclist1.ToList()[0].col2== "") ? "displaynone" :"displayblock")" data-column="column3">@item.col2</td>
+                                    <td class="column100 column4  @((Model.acclist1.ToList()[0].col3== "") ? "displaynone" :"displayblock")" data-column="column4">@item.col3</td>
+                                    <td class="column100 column5  @((Model.acclist1.ToList()[0].col4== "") ? "displaynone" :"displayblock")" data-column="column5">@item.col4</td>
+                                    <td class="column100 column6  @((Model.acclist1.ToList()[0].col5== "") ? "displaynone" :"displayblock")" data-column="column6">@item.col5</td>
+                                    <td class="column100 column7 @((Model.acclist1.ToList()[0].col6== "") ? "displaynone" :"displayblock")" data-column="column7">@item.col6</td>
+                                    <td class="column100 column8 @((Model.acclist1.ToList()[0].col7== "") ? "displaynone" :"displayblock")" data-column="column8">@item.col7</td>
+                                    <td class="column100 column9 @((Model.acclist1.ToList()[0].col8== "") ? "displaynone" :"displayblock")" data-column="column9">@item.col8</td>
+                                    <td class="column100 column10 @((Model.acclist1.ToList()[0].col9== "") ? "displaynone" :"displayblock")" data-column="column10">@item.col9</td>
+                                    <td class="column100 column11 @((Model.acclist1.ToList()[0].col10== "") ? "displaynone" :"displayblock")" data-column="column11">@item.col10</td>
+                                    <td class="column100 column12 @((Model.acclist1.ToList()[0].col11== "") ? "displaynone" :"displayblock")" data-column="column12">@item.col11</td>
+                                    <td class="column100 column13 @((Model.acclist1.ToList()[0].col12== "") ? "displaynone" :"displayblock")" data-column="column13">@item.col12</td>
+                                    <td class="column100 column14 @((Model.acclist1.ToList()[0].col13== "") ? "displaynone" :"displayblock")" data-column="column14">@item.col13</td>
+                                    <td class="column100 column15 @((Model.acclist1.ToList()[0].col14== "") ? "displaynone" :"displayblock")" data-column="column15">@item.col14</td>
                                 </tr>
+
                             }
                         }
-
                     }
-                    <!-- Repeat the above row structure for other data entries -->
                 </tbody>
             </table>
         </div>    <!--end::Col-->
@@ -164,47 +190,61 @@
         </div>
         <div class="table100 ver2 m-b-110">
             <table data-vertable="ver2">
-               @*  <thead>
-                    <tr class="row100 head">
-                        <th class="column100 " data-column="column1">Particulars</th>
-                        <th class="column100 " data-column="column2">F.Y. <label >F.Y. 2022-23</label></th>
-                        <th class="column100 " data-column="column3">F.Y. <label >F.Y. 2023-24</label></th>
-                       @*  <th class="column100 " data-column="column4"><label id="col31"></label></th> 
-                        <th class="column100 " data-column="column5">Y-O-Y Growth (%)</th>
-                    </tr>
-                </thead>*@
-                <thead id="htmlrpt11">
-                    @{
-                        if (Model != null)
-                        {
-                            foreach (var item in Model.acclist2.Take(1))
-                            {
 
-                                <tr class="row100 head">
-                                    <th class="column100 " data-column="column1">@Html.DisplayFor(modelItem => item.f_particulars)</th>
-                                    <th class="column100 " data-column="column2">@Html.DisplayFor(modelItem => item.f_col1)</th>
-                                    <th class="column100 " data-column="column3">@Html.DisplayFor(modelItem => item.f_col2)</th>
-                                    <th class="column100 " data-column="column5">@Html.DisplayFor(modelItem => item.f_yoy)</th>
-                                </tr>
-                            }
+                <thead id="htmlrpt11" class="text-align-center">
+                    @{
+                        if (Model != null && Model.acclist2.Any())
+                        {
+                            var firstItem = Model.acclist2.First();
+                            <tr class="row100 head">
+
+                                <th class="column100 " data-column="column1">@firstItem.f_particulars</th>
+                                <th class="column100 @((firstItem.col1== "") ? "displaynone" :"displayblock")" data-column="column2">@firstItem.col1</th>
+                                <th class="column100 @((firstItem.col2== "") ? "displaynone" :"displayblock")" data-column="column3">@firstItem.col2</th>
+                                <th class="column100 @((firstItem.col3== "") ? "displaynone" :"displayblock")" data-column="column4">@firstItem.col3</th>
+                                <th class="column100 @((firstItem.col4== "") ? "displaynone" :"displayblock")" data-column="column5">@firstItem.col4</th>
+                                <th class="column100 @((firstItem.col5== "") ? "displaynone" :"displayblock")" data-column="column6">@firstItem.col5</th>
+                                <th class="column100 @((firstItem.col6== "") ? "displaynone" :"displayblock")" data-column="column7">@firstItem.col6</th>
+                                <th class="column100 @((firstItem.col7== "") ? "displaynone" :"displayblock")" data-column="column8">@firstItem.col7</th>
+                                <th class="column100 @((firstItem.col8== "") ? "displaynone" :"displayblock")" data-column="column9">@firstItem.col8</th>
+                                <th class="column100 @((firstItem.col9== "") ? "displaynone" :"displayblock")" data-column="column10">@firstItem.col9</th>
+                                <th class="column100 @((firstItem.col10== "") ? "displaynone" :"displayblock")" data-column="column11">@firstItem.col10</th>
+                                <th class="column100 @((firstItem.col11== "") ? "displaynone" :"displayblock")" data-column="column12">@firstItem.col11</th>
+                                <th class="column100 @((firstItem.col12== "") ? "displaynone" :"displayblock")" data-column="column13">@firstItem.col12</th>
+                                <th class="column100 @((firstItem.col13== "") ? "displaynone" :"displayblock")" data-column="column14">@firstItem.col13</th>
+                                <th class="column100 @((firstItem.col14== "") ? "displaynone" :"displayblock")" data-column="column15">@firstItem.col14</th>
+                            </tr>
                         }
                     }
                 </thead>
                 <tbody id="htmlrpt1">
                     @{
-                        @if (Model != null)
+                        if (Model != null)
                         {
-                            foreach (var item in Model.acclist2.Skip(1))
+                            var remainingItems = Model.acclist2.Skip(1); // Skip the first item
+                            foreach (var item in remainingItems)
                             {
-                                <tr class="row100 head">
-                                    <td class="column100 column1 tal" data-column="column1">@Html.DisplayFor(modelItem => item.f_particulars)</td>
-                                    <td class="column100 column2 " data-column="column2">@Html.DisplayFor(modelItem => item.f_col1)</td>
-                                    <td class="column100 column3 " data-column="column3">@Html.DisplayFor(modelItem => item.f_col2)</td>
-                                    <td class="column100 column5 " data-column="column5">@Html.DisplayFor(modelItem => item.f_yoy)</td>
+                                <tr class="row100">
+
+                                    <td class="column100 column1 " data-column="column1">@item.f_particulars</td>
+                                    <td class="column100 column2 @((Model.acclist2.ToList()[0].col1== "") ? "displaynone" :"displayblock")" data-column="column2">@item.col1</td>
+                                    <td class="column100 column3 @((Model.acclist2.ToList()[0].col2== "") ? "displaynone" :"displayblock")" data-column="column3">@item.col2</td>
+                                    <td class="column100 column4 @((Model.acclist2.ToList()[0].col3== "") ? "displaynone" :"displayblock")" data-column="column4">@item.col3</td>
+                                    <td class="column100 column5 @((Model.acclist2.ToList()[0].col4== "") ? "displaynone" :"displayblock")" data-column="column5">@item.col4</td>
+                                    <td class="column100 column6 @((Model.acclist2.ToList()[0].col5== "") ? "displaynone" :"displayblock")" data-column="column6">@item.col5</td>
+                                    <td class="column100 column7 @((Model.acclist2.ToList()[0].col6== "") ? "displaynone" :"displayblock")" data-column="column7">@item.col6</td>
+                                    <td class="column100 column8 @((Model.acclist2.ToList()[0].col7== "") ? "displaynone" :"displayblock")" data-column="column8">@item.col7</td>
+                                    <td class="column100 column9 @((Model.acclist2.ToList()[0].col8== "") ? "displaynone" :"displayblock")" data-column="column9">@item.col8</td>
+                                    <td class="column100 column10 @((Model.acclist2.ToList()[0].col9== "") ? "displaynone" :"displayblock")" data-column="column10">@item.col9</td>
+                                    <td class="column100 column11 @((Model.acclist2.ToList()[0].col10== "") ? "displaynone" :"displayblock")" data-column="column11">@item.col10</td>
+                                    <td class="column100 column12 @((Model.acclist2.ToList()[0].col11== "") ? "displaynone" :"displayblock")" data-column="column12">@item.col11</td>
+                                    <td class="column100 column13 @((Model.acclist2.ToList()[0].col12== "") ? "displaynone" :"displayblock")" data-column="column13">@item.col12</td>
+                                    <td class="column100 column14 @((Model.acclist2.ToList()[0].col13== "") ? "displaynone" :"displayblock")" data-column="column14">@item.col13</td>
+                                    <td class="column100 column15 @((Model.acclist2.ToList()[0].col14== "") ? "displaynone" :"displayblock")" data-column="column15">@item.col14</td>
                                 </tr>
+
                             }
                         }
-
                     }
                 </tbody>
             </table>
@@ -224,53 +264,61 @@
         </div>
         <div class="table100 ver3 m-b-30">
             <table data-vertable="ver3">
-                @* <thead>
-                    <tr class="row100 head">
-                        <th class="column100 " data-column="column1">Particulars</th>
-                        <th class="column100 " data-column="column2"><label>F.Y. 2023-24</label></th>
-                        <th class="column100 " data-column="column3">MOU F.Y. 23-24</th>
-                        <th class="column100 " data-column="column4">MOU Achievement of Budget (%)</th>
-                        <th class="column100 " data-column="column4">Self Set Target F.Y. 23-24</th>
-                        <th class="column100 " data-column="column4">Achievement of Target (%)</th>
 
-                    </tr>
-                </thead> *@
-                <thead id="htmlrpt22">
+                <thead  class="text-align-center" id="htmlrpt22">
                     @{
-                        @if (Model != null)
+                        if (Model != null && Model.acclist3.Any())
                         {
-                            foreach (var item in Model.acclist3.Take(1))
-                            {
-                                <tr class="row100 head">
-                                    <th class="column100 " data-column="column1 ">@Html.DisplayFor(modelItem => item.m_particulars)</th>
-                                    <th class="column100 " data-column="column2 ">@Html.DisplayFor(modelItem => item.m_col1)</th>
-                                    <th class="column100 " data-column="column3 ">@Html.DisplayFor(modelItem => item.m_col2)</th>
-                                    <th class="column100 " data-column="column4 ">@Html.DisplayFor(modelItem => item.m_achievement)</th>
-                                    <th class="column100 " data-column="column4 ">@Html.DisplayFor(modelItem => item.m_selftarget)</th>
-                                    <th class="column100 " data-column="column4 ">@Html.DisplayFor(modelItem => item.mou_tobeachieved)</th>
-                                </tr>
-                            }
-                        }
+                            var firstItem = Model.acclist3.First();
+                            <tr class="row100 head">
 
+                                <th class="column100 " data-column="column1">@firstItem.m_particulars</th>
+                                <th class="column100 @((firstItem.col1== "") ? "displaynone" :"displayblock")" data-column="column2">@firstItem.col1</th>
+                                <th class="column100 @((firstItem.col2== "") ? "displaynone" :"displayblock")" data-column="column3">@firstItem.col2</th>
+                                <th class="column100 @((firstItem.col3== "") ? "displaynone" :"displayblock")" data-column="column4">@firstItem.col3</th>
+                                <th class="column100 @((firstItem.col4== "") ? "displaynone" :"displayblock")" data-column="column5">@firstItem.col4</th>
+                                <th class="column100 @((firstItem.col5== "") ? "displaynone" :"displayblock")" data-column="column6">@firstItem.col5</th>
+                                <th class="column100 @((firstItem.col6== "") ? "displaynone" :"displayblock")" data-column="column7">@firstItem.col6</th>
+                                <th class="column100 @((firstItem.col7== "") ? "displaynone" :"displayblock")" data-column="column8">@firstItem.col7</th>
+                                <th class="column100 @((firstItem.col8== "") ? "displaynone" :"displayblock")" data-column="column9">@firstItem.col8</th>
+                                <th class="column100 @((firstItem.col9== "") ? "displaynone" :"displayblock")" data-column="column10">@firstItem.col9</th>
+                                <th class="column100 @((firstItem.col10== "") ? "displaynone" :"displayblock")" data-column="column11">@firstItem.col10</th>
+                                <th class="column100 @((firstItem.col11== "") ? "displaynone" :"displayblock")" data-column="column12">@firstItem.col11</th>
+                                <th class="column100 @((firstItem.col12== "") ? "displaynone" :"displayblock")" data-column="column13">@firstItem.col12</th>
+                                <th class="column100 @((firstItem.col13== "") ? "displaynone" :"displayblock")" data-column="column14">@firstItem.col13</th>
+                                <th class="column100 @((firstItem.col14== "") ? "displaynone" :"displayblock")" data-column="column15">@firstItem.col14</th>
+                            </tr>
+                        }
                     }
                 </thead>
                 <tbody id="htmlrpt2">
                     @{
-                        @if (Model != null)
+                        if (Model != null)
                         {
-                            foreach (var item in Model.acclist3.Skip(1))
+                            var remainingItems = Model.acclist3.Skip(1); // Skip the first item
+                            foreach (var item in remainingItems)
                             {
                                 <tr class="row100">
-                                    <td class="column100 column1 tal" data-column="column1 tal">@Html.DisplayFor(modelItem => item.m_particulars)</td>
-                                    <td class="column100 column2 " data-column="column2 tar">@Html.DisplayFor(modelItem => item.m_col1)</td>
-                                    <td class="column100 column3 " data-column="column3 tar">@Html.DisplayFor(modelItem => item.m_col2)</td>
-                                    <td class="column100 column4 " data-column="column4 tar">@Html.DisplayFor(modelItem => item.m_achievement)</td>
-                                    <td class="column100 column4 " data-column="column4 tar">@Html.DisplayFor(modelItem => item.m_selftarget)</td>
-                                    <td class="column100 column4 " data-column="column4 tar">@Html.DisplayFor(modelItem => item.mou_tobeachieved)</td>
+
+                                    <td class="column100 column1 " data-column="column1">@item.m_particulars</td>
+                                    <td class="column100 column2 @((Model.acclist3.ToList()[0].col1== "") ? "displaynone" :"displayblock")" data-column="column2">@item.col1</td>
+                                    <td class="column100 column3 @((Model.acclist3.ToList()[0].col2== "") ? "displaynone" :"displayblock")" data-column="column3">@item.col2</td>
+                                    <td class="column100 column4 @((Model.acclist3.ToList()[0].col3== "") ? "displaynone" :"displayblock")" data-column="column4">@item.col3</td>
+                                    <td class="column100 column5 @((Model.acclist3.ToList()[0].col4== "") ? "displaynone" :"displayblock")" data-column="column5">@item.col4</td>
+                                    <td class="column100 column6 @((Model.acclist3.ToList()[0].col5== "") ? "displaynone" :"displayblock")" data-column="column6">@item.col5</td>
+                                    <td class="column100 column7 @((Model.acclist3.ToList()[0].col6== "") ? "displaynone" :"displayblock")" data-column="column7">@item.col6</td>
+                                    <td class="column100 column8 @((Model.acclist3.ToList()[0].col7== "") ? "displaynone" :"displayblock")" data-column="column8">@item.col7</td>
+                                    <td class="column100 column9 @((Model.acclist3.ToList()[0].col8== "") ? "displaynone" :"displayblock")" data-column="column9">@item.col8</td>
+                                    <td class="column100 column10 @((Model.acclist3.ToList()[0].col9== "") ? "displaynone" :"displayblock")" data-column="column10">@item.col9</td>
+                                    <td class="column100 column11 @((Model.acclist3.ToList()[0].col10== "") ? "displaynone" :"displayblock")" data-column="column11">@item.col10</td>
+                                    <td class="column100 column12 @((Model.acclist3.ToList()[0].col11== "") ? "displaynone" :"displayblock")" data-column="column12">@item.col11</td>
+                                    <td class="column100 column13 @((Model.acclist3.ToList()[0].col12== "") ? "displaynone" :"displayblock")" data-column="column13">@item.col12</td>
+                                    <td class="column100 column14 @((Model.acclist3.ToList()[0].col13== "") ? "displaynone" :"displayblock")" data-column="column14">@item.col13</td>
+                                    <td class="column100 column15 @((Model.acclist3.ToList()[0].col14== "") ? "displaynone" :"displayblock")" data-column="column15">@item.col14</td>
                                 </tr>
+
                             }
                         }
-
                     }
                 </tbody>
             </table>
@@ -290,47 +338,61 @@
         </div>
         <div class="table100 ver4 m-b-30">
             <table data-vertable="ver4">
-               @*  <thead>
-                    <tr class="row100 head">
-                        <th class="column100 " data-column="column1">Particulars</th>
-                        <th class="column100 " data-column="column2"><label>F.Y. 2022-23</label></th>
-                        <th class="column100 " data-column="column3">F.Y. <label>2023-24</label></th>
-                        <th class="column100 " data-column="column4"><label >Growth (bps)</label></th>
-                        @* <th class="column100 " data-column="column5"><label id="col43"></label></th> 
-                    </tr>
-                </thead> *@
+               
                 <thead id="htmlrpt33">
                     @{
-                        @if (Model != null)
+                        if (Model != null && Model.acclist5.Any())
                         {
-                            foreach (var item in Model.acclist5.Take(1))
-                            {
-                                <tr class="row100 head">
-                                    <th class="column100 " data-column="column1">@Html.DisplayFor(modelItem => item.y_particulars)</th>
-                                    <th class="column100 " data-column="column2">@Html.DisplayFor(modelItem => item.y_col1)</th>
-                                    <th class="column100 " data-column="column3">@Html.DisplayFor(modelItem => item.y_col2)</th>
-                                    <th class="column100 " data-column="column4">@Html.DisplayFor(modelItem => item.y_growth)</th>
-                                </tr>
-                            }
-                        }
+                            var firstItem = Model.acclist5.First();
+                            <tr class="row100 head">
 
+                                <th class="column100 " data-column="column1">@firstItem.y_particulars</th>
+                                <th class="column100 @((firstItem.col1== "") ? "displaynone" :"displayblock")" data-column="column2">@firstItem.col1</th>
+                                <th class="column100 @((firstItem.col2== "") ? "displaynone" :"displayblock")" data-column="column3">@firstItem.col2</th>
+                                <th class="column100 @((firstItem.col3== "") ? "displaynone" :"displayblock")" data-column="column4">@firstItem.col3</th>
+                                <th class="column100 @((firstItem.col4== "") ? "displaynone" :"displayblock")" data-column="column5">@firstItem.col4</th>
+                                <th class="column100 @((firstItem.col5== "") ? "displaynone" :"displayblock")" data-column="column6">@firstItem.col5</th>
+                                <th class="column100 @((firstItem.col6== "") ? "displaynone" :"displayblock")" data-column="column7">@firstItem.col6</th>
+                                <th class="column100 @((firstItem.col7== "") ? "displaynone" :"displayblock")" data-column="column8">@firstItem.col7</th>
+                                <th class="column100 @((firstItem.col8== "") ? "displaynone" :"displayblock")" data-column="column9">@firstItem.col8</th>
+                                <th class="column100 @((firstItem.col9== "") ? "displaynone" :"displayblock")" data-column="column10">@firstItem.col9</th>
+                                <th class="column100 @((firstItem.col10== "") ? "displaynone" :"displayblock")" data-column="column11">@firstItem.col10</th>
+                                <th class="column100 @((firstItem.col11== "") ? "displaynone" :"displayblock")" data-column="column12">@firstItem.col11</th>
+                                <th class="column100 @((firstItem.col12== "") ? "displaynone" :"displayblock")" data-column="column13">@firstItem.col12</th>
+                                <th class="column100 @((firstItem.col13== "") ? "displaynone" :"displayblock")" data-column="column14">@firstItem.col13</th>
+                                <th class="column100 @((firstItem.col14== "") ? "displaynone" :"displayblock")" data-column="column15">@firstItem.col14</th>
+                            </tr>
+                        }
                     }
                 </thead>
                 <tbody id="htmlrpt3">
                     @{
-                        @if (Model != null)
+                        if (Model != null)
                         {
-                            foreach (var item in Model.acclist5.Skip(1))
+                            var remainingItems = Model.acclist5.Skip(1); // Skip the first item
+                            foreach (var item in remainingItems)
                             {
                                 <tr class="row100">
-                                    <td class="column100 column1 tal" data-column="column1">@Html.DisplayFor(modelItem => item.y_particulars)</td>
-                                    <td class="column100 column2 " data-column="column2">@Html.DisplayFor(modelItem => item.y_col1)</td>
-                                    <td class="column100 column3 " data-column="column3">@Html.DisplayFor(modelItem => item.y_col2)</td>
-                                    <td class="column100 column4 " data-column="column4">@Html.DisplayFor(modelItem => item.y_growth)</td>
+
+                                    <td class="column100 column1 " data-column="column1">@item.y_particulars</td>
+                                    <td class="column100 column2 @((Model.acclist5.ToList()[0].col1== "") ? "displaynone" :"displayblock")" data-column="column2">@item.col1</td>
+                                    <td class="column100 column3 @((Model.acclist5.ToList()[0].col2== "") ? "displaynone" :"displayblock")" data-column="column3">@item.col2</td>
+                                    <td class="column100 column4 @((Model.acclist5.ToList()[0].col3== "") ? "displaynone" :"displayblock")" data-column="column4">@item.col3</td>
+                                    <td class="column100 column5 @((Model.acclist5.ToList()[0].col4== "") ? "displaynone" :"displayblock")" data-column="column5">@item.col4</td>
+                                    <td class="column100 column6 @((Model.acclist5.ToList()[0].col5== "") ? "displaynone" :"displayblock")" data-column="column6">@item.col5</td>
+                                    <td class="column100 column7 @((Model.acclist5.ToList()[0].col6== "") ? "displaynone" :"displayblock")" data-column="column7">@item.col6</td>
+                                    <td class="column100 column8 @((Model.acclist5.ToList()[0].col7== "") ? "displaynone" :"displayblock")" data-column="column8">@item.col7</td>
+                                    <td class="column100 column9 @((Model.acclist5.ToList()[0].col8== "") ? "displaynone" :"displayblock")" data-column="column9">@item.col8</td>
+                                    <td class="column100 column10 @((Model.acclist5.ToList()[0].col9== "") ? "displaynone" :"displayblock")" data-column="column10">@item.col9</td>
+                                    <td class="column100 column11 @((Model.acclist5.ToList()[0].col10== "") ? "displaynone" :"displayblock")" data-column="column11">@item.col10</td>
+                                    <td class="column100 column12 @((Model.acclist5.ToList()[0].col11== "") ? "displaynone" :"displayblock")" data-column="column12">@item.col11</td>
+                                    <td class="column100 column13 @((Model.acclist5.ToList()[0].col12== "") ? "displaynone" :"displayblock")" data-column="column13">@item.col12</td>
+                                    <td class="column100 column14 @((Model.acclist5.ToList()[0].col13== "") ? "displaynone" :"displayblock")" data-column="column14">@item.col13</td>
+                                    <td class="column100 column15 @((Model.acclist5.ToList()[0].col14== "") ? "displaynone" :"displayblock")" data-column="column15">@item.col14</td>
                                 </tr>
+
                             }
                         }
-
                     }
                 </tbody>
             </table>
@@ -350,47 +412,61 @@
         </div>
         <div class="table100 ver5 m-b-30">
             <table data-vertable="ver5">
-                @* <thead>
-                    <tr class="row100 head">
-                        <th class="column100 " data-column="column1">Particulars</th>
-                        <th class="column100 " data-column="column2"><label>F.Y. 2022-23</label></th>
-                        <th class="column100 " data-column="column3">F.Y. <label>2023-24</label></th>
-                        <th class="column100 " data-column="column4"><label>Growth (%) Change</label></th>
-                       @*  <th class="column100 " data-column="column5"><label id="col44"></label></th> 
-                    </tr>
-                </thead> *@
+
                 <thead id="htmlrpt44">
                     @{
-                        @if (Model != null)
+                        if (Model != null && Model.acclist4.Any())
                         {
-                            foreach (var item in Model.acclist4.Take(1))
-                            {
-                                <tr class="row100 head">
-                                    <th class="column100" data-column="column1">@Html.DisplayFor(modelItem => item.e_particulars)</th>
-                                    <th class="column100" data-column="column2">@Html.DisplayFor(modelItem => item.e_col1)</th>
-                                    <th class="column100" data-column="column3">@Html.DisplayFor(modelItem => item.e_col2)</th>
-                                    <th class="column100" data-column="column4">@Html.DisplayFor(modelItem => item.e_growth)</th>
-                                </tr>
-                            }
-                        }
+                            var firstItem = Model.acclist4.First();
+                            <tr class="row100 head">
 
+                                <th class="column100 " data-column="column1">@firstItem.e_particulars</th>
+                                <th class="column100 @((firstItem.col1== "") ? "displaynone" :"displayblock")" data-column="column2">@firstItem.col1</th>
+                                <th class="column100 @((firstItem.col2== "") ? "displaynone" :"displayblock")" data-column="column3">@firstItem.col2</th>
+                                <th class="column100 @((firstItem.col3== "") ? "displaynone" :"displayblock")" data-column="column4">@firstItem.col3</th>
+                                <th class="column100 @((firstItem.col4== "") ? "displaynone" :"displayblock")" data-column="column5">@firstItem.col4</th>
+                                <th class="column100 @((firstItem.col5== "") ? "displaynone" :"displayblock")" data-column="column6">@firstItem.col5</th>
+                                <th class="column100 @((firstItem.col6== "") ? "displaynone" :"displayblock")" data-column="column7">@firstItem.col6</th>
+                                <th class="column100 @((firstItem.col7== "") ? "displaynone" :"displayblock")" data-column="column8">@firstItem.col7</th>
+                                <th class="column100 @((firstItem.col8== "") ? "displaynone" :"displayblock")" data-column="column9">@firstItem.col8</th>
+                                <th class="column100 @((firstItem.col9== "") ? "displaynone" :"displayblock")" data-column="column10">@firstItem.col9</th>
+                                <th class="column100 @((firstItem.col10== "") ? "displaynone" :"displayblock")" data-column="column11">@firstItem.col10</th>
+                                <th class="column100 @((firstItem.col11== "") ? "displaynone" :"displayblock")" data-column="column12">@firstItem.col11</th>
+                                <th class="column100 @((firstItem.col12== "") ? "displaynone" :"displayblock")" data-column="column13">@firstItem.col12</th>
+                                <th class="column100 @((firstItem.col13== "") ? "displaynone" :"displayblock")" data-column="column14">@firstItem.col13</th>
+                                <th class="column100 @((firstItem.col14== "") ? "displaynone" :"displayblock")" data-column="column15">@firstItem.col14</th>
+                            </tr>
+                        }
                     }
                 </thead>
                 <tbody id="htmlrpt4">
                     @{
-                        @if (Model != null)
+                        if (Model != null)
                         {
-                            foreach (var item in Model.acclist4.Skip(1))
+                            var remainingItems = Model.acclist4.Skip(1); // Skip the first item
+                            foreach (var item in remainingItems)
                             {
                                 <tr class="row100">
-                                    <td class="column100 column1 tal" data-column="column1">@Html.DisplayFor(modelItem => item.e_particulars)</td>
-                                    <td class="column100 column2 " data-column="column2">@Html.DisplayFor(modelItem => item.e_col1)</td>
-                                    <td class="column100 column3 " data-column="column3">@Html.DisplayFor(modelItem => item.e_col2)</td>
-                                    <td class="column100 column4 " data-column="column4">@Html.DisplayFor(modelItem => item.e_growth)</td>
+
+                                    <td class="column100 column1 " data-column="column1">@item.e_particulars</td>
+                                    <td class="column100 column2 @((Model.acclist4.ToList()[0].col1== "") ? "displaynone" :"displayblock")" data-column="column2">@item.col1</td>
+                                    <td class="column100 column3 @((Model.acclist4.ToList()[0].col2== "") ? "displaynone" :"displayblock")" data-column="column3">@item.col2</td>
+                                    <td class="column100 column4 @((Model.acclist4.ToList()[0].col3== "") ? "displaynone" :"displayblock")" data-column="column4">@item.col3</td>
+                                    <td class="column100 column5 @((Model.acclist4.ToList()[0].col4== "") ? "displaynone" :"displayblock")" data-column="column5">@item.col4</td>
+                                    <td class="column100 column6 @((Model.acclist4.ToList()[0].col5== "") ? "displaynone" :"displayblock")" data-column="column6">@item.col5</td>
+                                    <td class="column100 column7 @((Model.acclist4.ToList()[0].col6== "") ? "displaynone" :"displayblock")" data-column="column7">@item.col6</td>
+                                    <td class="column100 column8 @((Model.acclist4.ToList()[0].col7== "") ? "displaynone" :"displayblock")" data-column="column8">@item.col7</td>
+                                    <td class="column100 column9 @((Model.acclist4.ToList()[0].col8== "") ? "displaynone" :"displayblock")" data-column="column9">@item.col8</td>
+                                    <td class="column100 column10 @((Model.acclist4.ToList()[0].col9== "") ? "displaynone" :"displayblock")" data-column="column10">@item.col9</td>
+                                    <td class="column100 column11 @((Model.acclist4.ToList()[0].col10== "") ? "displaynone" :"displayblock")" data-column="column11">@item.col10</td>
+                                    <td class="column100 column12 @((Model.acclist4.ToList()[0].col11== "") ? "displaynone" :"displayblock")" data-column="column12">@item.col11</td>
+                                    <td class="column100 column13 @((Model.acclist4.ToList()[0].col12== "") ? "displaynone" :"displayblock")" data-column="column13">@item.col12</td>
+                                    <td class="column100 column14 @((Model.acclist4.ToList()[0].col13== "") ? "displaynone" :"displayblock")" data-column="column14">@item.col13</td>
+                                    <td class="column100 column15 @((Model.acclist4.ToList()[0].col14== "") ? "displaynone" :"displayblock")" data-column="column15">@item.col14</td>
                                 </tr>
+
                             }
                         }
-
                     }
                 </tbody>
             </table>
@@ -398,7 +474,16 @@
     </div>
     @*     </div>*@
 </div>
+<style>
+    .displaynone {
+        display: none;
+    }
 
+    .displayblock {
+        display: table-cell;
+    }
+
+</style>
 <script>
     $(document).ready(function () {
 
@@ -429,7 +514,7 @@
             d = "2024-02-28";
         }
         //var date = '2024-02-29';
-        search12();
+       // search12();
 
     });
     function search12() {
