@@ -34,6 +34,13 @@ namespace PrintSoftWeb.Controllers
 
                 string? userid = Request.Cookies["com_id"];
                 HttpResponseMessage response = _httpClient.GetAsync(_httpClient.BaseAddress + "/CreditDashboard/GetAnnexII?UserId=" + new Guid(userid) + "&date=" + date).Result;
+                //HttpResponseMessage response2 = _httpClient.GetAsync(_httpClient.BaseAddress + "/CreditDashboard/GetAnnexIII?UserId=" + new Guid(userid) + "&date=" + DebtDate).Result;
+                //HttpResponseMessage response3 = _httpClient.GetAsync(_httpClient.BaseAddress + "/CreditDashboard/GetAnnexIV?UserId=" + new Guid(userid) + "&date=" + DebtDate).Result;
+                //HttpResponseMessage response4 = _httpClient.GetAsync(_httpClient.BaseAddress + "/CreditDashboard/GetAnnexVI?UserId=" + new Guid(userid) + "&date=" + DebtDate).Result;
+                //HttpResponseMessage response5 = _httpClient.GetAsync(_httpClient.BaseAddress + "/CreditDashboard/GetAnnexVII?UserId=" + new Guid(userid) + "&date=" + DebtDate).Result;
+                //HttpResponseMessage response6 = _httpClient.GetAsync(_httpClient.BaseAddress + "/CreditDashboard/GetAnnexIX?UserId=" + new Guid(userid) + "&date=" + DebtDate).Result;
+                //HttpResponseMessage response7 = _httpClient.GetAsync(_httpClient.BaseAddress + "/CreditDashboard/GetAnnexX?UserId=" + new Guid(userid) + "&date=" + DebtDate).Result;
+                //HttpResponseMessage response8 = _httpClient.GetAsync(_httpClient.BaseAddress + "/CreditDashboard/GetAnnexXI?UserId=" + new Guid(userid) + "&date=" + DebtDate).Result;
                 if (response.IsSuccessStatusCode)
                 {
                     //debt
@@ -87,6 +94,14 @@ namespace PrintSoftWeb.Controllers
 
                 string? userid = Request.Cookies["com_id"];
                 HttpResponseMessage response = _httpClient.GetAsync(_httpClient.BaseAddress + "/CreditDashboard/GetAnnexII?UserId=" + new Guid(userid) + "&date=" + DebtDate).Result;
+                //HttpResponseMessage response2 = _httpClient.GetAsync(_httpClient.BaseAddress + "/CreditDashboard/GetAnnexIII?UserId=" + new Guid(userid) + "&date=" + DebtDate).Result;
+                //HttpResponseMessage response3 = _httpClient.GetAsync(_httpClient.BaseAddress + "/CreditDashboard/GetAnnexIV?UserId=" + new Guid(userid) + "&date=" + DebtDate).Result;
+                //HttpResponseMessage response4 = _httpClient.GetAsync(_httpClient.BaseAddress + "/CreditDashboard/GetAnnexVI?UserId=" + new Guid(userid) + "&date=" + DebtDate).Result;
+                //HttpResponseMessage response5 = _httpClient.GetAsync(_httpClient.BaseAddress + "/CreditDashboard/GetAnnexVII?UserId=" + new Guid(userid) + "&date=" + DebtDate).Result;
+                //HttpResponseMessage response6 = _httpClient.GetAsync(_httpClient.BaseAddress + "/CreditDashboard/GetAnnexIX?UserId=" + new Guid(userid) + "&date=" + DebtDate).Result;
+                //HttpResponseMessage response7 = _httpClient.GetAsync(_httpClient.BaseAddress + "/CreditDashboard/GetAnnexX?UserId=" + new Guid(userid) + "&date=" + DebtDate).Result;
+                //HttpResponseMessage response8 = _httpClient.GetAsync(_httpClient.BaseAddress + "/CreditDashboard/GetAnnexXI?UserId=" + new Guid(userid) + "&date=" + DebtDate).Result;
+
                 if (response.IsSuccessStatusCode)
                 {
                     //debt

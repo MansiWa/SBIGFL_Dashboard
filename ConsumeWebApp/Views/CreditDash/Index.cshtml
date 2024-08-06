@@ -36,10 +36,26 @@
                     <li class="nav-item">
                         <a class="nav-link nav-link3 text-active-primary active p-5 " id="NavAnnexII" onclick="move('AnnexII')">Annex II</a>
                     </li>
-                    <!--end::Nav item-->
-                    <!--begin::Nav item-->
                     <li class="nav-item">
                         <a class="nav-link nav-link3 text-active-primary   p-5" id="NavAnnexIII" onclick="move('AnnexIII')">Annex III</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link3 text-active-primary   p-5" id="NavAnnexIV" onclick="move('AnnexIV')">Annex IV</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link3 text-active-primary   p-5" id="NavAnnexVI" onclick="move('AnnexVI')">Annex VI</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link3 text-active-primary   p-5" id="NavAnnexVII" onclick="move('AnnexVII')">Annex VII</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link3 text-active-primary   p-5" id="NavAnnexIX" onclick="move('AnnexIX')">Annex IX</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link3 text-active-primary   p-5" id="NavAnnexX" onclick="move('AnnexX')">Annex X</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link3 text-active-primary   p-5" id="NavAnnexXI" onclick="move('AnnexXI')">Annex XI</a>
                     </li>
                     <!--end::Nav item-->
 
@@ -192,11 +208,335 @@
                 </table>
             </div>
         </div>
+        <div class="Add3 row3  pt-10 pr-5 allcontainer" id="AnnexIV">
+            <!--begin::Col-->
+            <div class="col-lg-12  d-flex justify-content-end align-items-center" style="position: absolute;right: 20px;top: 88px;">
+
+                <div class="col-auto">
+                    <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                        Amount in Cr.
+                    </a>
+
+                </div>
+
+            </div>
+            <div class="table100 ver4 m-b-110">
+                <table data-vertable="ver4">
+                    <thead>
+                        <tr class="row100 head">
+                            <th class="column100 " width="7%" data-column="column1">Sr No</th>
+                            <th class="column100 tal" data-column="column2">DEC</th>
+                            <th class="column100 " data-column="column3">Region</th>
+                            <th class="column100 " data-column="column4">Principal WOA</th>
+                            <th class="column100 " data-column="column5">Date of NPA</th>
+                            <th class="column100 " data-column="column6">Date of WOA</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @*  @{
+                        int no1 = 1;
+
+                        if (Model != null)
+                        {
+                        @foreach (var item in Model.listI)
+                        {
+
+                        <tr class="row100">
+                        <td class="column100 column1 " data-column="column1">@no1</td>
+                        <td class="column100 column2 tal" data-column="column2">@item.dec</td>
+                        <td class="column100 column3 " data-column="column3">@item.REGION</td>
+                        <td class="column100 column4 " data-column="column4">@item.PRINCIPAL_WOA</td>
+                        <td class="column100 column5 " data-column="column5">@String.Format("{0:dd/MM/yyyy}", item.DATE_NPA)</td>
+                        <td class="column100 column6 " data-column="column6">@String.Format("{0:dd/MM/yyyy}", item.DATE_WOA)</td>
+
+                        </tr>
+                        no1++;
+
+                        }
+                        }
+                        } *@
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="Add3 row3  pt-10 pr-5 allcontainer" id="AnnexVI">
+            <!--begin::Col-->
+            <div class="col-lg-12  d-flex justify-content-end align-items-center" style="position: absolute;right: 20px;top: 88px;">
+
+                <div class="col-auto">
+                    <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                        Amount in Cr.
+                    </a>
+
+                </div>
+
+            </div>
+            <div class="table100 ver3 m-b-110">
+                <table data-vertable="ver3">
+                    <thead>
+                        <tr class="row100 head">
+                            <th class="column100 " width="7%" data-column="column1">Sr No</th>
+                            <th class="column100 tal" data-column="column2">DEC</th>
+                            <th class="column100 " data-column="column3">Region</th>
+                            <th class="column100 " data-column="column4">Principal WOA</th>
+                            <th class="column100 " data-column="column5">Date of NPA</th>
+                            <th class="column100 " data-column="column6">Date of WOA</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @*  @{
+                        int no1 = 1;
+
+                        if (Model != null)
+                        {
+                        @foreach (var item in Model.listI)
+                        {
+
+                        <tr class="row100">
+                        <td class="column100 column1 " data-column="column1">@no1</td>
+                        <td class="column100 column2 tal" data-column="column2">@item.dec</td>
+                        <td class="column100 column3 " data-column="column3">@item.REGION</td>
+                        <td class="column100 column4 " data-column="column4">@item.PRINCIPAL_WOA</td>
+                        <td class="column100 column5 " data-column="column5">@String.Format("{0:dd/MM/yyyy}", item.DATE_NPA)</td>
+                        <td class="column100 column6 " data-column="column6">@String.Format("{0:dd/MM/yyyy}", item.DATE_WOA)</td>
+
+                        </tr>
+                        no1++;
+
+                        }
+                        }
+                        } *@
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="Add3 row3  pt-10 pr-5 allcontainer" id="AnnexVII">
+            <!--begin::Col-->
+            <div class="col-lg-12  d-flex justify-content-end align-items-center" style="position: absolute;right: 20px;top: 88px;">
+
+                <div class="col-auto">
+                    <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                        Amount in Cr.
+                    </a>
+
+                </div>
+
+            </div>
+            <div class="table100 ver2 m-b-110">
+                <table data-vertable="ver2">
+                    <thead>
+                        <tr class="row100 head">
+                            <th class="column100 " width="7%" data-column="column1">Sr No</th>
+                            <th class="column100 tal" data-column="column2">DEC</th>
+                            <th class="column100 " data-column="column3">Region</th>
+                            <th class="column100 " data-column="column4">Principal WOA</th>
+                            <th class="column100 " data-column="column5">Date of NPA</th>
+                            <th class="column100 " data-column="column6">Date of WOA</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @*  @{
+                        int no1 = 1;
+
+                        if (Model != null)
+                        {
+                        @foreach (var item in Model.listI)
+                        {
+
+                        <tr class="row100">
+                        <td class="column100 column1 " data-column="column1">@no1</td>
+                        <td class="column100 column2 tal" data-column="column2">@item.dec</td>
+                        <td class="column100 column3 " data-column="column3">@item.REGION</td>
+                        <td class="column100 column4 " data-column="column4">@item.PRINCIPAL_WOA</td>
+                        <td class="column100 column5 " data-column="column5">@String.Format("{0:dd/MM/yyyy}", item.DATE_NPA)</td>
+                        <td class="column100 column6 " data-column="column6">@String.Format("{0:dd/MM/yyyy}", item.DATE_WOA)</td>
+
+                        </tr>
+                        no1++;
+
+                        }
+                        }
+                        } *@
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="Add3 row3  pt-10 pr-5 allcontainer" id="AnnexIX">
+            <!--begin::Col-->
+            <div class="col-lg-12  d-flex justify-content-end align-items-center" style="position: absolute;right: 20px;top: 88px;">
+
+                <div class="col-auto">
+                    <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                        Amount in Cr.
+                    </a>
+
+                </div>
+
+            </div>
+            <div class="table100 ver1 m-b-110">
+                <table data-vertable="ver1">
+                    <thead>
+                        <tr class="row100 head">
+                            <th class="column100 " width="7%" data-column="column1">Sr No</th>
+                            <th class="column100 tal" data-column="column2">DEC</th>
+                            <th class="column100 " data-column="column3">Region</th>
+                            <th class="column100 " data-column="column4">Principal WOA</th>
+                            <th class="column100 " data-column="column5">Date of NPA</th>
+                            <th class="column100 " data-column="column6">Date of WOA</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @*  @{
+                        int no1 = 1;
+
+                        if (Model != null)
+                        {
+                        @foreach (var item in Model.listI)
+                        {
+
+                        <tr class="row100">
+                        <td class="column100 column1 " data-column="column1">@no1</td>
+                        <td class="column100 column2 tal" data-column="column2">@item.dec</td>
+                        <td class="column100 column3 " data-column="column3">@item.REGION</td>
+                        <td class="column100 column4 " data-column="column4">@item.PRINCIPAL_WOA</td>
+                        <td class="column100 column5 " data-column="column5">@String.Format("{0:dd/MM/yyyy}", item.DATE_NPA)</td>
+                        <td class="column100 column6 " data-column="column6">@String.Format("{0:dd/MM/yyyy}", item.DATE_WOA)</td>
+
+                        </tr>
+                        no1++;
+
+                        }
+                        }
+                        } *@
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="Add3 row3  pt-10 pr-5 allcontainer" id="AnnexX">
+            <!--begin::Col-->
+            <div class="col-lg-12  d-flex justify-content-end align-items-center" style="position: absolute;right: 20px;top: 88px;">
+
+                <div class="col-auto">
+                    <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                        Amount in Cr.
+                    </a>
+
+                </div>
+
+            </div>
+            <div class="table100 ver6 m-b-110">
+                <table data-vertable="ver6">
+                    <thead>
+                        <tr class="row100 head">
+                            <th class="column100 " width="7%" data-column="column1">Sr No</th>
+                            <th class="column100 tal" data-column="column2">DEC</th>
+                            <th class="column100 " data-column="column3">Region</th>
+                            <th class="column100 " data-column="column4">Principal WOA</th>
+                            <th class="column100 " data-column="column5">Date of NPA</th>
+                            <th class="column100 " data-column="column6">Date of WOA</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @*  @{
+                        int no1 = 1;
+
+                        if (Model != null)
+                        {
+                        @foreach (var item in Model.listI)
+                        {
+
+                        <tr class="row100">
+                        <td class="column100 column1 " data-column="column1">@no1</td>
+                        <td class="column100 column2 tal" data-column="column2">@item.dec</td>
+                        <td class="column100 column3 " data-column="column3">@item.REGION</td>
+                        <td class="column100 column4 " data-column="column4">@item.PRINCIPAL_WOA</td>
+                        <td class="column100 column5 " data-column="column5">@String.Format("{0:dd/MM/yyyy}", item.DATE_NPA)</td>
+                        <td class="column100 column6 " data-column="column6">@String.Format("{0:dd/MM/yyyy}", item.DATE_WOA)</td>
+
+                        </tr>
+                        no1++;
+
+                        }
+                        }
+                        } *@
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="Add3 row3  pt-10 pr-5 allcontainer" id="AnnexXI">
+            <!--begin::Col-->
+            <div class="col-lg-12  d-flex justify-content-end align-items-center" style="position: absolute;right: 20px;top: 88px;">
+
+                <div class="col-auto">
+                    <a class="mt-3 mt-lg-0 mt-md-0 ml-2">
+                        Amount in Cr.
+                    </a>
+
+                </div>
+
+            </div>
+            <div class="table100 ver5 m-b-110">
+                <table data-vertable="ver5">
+                    <thead>
+                        <tr class="row100 head">
+                            <th class="column100 " width="7%" data-column="column1">Sr No</th>
+                            <th class="column100 tal" data-column="column2">DEC</th>
+                            <th class="column100 " data-column="column3">Region</th>
+                            <th class="column100 " data-column="column4">Principal WOA</th>
+                            <th class="column100 " data-column="column5">Date of NPA</th>
+                            <th class="column100 " data-column="column6">Date of WOA</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @*  @{
+                        int no1 = 1;
+
+                        if (Model != null)
+                        {
+                        @foreach (var item in Model.listI)
+                        {
+
+                        <tr class="row100">
+                        <td class="column100 column1 " data-column="column1">@no1</td>
+                        <td class="column100 column2 tal" data-column="column2">@item.dec</td>
+                        <td class="column100 column3 " data-column="column3">@item.REGION</td>
+                        <td class="column100 column4 " data-column="column4">@item.PRINCIPAL_WOA</td>
+                        <td class="column100 column5 " data-column="column5">@String.Format("{0:dd/MM/yyyy}", item.DATE_NPA)</td>
+                        <td class="column100 column6 " data-column="column6">@String.Format("{0:dd/MM/yyyy}", item.DATE_WOA)</td>
+
+                        </tr>
+                        no1++;
+
+                        }
+                        }
+                        } *@
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </body>
 <script>
     $(document).ready(function () {
         document.getElementById('AnnexIII').style.display = 'none';
+        document.getElementById('AnnexIV').style.display = 'none';
+        document.getElementById('AnnexVI').style.display = 'none';
+        document.getElementById('AnnexVII').style.display = 'none';
+        document.getElementById('AnnexIX').style.display = 'none';
+        document.getElementById('AnnexX').style.display = 'none';
+        document.getElementById('AnnexXI').style.display = 'none';
 
 
     });
