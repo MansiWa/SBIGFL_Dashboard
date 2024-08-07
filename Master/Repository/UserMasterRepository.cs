@@ -153,10 +153,7 @@ namespace Master.Repository
             parameters.Add("@UserId", user.UserId, DbType.Guid);
             parameters.Add("@um_user_name", user.um_user_name, DbType.String);
             parameters.Add("@um_password", user.um_password, DbType.String);
-            parameters.Add("@um_staffname", user.um_staffname, DbType.String);
-            parameters.Add("@um_staffid", user.um_staffid, DbType.String); 
             parameters.Add("@um_roleid", user.um_roleid, DbType.String); 
-            parameters.Add("@um_com_id", user.um_com_id, DbType.String); 
             parameters.Add("@um_rolename", user.um_rolename, DbType.String); 
             parameters.Add("@um_isactive", user.um_isactive, DbType.String);
             parameters.Add("@um_createddate", user.um_createddate, DbType.DateTime);

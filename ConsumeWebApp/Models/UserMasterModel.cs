@@ -13,20 +13,14 @@ namespace PrintSoftWeb.Models
         [DisplayName("Password")]
         public string? um_password { get; set; }
         [DisplayName("Roleid")]
-
         public string? um_roleid { get; set; }
         [DisplayName("Role Name")]
         public string? um_rolename { get; set; }
-        [DisplayName("Staff Name")]
-        public string? um_staffname { get; set; }
-        [DisplayName("Staff Id")]
-        public string? um_staffid { get; set; }
+
         [DisplayName("Status")]
         public string? um_isactive { get; set; }
         public DateTime? um_createddate { get; set; }
         public DateTime? um_updateddate { get; set; }
-        public string? um_com_id { get; set; }
-		public string? Server_Value { get; set; }
 	}
     public class RootUserMaster
     {

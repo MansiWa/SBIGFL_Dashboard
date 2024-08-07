@@ -85,12 +85,10 @@
 
 @{
 	List<PrintSoftWeb.Models.Home> menuList = new List<PrintSoftWeb.Models.Home>();
-	string menu = HttpContextAccessor.HttpContext.Session.GetString("HomeDataList");
-
-	if (!string.IsNullOrEmpty(menu))
-	{
-		menuList = JsonConvert.DeserializeObject<List<PrintSoftWeb.Models.Home>>(menu);
-	}
+	WebMenu gmn = new WebMenu();
+	string? userid = ViewContext.HttpContext.Request.Cookies["com_id"];
+	menuList = gmn.GetWebMenu(userid);
+	string abc = "";
 }
 
 
@@ -299,21 +297,6 @@
 																<span class="menu-arrow"></span>
 															</span>
 															<!--end:Menu link-->
-															<!--begin:Menu sub
-															<div class="menu-sub menu-sub-accordion">
-																<div class="menu-item">
-
-																	<a href="@Url.Action("Index", "TreasuryDashboard")" class="menu-link">
-																		<span class="menu-bullet">
-																			<span class="bullet bullet-dot"></span>
-																		</span>
-																		<span class="menu-title">Treasury Dashboard</span>
-																	</a>
-																</div>
-
-
-															</div>
-															end:Menu sub-->
 															<!--begin:Menu sub-->
 															<div class="menu-sub menu-sub-accordion">
 																<!--begin:Menu item-->
@@ -444,21 +427,6 @@
 																<span class="menu-arrow"></span>
 															</span>
 															<!--end:Menu link-->
-															<!--begin:Menu sub
-															<div class="menu-sub menu-sub-accordion">
-																<div class="menu-item">
-
-																	<a href="@Url.Action("Index", "AccountDashboard")" class="menu-link">
-																		<span class="menu-bullet">
-																			<span class="bullet bullet-dot"></span>
-																		</span>
-																		<span class="menu-title">Accounting Dashboard</span>
-																	</a>
-																</div>
-
-
-															</div>
-															end:Menu sub-->
 															<!--begin:Menu sub-->
 															<div class="menu-sub menu-sub-accordion">
 																<!--begin:Menu item-->

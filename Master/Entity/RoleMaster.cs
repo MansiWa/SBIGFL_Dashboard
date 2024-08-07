@@ -19,7 +19,5 @@ namespace Master.Entity
         public Guid? a_id { get; set; }
         public DateTime? a_updateddate { get; set; }
         public DateTime? a_createddate { get; set; }
-        public Guid? r_com_id { get; set; }
-		public string? Server_Value { get; set; }
 	}
 }

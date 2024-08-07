@@ -107,7 +107,6 @@ namespace Master.Repository
 			parameters.Add("@OperationType", user.BaseModel?.OperationType, DbType.String);
 			parameters.Add("@userId", user.UserId, DbType.Guid);
 			parameters.Add("@r_id", user.r_id, DbType.Guid);
-			parameters.Add("@r_com_id", user.r_com_id, DbType.Guid);
 			parameters.Add("@r_rolename", user.r_rolename, DbType.String);
 			parameters.Add("@r_description", user.r_description, DbType.String);
 			parameters.Add("@r_module", user.r_module, DbType.String);

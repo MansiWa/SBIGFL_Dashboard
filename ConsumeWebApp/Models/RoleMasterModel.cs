@@ -6,7 +6,6 @@ namespace PrintSoftWeb.Models
     {
         public Guid? UserId { get; set; }
         public Guid? r_id { get; set; }
-        public Guid? r_com_id { get; set; }
         [DisplayName("Role Name")]
         public string? r_rolename { get; set; }
         [DisplayName("Description")]
@@ -24,7 +23,6 @@ namespace PrintSoftWeb.Models
         public string? a_id { get; set; }
         public DateTime? a_updateddate { get; set; }
         public DateTime? a_createddate { get; set; }
-		public string? Server_Value { get; set; }
 	}
    
 }
